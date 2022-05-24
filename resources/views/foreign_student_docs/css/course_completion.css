@@ -1,0 +1,40 @@
+{margin: 0; padding: 0;}
+body{
+    font-size: 12px;
+    line-height: 32px;
+    font-weight: bold;
+    background-color: transparent;
+}
+table{
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+table th,
+table td{padding: 0; margin: 0;}
+h1, h2, h3, h4, h5, h6{margin: 0; padding: 0;}
+p{
+    margin: 0;
+    padding: 0;
+    text-align: justify;
+}
+@page {
+    margin-top: 1.8in;
+    margin-bottom: 0.8in;
+    margin-left: 1in;
+    margin-right: 1in;
+}
+
+.reference{
+    position: absolute;
+    top: 10%;
+    left: 21%;
+    transform: translate(50%, -50%);
+}
+
+.reference_date{
+    position: absolute;
+    top: 10%;
+    right: 8%;
+    transform: translate(50%, -50%);
+}
