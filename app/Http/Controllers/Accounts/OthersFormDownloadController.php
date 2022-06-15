@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use Ixudra\Curl\Facades\Curl;
 use App\Models\Convocation\StudentConvocation;
+use App\Models\STD\Student;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -417,6 +418,119 @@ class OthersFormDownloadController extends Controller
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
             // return response()->json(['message' => $e->getMessage()], 400);
             return response()->json(['message' => 'Something went to wrong'], 401);
+        }
+    }
+
+
+    //other application form
+    public function test_store(Request $request)
+    {
+
+        $this->validate($request, [
+            'form_name' => 'required',
+            'department_id' => 'required|integer',
+            'batch_id' => 'required|integer',
+            'student_id' => 'required|integer',
+            'purpose_id' => 'required|integer',
+            'total_payable' => 'required|integer',
+            'bank_id' => 'required|integer',
+            'bank_payment_date' => 'required',
+            'note' => 'nullable',
+            'receipt_no' => 'nullable',
+        ]);
+
+        if ($request->receipt_no && ($request->bank_id == 7 || $request->bank_id == 8 || $request->bank_id == 9) && \App\Models\Cms\OtherStudentForm::wherereceiptNo($request->receipt_no)->exists()) {
+            return response()->json(['message' => 'This receipt no already used'], 406);
+        }
+
+        try {
+
+            \DB::beginTransaction();
+
+
+            $student = $this->studentInfoWithCompleteSemesterResult($request->student_id);
+            $student_provisional_transcript = $this->student_provisional_transcript_marksheet_info_by_student_id($request->student_id);
+
+
+            if (!array_key_exists('result_publish_date_of_last_semester', $student_provisional_transcript)) {
+                if ($student_provisional_transcript->status == '400') {
+                    $student_provisional_transcript = [];
+                }
+                $student_provisional_transcript['result_publish_date_of_last_semester'] = '';
+            }
+
+            $form = $request->all();
+
+            unset($form['receipt_no']);
+            unset($form['token']);
+            unset($form['bank_payment_date']);
+
+            $receipt_no = $request->receipt_no;
+            if ($request->bank_id == 1 || $request->bank_id == 3 || $request->bank_id == 4 || $request->bank_id == 5) {
+                $bankSlipCreate = $this->bankSlipCreate($request->purpose_id, $request->student_id, $student['student']['name'], $student['student']['reg_code'], $request->total_payable);
+
+                $receipt_no = $bankSlipCreate['receipt_number'];
+                $form['bank_slip_id'] = $bankSlipCreate['bank_slip_id'];
+            }
+
+            $form['name'] = $student['student']['name'];
+            $form['created_by'] = $request->auth->id;
+
+            $form['bank_payment_date'] = Carbon::parse($request->bank_payment_date)->format('Y-m-d');
+
+            $form['reg_code'] = $student['student']['reg_code'];
+            $form['roll'] = $student['student']['roll_no'];
+            $form['cgpa'] = $student['student']['cgpa'] ?? 'Not Completed';
+            $form['shift'] = $student['student']['shift']['name'];
+            $form['session'] = $student['student']['session_name'];
+            $form['passing_year'] = \Carbon\Carbon::parse(str_replace('/', '-', $student_provisional_transcript['result_publish_date_of_last_semester']))->format('Y') ?? '';
+            $form['email'] = $student['student']['email'];
+            $form['mobile_no'] = $student['student']['phone_no'];
+            $form['receipt_no'] = $receipt_no;
+            $form['code'] = Str::random(12);
+
+
+            try{
+
+                $otherStudentForm = \App\Models\Cms\OtherStudentForm::create($form);
+
+            }catch(\Exception $e){
+                return response()->json(['message' => $e->getMessage()], 400);
+            }
+
+
+            // payment
+            $url = env('RMS_API_URL') . '/general-payment';
+            $array = [
+                'bank_id' => $request->bank_id,
+                'bank_payment_date' => Carbon::parse($request->bank_payment_date)->format('d-m-Y'),
+                'purpose_id' => $request->purpose_id,
+                'receipt_no' => $receipt_no,
+                'total_payable' => $request->total_payable,
+                'employee_email' => $request->auth->office_email,
+                'student_id' => $request->student_id,
+                'note' => $request->note,
+            ];
+
+
+            $response = Curl::to($url)->withData($array)->returnResponseObject()->asJsonResponse(true)->post();
+
+            $data = "";
+            if ($response->status == 200) {
+
+                $this->sendStudentSmsForFeeCollection($request->purpose_id, $request->student_id, $request->total_payable);
+            }
+            // payment
+
+            \DB::commit();
+
+            return response()->json(['message' => 'Form create Successfully', 'otherStudentForm' => $otherStudentForm], 200);
+        } catch (\Exception $e) {
+            \DB::rollBack();
+
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            // return response()->json(['message' => $e->getMessage()], 400);
+            return response()->json(['message' => $e->getMessage()], 401);
         }
     }
 

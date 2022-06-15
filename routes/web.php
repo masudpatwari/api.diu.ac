@@ -21,6 +21,7 @@ use App\Models\indlkg\CompanyDescription;
 use App\Models\indlkg\UserModel;
 use App\Models\indlkg\Users;
 use App\Models\STD\AttendanceData;
+use App\Models\WhatsApp\WhatsApp;
 
 $router->GET('/cache-clear', function () use ($router) {
     Cache::flush();
@@ -50,7 +51,18 @@ Route::get('/convocation-ticket', 'Accounts\OthersFormDownloadController@convoca
 
 // Route::get('original-certificate','Accounts\OthersFormDownloadController@original_certificate');
 
-
+// Admission
+$router->get('/admission/import_form', 'adsn\StockController@index');
+$router->get('/english_book/import_form', 'adsn\StockController@english_book');
+$router->post('/english_book/import_form', 'adsn\StockController@english_book_create');
+$router->POST('/admission/import_form', 'adsn\StockController@create');
+$router->get('/admission/form_search/{form}', 'adsn\AdmisisonFormController@search');
+$router->get('/english_book/form_search/{form}', 'adsn\AdmisisonFormController@english_book_search');
+$router->POST('/admission/form_sales/{id}', 'adsn\AdmisisonFormController@update');
+$router->POST('/english_book/form_sales/{id}', 'adsn\AdmisisonFormController@english_book_update');
+$router->get('/admission/batches/{id}', 'adsn\AdmisisonFormController@getBatch');
+$router->get('/admission/get-print-recieve/{recieve}', 'adsn\AdmisisonFormController@getPrintRecieve');
+$router->get('/english_book/get-print-recieve/{recieve}', 'adsn\AdmisisonFormController@getPrintRecieveEnglishBook');
 
 
 
@@ -141,6 +153,9 @@ $router->GET('/find_employee/{id}', function ($id) use ($router) {
 
 
 
+
+
+
 $router->GET('/supervisors', function () use ($router) {
     $data['employee'] = [];
     $data['supervisors'] = Employee::with('relDesignation:name,id', 'relDepartment:name,id')->where('activestatus', '1')->orderBy('supervised_by', 'asc')->get();
@@ -227,19 +242,22 @@ $router->PUT('auth/password/reset', ['uses' => 'ForgetPasswordResetController@pa
 //
 //});
 
+// $router->GET('employee-info', function (){
 
-// Admission
-$router->get('/admission/import_form', 'adsn\StockController@index');
-$router->get('/english_book/import_form', 'adsn\StockController@english_book');
-$router->post('/english_book/import_form', 'adsn\StockController@english_book_create');
-$router->POST('/admission/import_form', 'adsn\StockController@create');
-$router->get('/admission/form_search/{form}', 'adsn\AdmisisonFormController@search');
-$router->get('/english_book/form_search/{form}', 'adsn\AdmisisonFormController@english_book_search');
-$router->POST('/admission/form_sales/{id}', 'adsn\AdmisisonFormController@update');
-$router->POST('/english_book/form_sales/{id}', 'adsn\AdmisisonFormController@english_book_update');
-$router->get('/admission/batches/{id}', 'adsn\AdmisisonFormController@getBatch');
-$router->get('/admission/get-print-recieve/{recieve}', 'adsn\AdmisisonFormController@getPrintRecieve');
-$router->get('/english_book/get-print-recieve/{recieve}', 'adsn\AdmisisonFormController@getPrintRecieveEnglishBook');
+//     $chats = WhatsApp::
+//         whereNotNull('user_id')
+//         ->get();
+
+//     // foreach($chats as $chat)
+//     // {
+//     //     $employee_name = Employee::where('id', $chat->user_id)->first()->name;
+//     //     $chat->update([
+//     //         'employee_name' => $employee_name
+//     //     ]);
+//     // }
+    
+// });
+
 
 $router->GET('/booking', 'HMS\BookingController@index');
 $router->GET('/booking/{id}', 'HMS\BookingController@show');
@@ -266,12 +284,13 @@ $router->group(['middleware' => ['token.student.auth']], function () use ($route
     $router->get('student/blood', ['as' => 'students.blood', 'uses' => 'STD\StudentsController@bloodShow']);
     $router->post('student/blood', ['as' => 'students.blood.donate', 'uses' => 'STD\StudentsController@bloodCreate']);
 
+
+
     // To_let
     $router->get('tolet', "ToLetController@show");
     $router->post('tolet/tolet-publish', "ToLetController@toletPublish");
     $router->get('toletsearch/{item}', "ToLetController@search");
-    $router->get('toletdetails/{id}', "ToLetController@details");
-    $router->post('tolet/publish', "ToLetController@store");
+    $router->get('toletdetails/{id}', "ToLetController@details");    
     $router->post('tolet/publishupdate/{id}', "ToLetController@requestAccept");
     $router->post('tolet/tolet-accept/{id}', "ToLetController@toletAccept");
     $router->post('tolet/requestreject/{id}', "ToLetController@requestReject");
@@ -280,6 +299,7 @@ $router->group(['middleware' => ['token.student.auth']], function () use ($route
     $router->get('getrequest/{id}', "ToLetController@getrequest");
     $router->get('get-request-by-id', "ToLetController@getRequestById");
     $router->get('tolet/searchgender/{id}', "ToLetController@searchGender");
+    $router->post('tolet/withdraw/{id}', "ToLetController@withdraw");
 });
 
 
@@ -523,6 +543,7 @@ $router->GET('doc-mtg/download/{id}/{tokenVal}', ['as' => 'student_doc_mtg.downl
 $router->group(['middleware' => ['token.auth']], function () use ($router) {
 
     $router->group(['middleware' => ['CommonAccessMiddleware']], function () use ($router) {
+
 
 
         // other form verification start (mobile apps)
@@ -918,6 +939,7 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
 
 
         $router->post('cms/other-form-download', ['as' => 'other-form-download.store', 'uses' => 'Accounts\OthersFormDownloadController@store']);
+        $router->post('ncms/other-form-download', ['as' => 'other-form-download.store', 'uses' => 'Accounts\OthersFormDownloadController@test_store']);
         $router->post('cms/application-form-download', ['as' => 'other-form-download.application', 'uses' => 'Accounts\OthersFormDownloadController@application']);
         $router->post('ncms/application-form-download', ['as' => 'other-form-download.application', 'uses' => 'Accounts\OthersFormDownloadController@nApplication']);
         $router->post('cms/application-form-test', ['as' => 'other-form-download.test', 'uses' => 'Accounts\OthersFormDownloadController@test']);

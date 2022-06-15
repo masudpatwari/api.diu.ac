@@ -28,6 +28,19 @@ class AdmissionInActiveBatchController extends Controller
         return $activeBatchForAdmission;
     }
 
+    public function all(Request $request)
+    {
+        [$activeBatchForAdmission = $this->BatchForAdmission()];
+
+        if (!$activeBatchForAdmission) {
+
+            return response()->json(['error' => 'data not found'], 406);
+
+        }
+
+        return $activeBatchForAdmission;
+    }
+
     public function studentsList($batch_id)
     {
         $activeBatchForAdmissionWiseStudentsList = $this->activeBatchForAdmissionWiseStudentsList($batch_id);

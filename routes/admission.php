@@ -4,6 +4,11 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
 
     $router->group(['middleware' => ['CommonAccessMiddleware']], function () use ($router) {
 
+
+        //Form
+
+        
+
         $router->group(['prefix' => 'importSms', 'namespace' => 'ImportSms',], function () use ($router) {
             $router->get('import-message', ['as' => 'importSms.importMessageIndex', 'uses' => 'ImportSmsController@importMessageIndex']);
             $router->get('import-message-done', ['as' => 'importSms.importMessageDone', 'uses' => 'ImportSmsController@importMessageDone']);
@@ -43,6 +48,8 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
 
 
     });
+
+
 
     $router->group(['middleware' => ['LeaveAttendanceMiddleware']], function () use ($router) {
         /*Upcoming student*/
@@ -133,6 +140,87 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
             $router->get('admission-in-active-batch', [
                 'as' => 'admissionInActiveBatch.index',
                 'uses' => 'AdmissionInActiveBatchController@index'
+            ]);
+
+
+            // Admission Form
+
+            $router->get('import-admission-form', [
+                'as' => 'admissionForm.import',
+                'uses' => 'StockController@index'
+            ]);
+
+
+            $router->get('admission-form-search/{form}', [
+                'as' => 'admissionForm.Search',
+                'uses' => 'AdmissionFormController@search'
+            ]);
+
+
+            $router->POST('form-sales/{id}', [
+                'as' => 'admissionForm.update',
+                'uses' => 'AdmissionFormController@update'
+            ]);
+
+
+
+            $router->get('batch-by-department/{id}', [
+                'as' => 'admissionForm.batchByDepartmentId',
+                'uses' => 'AdmissionFormController@getBatch'
+            ]);
+
+
+
+            $router->get('get-admission-form-recieve/{recieve}', [
+                'as' => 'admissionForm.print',
+                'uses' => 'AdmissionFormController@getPrintRecieve'
+            ]);
+
+
+
+            // English Book Form
+
+
+
+            $router->get('import-english-book-form', [
+                'as' => 'englishBookForm.import',
+                'uses' => 'StockController@english_book'
+            ]);
+
+
+
+            $router->get('english-book-form-search/{form}', [
+                'as' => 'englishBookForm.search',
+                'uses' => 'AdmissionFormController@english_book_search'
+            ]);
+
+
+
+            $router->POST('english-book-form-sales/{id}', [
+                'as' => 'englishBookForm.sale',
+                'uses' => 'AdmissionFormController@english_book_update'
+            ]);
+
+
+
+            $router->get('english-book-form-print/{recieve}', [
+                'as' => 'englishBookForm.print',
+                'uses' => 'AdmissionFormController@getPrintRecieveEnglishBook'
+            ]);
+
+
+
+            $router->POST('update-english-book-form', [
+                'as' => 'englishBookForm.update',
+                'uses' => 'StockController@english_book_create'
+            ]);
+
+
+
+
+            $router->get('admission-in-batch', [
+                'as' => 'admissionInBatch.index',
+                'uses' => 'AdmissionInActiveBatchController@all'
             ]);
 
             $router->get('admission-in-active-batch-students/{batch_id}', [
@@ -243,8 +331,20 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
                 'uses' => 'StudentController@update'
             ]);
 
+
+            $router->get('whats_app_messages', [
+                'as' => 'whats_app.index',
+                'uses' => 'WhatsAppController@index'
+            ]);
+
+
+            $router->post('whats_app_messages/send', [
+                'as' => 'whats_app.send',
+                'uses' => 'App\Http\Controllers\Admission\WhatsApp\WhatsAppController@send'
+            ]);
+
             $router->get('student-search/{slug}', [
-                'as' => 'student.search',
+                'as' => 'student.update',
                 'uses' => 'StudentController@search'
             ]);
 

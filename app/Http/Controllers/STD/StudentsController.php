@@ -661,7 +661,12 @@ class StudentsController extends Controller
         $token = md5($student_id);
 
         $file_path = storage_path('admit_cards/student_portal/regular_admit_card_' . $student_id . '.pdf');
-        $view = view('admit_cards/regular_admit_card_for_student_portal', $data);
+        // if($student_id == '19946')
+        // {
+        //     $view = view('admit_cards/regular_admit_card_for_student_portal_test', $data);
+        // }else{
+            $view = view('admit_cards/regular_admit_card_for_student_portal', $data);
+        // }
         $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('temp'), 'mode' => 'utf-8', 'format' => 'A4-P', 'orientation' => 'P']);
         $mpdf->SetTitle('regular_admit_card_' . $token . '');
         $mpdf->WriteHTML(file_get_contents(storage_path('assets/regular_admit_card_for_student_portal.css')), 1);
@@ -806,7 +811,8 @@ class StudentsController extends Controller
             }
             return response(["msg"=>"success",'donor_blood_status'=>$student->first()->blood_status]);
         } catch (\Exception $e) {
-            return response("something wrong", 500);
+            // return response("something wrong", 500);
+            return response($e->getMessage(), 500);
         }
     }
     public function updatePersonalInfo(Request $request, $id, $type)

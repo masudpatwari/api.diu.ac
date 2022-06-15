@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\adsn;
+namespace App\Http\Controllers\Admission;
 
 use App\ApiKey;
 use App\Employee;
@@ -16,7 +16,7 @@ use App\Traits\RmsApiTraits;
 
 
 
-class AdmisisonFormController extends Controller
+class AdmissionFormController extends Controller
 {
     use RmsApiTraits;
 
@@ -92,7 +92,8 @@ class AdmisisonFormController extends Controller
                 "dept_id" => $request->dept_id,
                 "batch_id" => $request->batch_id,
                 "saler_id" => $request->auth->id ?? $api_user->employee_id,
-                'sale_date' => Carbon::now()->format('Y-m-d')
+                'sale_date' => Carbon::now()->format('Y-m-d'),
+                'updated_by' => $request->auth->id ?? $api_user->employee_id,
             ]);
 
             $receipt_no = 'FS'.$id;
@@ -133,7 +134,7 @@ class AdmisisonFormController extends Controller
                 "name_of_student" => $request->std_name,
                 "dept_id" => $request->dept_id,
                 "batch_id" => $request->batch_id,
-                "saler_id" => $request->auth->id ?? $api_user->employee_id,
+                "saler_id" => $request->auth->id ?? $request->emp_id,
                 'sale_date' => Carbon::now()->format('Y-m-d')
             ]);
 
@@ -143,6 +144,7 @@ class AdmisisonFormController extends Controller
 
         }catch (\Exception $exception)
         {
+            Log::alert(json_encode( $exception->getMessage()));
             return response(['error' => $exception->getMessage()], 400);
         }
     }

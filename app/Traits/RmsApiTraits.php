@@ -689,6 +689,28 @@ trait RmsApiTraits
     }
 
 
+
+
+    public function studentInfoWithTestCompleteSemesterResult($student_id)
+    {
+
+        $url = env('RMS_API_URL') . '/student-test/' . $student_id;
+        $curl = Curl::to($url)->returnResponseObject();
+        $curl->asJson(true);
+        $response = $curl->get();
+
+
+        if ($response->status == 200) {
+            return $response->content;
+        }else{
+            return $response;
+        }
+
+        return false;
+
+    }
+
+
     public function bankInfo($bank_id)
     {
         $url = env('RMS_API_URL') . '/get-bank/' . $bank_id;
@@ -747,6 +769,19 @@ trait RmsApiTraits
     public function activeBatchForAdmission()
     {
         $url = env('RMS_API_URL') . '/admission/active-batch-for-admission/';
+        $curl = Curl::to($url)->returnResponseObject();
+        $curl->asJson(true);
+        $response = $curl->get();
+
+        if ($response->status == 200) {
+            return $response->content;
+        }
+        return false;
+    }
+
+    public function BatchForAdmission()
+    {
+        $url = env('RMS_API_URL') . '/admission/batch-for-admission/';
         $curl = Curl::to($url)->returnResponseObject();
         $curl->asJson(true);
         $response = $curl->get();

@@ -10,9 +10,6 @@ class WhatsAppController extends Controller
     {
         $chatApiToken = "EAALXQC2uJj8BAEZAV6xu7I1ewiqzSYf6tZAnJU3rTbJYGLkQfkZCpEKUyyOALSLYyqvZAKoX13Elc3CowPYLod7Ri2zez15AGjv04iad2QAqpKWNhnzaezSuJXjztb4RYtWAaHmmQZCVnLuRxL8XZBX0Vjvd1co7dMOP0YIzBZCZCmMeSyDQ9GpAsa4qUYxdWaaWIZCoeAdywg5HdEWB6xYyd"; // Get it from https://www.phphive.info/255/get-whatsapp-password/
         
-        
-        $number = "8801722711523"; // Number
-        $message = "Hello :)";
 
         $data = array(
             'messaging_product' => 'whatsapp',

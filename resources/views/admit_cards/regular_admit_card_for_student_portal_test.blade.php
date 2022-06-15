@@ -42,6 +42,7 @@
         @else
             <img src="{{ 'data:image/jpg;base64,'. base64_encode($img) }}" alt="Passport size photo">
         @endif
+
     </div>
     <div style="text-align: center; width: 5.7in; float: left;">
         <div style="text-align: center; width: 5in; float: left;">
@@ -61,7 +62,6 @@
             <div style="text-align: center; width: 3.97in; float: left;">
 
                 <img src="data:image/png;base64, {!! base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')
-                        ->merge('https://api.diu.ac/images/white_logo.png', 0.6, true)
                         ->size(140)->errorCorrection('H')
                         ->generate($details)) !!} ">
             </div>

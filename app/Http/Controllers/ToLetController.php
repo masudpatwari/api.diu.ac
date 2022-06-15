@@ -15,94 +15,10 @@ use Illuminate\Http\Request;
 class ToLetController extends Controller
 {
 
-    public function test(Request $request)
-    {
-        $tolets = ToLet::where("status", "=", 1)
-            ->orderBy('id', 'desc')
-            ->get();
 
 
-        //        $toletAll = $tolets->map(function($tolet) use($tolets){
-        //            $tolet['id'] = (string)$tolet['id'];
-        //            $tolet['rent'] = (string)$tolet['rent'];
-        //            $tolet['available_seat'] = (string)$tolet['available_seat'];
-        //            $tolet['creater_id'] = (string)$tolet['creater_id'];
-        //            $tolet['phone'] = (string)$tolet['phone'];
-        //            $tolet['person_per_room'] = (string)$tolet['person_per_room'];
-        //            $tolet['status'] = (string)$tolet['status'];
-        //            return $tolet;
-        //        });
-
-        return $tolets;
-        //        return Goip::query()->update(['gsm_status' => 'LOGIN']);
-
-        //        return Goip::all();
-        return
-            $deletable_ids = AttendanceData::where('employee_id', '=', '635')
-            ->whereBetween('date', ['2022-03-13', '2022-04-17'])
-            //            ->doesntHave('relAttendanceReport')
-            ->has('relAttendanceReport')
-            //            ->pluck('id');
-            ->count();
-
-        //        AttendanceData::whereIn('id', $deletable_ids)->delete();
-
-    }
 
 
-    public function store(Request $request)
-    {
-        $date = date('m/d/Y');
-        $this->validate($request, [
-            'type' => 'required',
-            'gender' => 'required',
-            'campus' => 'required',
-            'details' => 'required',
-            'address' => 'required',
-            'rent' => ['required', 'numeric', 'min:0'],
-            'available_seat' => ['required', 'numeric', 'min:1'],
-            'available_from' => ['required', 'date', "after_or_equal:$date"],
-            'bathroom_type' => 'required',
-            'room_type' => 'required',
-            'wifi' => 'required',
-            'maid' => 'required',
-            'fridge' => 'required',
-            'person_per_room' => ['required', 'numeric', 'min:1', 'max:4'],
-        ]);
-
-        try {
-
-            $data = new ToLet;
-            $data->created_by = $request->created_by;
-            $data->creater_id = $request->creater_id;
-            $data->phone = $request->phone ?? 0124545;
-            $data->email = $request->email;
-            $data->type = $request->type;
-            $data->gender = $request->gender;
-            $data->campus = $request->campus;
-            $data->details = $request->details;
-            $data->address = $request->address;
-            $data->rent = $request->rent;
-            $data->available_seat = $request->available_seat;
-            $data->available_from = $request->available_from;
-            $data->bathroom_type = $request->bathroom_type;
-            $data->room_type = $request->room_type;
-            $data->person_per_room = $request->person_per_room;
-            $data->wifi = $request->wifi;
-            $data->maid = $request->maid;
-            $data->fridge = $request->fridge;
-            $data->status = 1;
-            $data->save();
-            return $data;
-        } catch (\Exception $e) {
-
-            return response([
-                'status' => $e->getCode(),
-                'error' => $e->getMessage()
-
-            ], 400);
-        }
-    }
     public function toletPublish(Request $request)
     {
         $token = trim($request->get('token'));
@@ -115,7 +31,7 @@ class ToLetController extends Controller
             'details' => 'required',
             'address' => 'required',
             'rent' => ['required', 'numeric', 'min:0'],
-            'available_seat' => ['required', 'numeric', 'min:1'],
+            'available_seat' => ['required', 'numeric', 'min:1', 'max:4'],
             'available_from' => ['required', 'date', "after_or_equal:$date"],
             'bathroom_type' => 'required',
             'room_type' => 'required',
@@ -168,7 +84,9 @@ class ToLetController extends Controller
 
     public function show()
     {
+
         return ToLet::where("status", "=", 1)
+            // ->where("available_from", ">=", Carbon::now())
             ->orderBy('id', 'desc')
             ->paginate(15);
     }
@@ -184,7 +102,9 @@ class ToLetController extends Controller
         return ToLet::where(function ($query) use ($item) {
             $query->where('campus', 'LIKE', "%" . $item . "%")
                 ->orWhere('address', 'LIKE', "%" . $item . "%");
-        })->where("status", "=", 1)->get();
+        })
+        // ->where("available_from", ">=", Carbon::now())
+            ->where("status", "=", 1)->get();
     }
 
 
@@ -193,6 +113,7 @@ class ToLetController extends Controller
 
         return ToLet::where("status", "=", 1)
             ->where("gender", "=", $gender)
+            // ->where("available_from", ">=", Carbon::now())
             ->orderBy('id', 'desc')
             ->paginate(15);
     }
@@ -201,9 +122,9 @@ class ToLetController extends Controller
     public function request(Request $request)
     {
         $this->validate($request, [
-
             'seat' => ['required', 'numeric'],
         ]);
+        $tolet = ToLet::where('id', $request->publish_id)->where("status", "=", 1)->firstOrFail();
 
         $data = new ToletRequest;
         $data->requested_by = $request->requested_by;
@@ -258,6 +179,19 @@ class ToLetController extends Controller
         }
     }
 
+    public function withdraw($id)
+    {
+        try {
+            $tolet = ToLet::findOrFail($id);
+            $tolet->status = 0;
+            $tolet->save();
+        } catch (\Exception $e) {
+            return response([
+                'message' => "something went wrong",
+            ], 400);
+        }
+        return response(['message' => 'To-let withdraw successfully'], 200);
+    }
 
     public function getRequestById(Request $request)
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\adsn;
+namespace App\Http\Controllers\Admission;
 
 use App\Models\adsn\EnglishBookFormDetails;
 use App\Models\adsn\EStock;
@@ -54,7 +54,7 @@ class StockController extends Controller
                     'to' => $request->end,
                     'count' => $request->count,
                     'ip' => $request->ip(),
-                    'employee_id' => $request->auth->id,
+                    'employee_id' => $request->emp_id,
                     'time' => Carbon::now()->format('Y-m-d H:i:s')
                 ]);
 
@@ -106,17 +106,13 @@ class StockController extends Controller
 
         try {
 
-            $api_user = ApiKey::where('apiKey', $request->token)->first();
-
-            dd($request->auth);
-
             DB::transaction(function () use($request){
                 EStock::create([
                     'from' => $request->start,
                     'to' => $request->end,
                     'count' => $request->count,
                     'ip' => $request->ip(),
-                    'employee_id' => $request->auth->id ?? $api_user->employee_id,
+                    'employee_id' => $request->emp_id,
                     'time' => Carbon::now()->format('Y-m-d H:i:s')
                 ]);
 
