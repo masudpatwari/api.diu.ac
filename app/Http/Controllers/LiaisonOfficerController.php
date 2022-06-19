@@ -396,11 +396,9 @@ class LiaisonOfficerController extends Controller
 
     public function get_amount_for_student($std)
     {
-//         dump($std['department']['name']);
-        // dd( Liaison_programs::where('name', trim($std['department']['name']))->first());
-
         if (strpos(strtolower($std['nationality']), 'ban') !== false) {
-            return Liaison_programs::where('name', trim($std['department']['name']))->first()->amount_std_local;
+            return optional(Liaison_programs::where('name', trim($std['department']['name']))->first())
+                ->amount_std_local;
         } else {
             return Liaison_programs::where('name', trim($std['department']['name']))->first()->amount_std_foreign;
         }

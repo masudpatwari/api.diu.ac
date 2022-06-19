@@ -339,9 +339,17 @@ class StudentsController extends Controller
             ]
         );
 
-        Student::whereId($request->auth->ID)->update([
-            'password' => $request->password,
+        $std = Student::whereId($request->auth->ID)->first();
+
+        $this->validate($request,[
+            'email' => 'unique:std.users,email,'.$std->id
         ]);
+
+        if($std) {
+            $std->update([
+                'password' => $request->password,
+            ]);
+        }
         return response()->json(['message' => 'Password Changed.'], 200);
     }
 
@@ -402,9 +410,16 @@ class StudentsController extends Controller
     public function change_profile_visibility(Request $request)
     {
         $std = Student::where('ID', $request->auth->ID)->first();
-        Student::where('ID', $request->auth->ID)->update([
-            'show_profile_publicly' => $std->show_profile_publicly == '1' ? '0' : '1'
+
+        $this->validate($request,[
+            'email' => 'unique:std.users,email,'.$std->id
         ]);
+
+        if($std){
+            $std->update([
+                'show_profile_publicly' => $std->show_profile_publicly == '1' ? '0' : '1'
+            ]);
+        }
 
         $message = $std->show_profile_publicly == '1' ? 'to Private' : 'to Public';
         return response()->json(['message' => 'Visibility Changed ' . $message], 200);
@@ -463,7 +478,12 @@ class StudentsController extends Controller
         if (!$student) {
             return response()->json(['error' => 'Student Not found with Reg. Code and Email!'], 400);
         }
-        Student::where('REG_CODE', $reg_code)->where('EMAIL', $current_email)->update([
+
+        $this->validate($request,[
+            'email' => 'unique:std.users,email,'.$student->id
+        ]);
+
+        $student->update([
             'email' => $to_email
         ]);
 
@@ -689,9 +709,17 @@ class StudentsController extends Controller
 
         $full_number = '+88' . $phone;
         $otp = rand(1111, 9999);
-        Student::where('id', $id)->update([
-            'otp' => $otp
+        $student = Student::where('id', $id)->first();
+
+        $this->validate($request,[
+            'email' => 'unique:std.users,email,'.$student->id
         ]);
+
+        if($student) {
+            $student->update([
+                'otp' => $otp
+            ]);
+        }
 
         $message = "Your Phone Number Update  OTP is {$otp}";
         $this->send_sms($phone, $message);

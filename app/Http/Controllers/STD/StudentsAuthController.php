@@ -231,9 +231,21 @@ class StudentsAuthController extends Controller
         );
 
         $explode_token = $this->explode_token( $token );
-        $update = Student::where('ID', $explode_token['id'])->update([
-            'PASSWORD' => $request->password
-        ]);
+        $update = Student::where('ID', $explode_token['id'])->first();
+        
+        if($update){
+
+            $this->validate($request,
+                [
+                    'email' => 'unique:std.users,email,'.$update->id
+                ]
+            );
+
+            $update->update([
+                'PASSWORD' => $request->password
+            ]);
+        }
+
         if (!empty($update)) {
             return response()->json(['success' => 'Password update successfull'], 201);
         }
@@ -268,6 +280,12 @@ class StudentsAuthController extends Controller
         }
         if (!empty($student)) {
             if( $student->PASSWORD == $explode_token['password']){
+
+
+                $this->validate(request(),[
+                    'email' => 'unique:std.users,email,'.$student->id
+                ]);
+
                 Student::where('ID', $student->ID)->update([
                     'IS_VERIFIED' => 1
                 ]);

@@ -29,8 +29,11 @@ $router->GET('/cache-clear', function () use ($router) {
 });
 
 Route::get('get-tolets', "ToLetController@test");
+// Route::get('change-dob-doj', "ToLetController@change");
 
 $router->get('support-ticket-departments-for-student', ['as' => 'supportTicketDepartments.index', 'uses' => 'ItSupport\SupportTicketDepartmentsController@index']);
+
+
 
 
 // Industrial Linkagechange-official-email

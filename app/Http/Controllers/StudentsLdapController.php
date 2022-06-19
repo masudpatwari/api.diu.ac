@@ -187,11 +187,20 @@ class StudentsLdapController extends Controller
 
         DB::transaction(function () use ($student_info, $student_id) {
 
-            Student::whereId($student_id)->update([
-                'wifi_username' => NULL,
-                'wifi_password' => NULL,
-            ]);
+            $student = Student::whereId($student_id)->first();
 
+            $this->validate(request(),
+                [
+                    'email' => 'unique:std.users,email,'.$student->id
+                ]
+            );
+
+            if($student) {
+                $student->update([
+                    'wifi_username' => NULL,
+                    'wifi_password' => NULL,
+                ]);
+            }
             $radRow = Radcheck::where('username', $student_info->wifi_username)->first();
 
 
@@ -213,7 +222,6 @@ class StudentsLdapController extends Controller
      */
     public function change_password(Request $request)
     {
-
         $this->validate($request,
             [
                 'password' => 'bail|min:6|required|alpha',
@@ -228,7 +236,6 @@ class StudentsLdapController extends Controller
             return response()->json(['error' => 'Your wifi account not found!'], 400);
         }
 
-
         try {
             DB::transaction(function () use ($request, $student_id) {
 
@@ -241,7 +248,15 @@ class StudentsLdapController extends Controller
                 $raddata->value = $request->password;
                 $raddata->save();
 
-                $student = Student::whereId($student_id)->update([
+                $student = Student::whereId($student_id)->first();
+
+                $this->validate($request,
+                    [
+                        'email' => 'unique:std.users,email,'.$student->id
+                    ]
+                );
+
+                $student->update([
                     'wifi_password' => $request->password,
                 ]);
             }, 5);

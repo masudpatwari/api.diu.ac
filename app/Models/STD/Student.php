@@ -16,7 +16,7 @@ class Student extends Model
     //     parent::__construct($attributes);
     // }
 
-    protected $fillable = ['ID', 'NAME', 'slug_name', 'site_tag', 'ROLL_NO', 'REG_CODE', 'PASSWORD', 'DEPARTMENT_ID', 'BATCH_ID', 'SHIFT_ID', 'YEAR', 'REG_SL_NO', 'GROUP_ID', 'BLOOD_GROUP', 'EMAIL', 'PHONE_NO', 'ADM_FRM_SL', 'RELIGION', 'GENDER', 'DOB', 'BIRTH_PLACE', 'FG_MONTHLY_INCOME', 'PARMANENT_ADD', 'MAILING_ADD', 'F_NAME', 'F_CELLNO', 'F_OCCU', 'M_NAME', 'M_CELLNO', 'M_OCCU', 'G_NAME', 'G_CELLNO', 'G_OCCU', 'E_NAME', 'E_CELLNO', 'E_OCCU', 'E_ADDRESS', 'E_RELATION', 'EMP_ID', 'NATIONALITY', 'MARITAL_STATUS', 'ADM_DATE', 'CAMPUS_ID', 'STD_BIRTH_OR_NID_NO', 'FATHER_NID_NO', 'MOTHER_NID_NO', 'about_me', 'IS_VERIFIED', 'profile_photo', 'show_profile_publicly', 'last_donate'];
+    protected $fillable = ['ID', 'NAME', 'slug_name', 'site_tag', 'ROLL_NO', 'REG_CODE', 'PASSWORD', 'DEPARTMENT_ID', 'BATCH_ID', 'SHIFT_ID', 'YEAR', 'REG_SL_NO', 'GROUP_ID', 'BLOOD_GROUP', 'PHONE_NO', 'ADM_FRM_SL', 'RELIGION', 'GENDER', 'DOB', 'BIRTH_PLACE', 'FG_MONTHLY_INCOME', 'PARMANENT_ADD', 'MAILING_ADD', 'F_NAME', 'F_CELLNO', 'F_OCCU', 'M_NAME', 'M_CELLNO', 'M_OCCU', 'G_NAME', 'G_CELLNO', 'G_OCCU', 'E_NAME', 'E_CELLNO', 'E_OCCU', 'E_ADDRESS', 'E_RELATION', 'EMP_ID', 'NATIONALITY', 'MARITAL_STATUS', 'ADM_DATE', 'CAMPUS_ID', 'STD_BIRTH_OR_NID_NO', 'FATHER_NID_NO', 'MOTHER_NID_NO', 'about_me', 'IS_VERIFIED', 'profile_photo', 'show_profile_publicly', 'last_donate'];
 
     protected $hidden = ['PASSWORD', 'diu_email_pass', 'wifi_password'];
 

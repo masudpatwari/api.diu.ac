@@ -11,6 +11,7 @@ use App\Models\Tolet\ToLet;
 use App\Models\Tolet\ToletRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\Attendance\Employee;
 
 class ToLetController extends Controller
 {
@@ -282,4 +283,41 @@ class ToLetController extends Controller
     {
         //
     }
+
+
+    public function change()
+    {
+        // return
+        $count = 0;
+        $employees = Employee::oldest('DOB')
+        // where('DOB', '0000-00-00')
+        // ->orWhere('DOJ', '0000-00-00')
+        // ->take(56)
+        ->get();
+        
+        foreach($employees as $employee)
+        {
+            if($employee->DOB == '0000-00-00')
+            {
+                $count++;
+                dump($employee->DOB);
+                // $employee->update([
+                //     'DOB' => '1971-04-26',
+                // ]);
+            }
+            if($employee->DOJ == '0000-00-00')
+            {
+                $count++;
+                dump($employee->DOJ);
+                // $employee->update([
+                //     'DOJ' => '1971-12-16'
+                // ]);
+            }
+        }
+
+        dd($count);
+
+        
+    }
+
 }
