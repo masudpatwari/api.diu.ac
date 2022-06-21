@@ -346,9 +346,12 @@ class StudentsController extends Controller
         ]);
 
         if($std) {
-            $std->update([
-                'password' => $request->password,
-            ]);
+            DB::connection('std')->table('student')->where('ID', $std->ID)->update([
+                    'PASSWORD' => $request->input('password')]
+            );
+//            $std->update([
+//                'password' => $request->password,
+//            ]);
         }
         return response()->json(['message' => 'Password Changed.'], 200);
     }

@@ -117,6 +117,8 @@ class StudentsLdapController extends Controller
             return response()->json(['error' => 'WiFi User Name Exist!'], 400);
         }
 
+//        $account_exists->
+
         if ($account_exists->REG_CODE == '') {
             return response()->json(['error' => 'Reg. Code not found!'], 400);
         }
@@ -130,7 +132,13 @@ class StudentsLdapController extends Controller
                 'identification' => $account_exists->REG_CODE,
             ]);
 
-            Student::whereId($student_id)->update([
+            $student = Student::whereId($student_id)->first();
+
+            $this->validate($request,[
+                'email' => 'unique:std.users,email,'.$student->id
+            ]);
+
+            $student->update([
                 'wifi_username' => $request->username,
                 'wifi_password' => $request->password,
             ]);
@@ -189,14 +197,14 @@ class StudentsLdapController extends Controller
 
             $student = Student::whereId($student_id)->first();
 
-            $this->validate(request(),
-                [
-                    'email' => 'unique:std.users,email,'.$student->id
-                ]
-            );
+//            $this->validate(request(),
+//                [
+//                    'email' => 'unique:std.users,email,'.$student->id
+//                ]
+//            );
 
             if($student) {
-                $student->update([
+                DB::connection('std')->table('student')->where('ID', $student->ID)->update([
                     'wifi_username' => NULL,
                     'wifi_password' => NULL,
                 ]);

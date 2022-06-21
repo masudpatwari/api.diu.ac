@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Rules\CheckStrongPassword;
 use App\Models\STD\Student;
 use App\Http\Resources\StudentResource;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ResetStudentPassword;
@@ -230,21 +231,40 @@ class StudentsAuthController extends Controller
             ]
         );
 
+
         $explode_token = $this->explode_token( $token );
         $update = Student::where('ID', $explode_token['id'])->first();
-        
+
+//return $update;
         if($update){
 
             $this->validate($request,
                 [
-                    'email' => 'unique:std.users,email,'.$update->id
+                    'email' => 'unique:std.users,email,'.$update->ID
                 ]
             );
 
-            $update->update([
-                'PASSWORD' => $request->password
-            ]);
+
+            try {
+                DB::connection('std')->beginTransaction();
+
+                DB::connection('std')->table('student')->where('ID', $update->ID)->update([
+                    'PASSWORD' => $request->input('password')]
+                );
+
+                DB::connection('std')->commit();
+
+            }catch (\Exception $exception){
+                DB::connection('std')->rollBack();
+
+
+                return response()->json(['error' => $exception->getMessage()], 400);
+            }
+
         }
+
+//        dd($update);
+//        dd($update);
 
         if (!empty($update)) {
             return response()->json(['success' => 'Password update successfull'], 201);
@@ -282,13 +302,14 @@ class StudentsAuthController extends Controller
             if( $student->PASSWORD == $explode_token['password']){
 
 
-                $this->validate(request(),[
-                    'email' => 'unique:std.users,email,'.$student->id
-                ]);
+//                $this->validate(request(),[
+//                    'email' => 'unique:std.users,email,'.$student->id
+//                ]);
 
-                Student::where('ID', $student->ID)->update([
+                DB::connection('std')->table('student')->where('ID', $student->ID)->update([
                     'IS_VERIFIED' => 1
                 ]);
+
                 return response()->json(['success' => 'Your Account verification successfull'], 201);
             }
             return response()->json(['error' => 'Token verification Failed! Try again.'], 404);
