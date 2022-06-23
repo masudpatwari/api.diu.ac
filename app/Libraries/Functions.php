@@ -132,7 +132,7 @@ function getSystemSettingValue($key){
     return $setting->value;
 }
 
-function checkPermissionArray( $routes_array, $permissions_array )
+function checkPermissionArray($routes_array, $permissions_array )
 {
     $count = count($permissions_array);
     foreach ($permissions_array as $key => $value) {

@@ -475,20 +475,26 @@ class StudentsController extends Controller
         $current_email = $request->current_email;
         $to_email = $request->to_email;
 
-        $student = Student::where('REG_CODE', $reg_code)->where('EMAIL', $current_email)->first();
+        $student = DB::connection('std')->table("student")->where('REG_CODE', $reg_code)->where('EMAIL',
+            $current_email)
+            ->first();
 
 
         if (!$student) {
             return response()->json(['error' => 'Student Not found with Reg. Code and Email!'], 400);
         }
 
-        $this->validate($request,[
-            'email' => 'unique:std.users,email,'.$student->id
-        ]);
-
-        $student->update([
-            'email' => $to_email
-        ]);
+//        $this->validate($request,[
+//            'email' => 'unique:std.users,email,'.$student->id
+//        ]);
+        DB::connection('std')->table("student")->where('REG_CODE', $reg_code)->where('EMAIL',
+            $current_email)
+            ->update([
+                'email' => $to_email
+            ]);
+//        $student->update([
+//            'email' => $to_email
+//        ]);
 
         //        return $student;
         return response()->json(['message' => 'Student Email Change from:' . $current_email . ' to : ' . $to_email], 200);
@@ -742,7 +748,7 @@ class StudentsController extends Controller
                 'otp' => null
             ]);
         } else {
-            return response(['error' => 'Please Enter currect otp number'], 400);
+            return response(['error' => 'Please Enter correct otp number'], 400);
         }
     }
     public function updateEmail(Request $request, $id)
@@ -753,7 +759,7 @@ class StudentsController extends Controller
 
         ]);
         $email = $request->get("email");
-        Student::where('id', $id)->update([
+        DB::connection('std')->table("student")->where('id', $id)->update([
             'EMAIL' => $email
         ]);
     }

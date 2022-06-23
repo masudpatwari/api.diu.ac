@@ -5,9 +5,8 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
     $router->group(['middleware' => ['CommonAccessMiddleware']], function () use ($router) {
 
 
-        //Form
 
-        
+
 
         $router->group(['prefix' => 'importSms', 'namespace' => 'ImportSms',], function () use ($router) {
             $router->get('import-message', ['as' => 'importSms.importMessageIndex', 'uses' => 'ImportSmsController@importMessageIndex']);
@@ -335,6 +334,36 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
             $router->get('whats_app_messages', [
                 'as' => 'whats_app.index',
                 'uses' => 'WhatsAppController@index'
+            ]);
+
+
+            $router->get('load-templates/{type}', [
+                'as' => 'whats_app.loadTemplate',
+                'uses' => 'WhatsAppController@loadTemplate'
+            ]);
+
+
+            $router->get('get-templates', [
+                'as' => 'whats_app.getTemplates',
+                'uses' => 'WhatsAppController@getTemplates'
+            ]);
+
+
+            $router->post('store-template', [
+                'as' => 'whats_app.templateStore',
+                'uses' => 'WhatsAppTemplateController@store'
+            ]);
+
+
+            $router->post('update-template/{id}', [
+                'as' => 'whats_app.templateUpdate',
+                'uses' => 'WhatsAppTemplateController@update'
+            ]);
+
+
+            $router->post('delete-template/{id}', [
+                'as' => 'whats_app.templateDelete',
+                'uses' => 'WhatsAppTemplateController@delete'
             ]);
 
 

@@ -136,9 +136,8 @@ class AccessControlController extends Controller
 
             return response()->json(['error' => 'Update Failed.'], 400);
         }
+
         return response()->json(['error' => 'Invalid permissions.'], 400);
-
-
     }
 
     public function assign_employee_role(Request $request)
@@ -330,7 +329,7 @@ class AccessControlController extends Controller
                     }
                 }
                 if ($layout == 'liaison_officer') {
-                    if ($permission_modules[0] != 'liaison_officer' && $permission_modules[0] != 'liaison_student' && $permission_modules[0] != 'liaison_bill' && $permission_modules[0] != 'liaison_bill_student' && $permission_modules[0] != 'liaison-programs' && $permission_modules[0] != 'admissionInActiveBatch' && $permission_modules[0] != 'registrationSummary' && $permission_modules[0] != 'InternationalStudentDoc' && $permission_modules[0] != 'internationalStudent' && $permission_modules[0] != 'batch' && $permission_modules[0] != 'goip') {
+                    if ($permission_modules[0] != 'liaison_officer' && $permission_modules[0] != 'liaison_student'  && $permission_modules[0] != 'whats_app'   && $permission_modules[0] != 'admissionForm'  && $permission_modules[0] != 'englishBookForm' && $permission_modules[0] != 'liaison_bill' && $permission_modules[0] != 'liaison_bill_student' && $permission_modules[0] != 'liaison-programs' && $permission_modules[0] != 'admissionInActiveBatch' && $permission_modules[0] != 'registrationSummary' && $permission_modules[0] != 'InternationalStudentDoc' && $permission_modules[0] != 'internationalStudent' && $permission_modules[0] != 'batch' && $permission_modules[0] != 'goip') {
                         array_push($non_module_permissions, $old_permission);
                     }
                 }

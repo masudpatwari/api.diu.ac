@@ -57,7 +57,7 @@ class StudentsAuthController extends Controller
         $std = $this->traits_get_student_by_id( $id1 );
 
         try{
-            $student = Student::create([
+            $data = [
                 'ID' => $std->id,
                 'NAME' => $std->name,
                 'ROLL_NO' => $std->roll_no,
@@ -102,7 +102,9 @@ class StudentsAuthController extends Controller
                 'STD_BIRTH_OR_NID_NO' => $std->std_birth_or_nid_no,
                 'FATHER_NID_NO' => $std->father_nid_no,
                 'MOTHER_NID_NO' => $std->mother_nid_no,
-            ]);
+            ];
+
+            $student = Student::create($data);
 
             $token = $this->generate_token( $student );
 
