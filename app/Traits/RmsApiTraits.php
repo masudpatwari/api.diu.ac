@@ -1183,6 +1183,22 @@ trait RmsApiTraits
         return false;
     }
 
+    public function studentEmailUpdate($data)
+    {
+        $url = env('RMS_API_URL') . '/admission/student-email-update';
+
+        $response = Curl::to($url)
+            ->withData($data)
+            ->returnResponseObject()
+            ->asJson(true)
+            ->post();
+
+        if ($response->status == 200) {
+            return $response->content;
+        }
+        return false;
+    }
+
 
     public function studentSearch($data)
     {

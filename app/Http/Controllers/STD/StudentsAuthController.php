@@ -56,6 +56,14 @@ class StudentsAuthController extends Controller
 
         $std = $this->traits_get_student_by_id( $id1 );
 
+        if(empty($std->email))
+        {
+            $data['email'] = $request->email;
+            $data['id'] = $std->id;
+
+            $this->studentEmailUpdate($data);
+        }
+
         try{
             $data = [
                 'ID' => $std->id,
