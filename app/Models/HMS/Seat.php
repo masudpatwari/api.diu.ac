@@ -1,18 +1,22 @@
 <?php
 
 namespace App\Models\HMS;
-use App\Models\HMS\Room;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Seat extends Model
 {
-    protected $connection = 'hms';
+    protected $connection = 'hostel';
 
     public $timestamps = false;      
     
     protected $guarded = ['id'];
  
+
+    public function hostel()
+    {
+    	return $this->belongsTo(Hostel::class, 'hostel_id');
+    }
      
     public function room()
     {

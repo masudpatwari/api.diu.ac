@@ -28,7 +28,7 @@ class VitalPersonType extends Model
 
     public function vitalPersons()
     {
-        return $this->hasMany(VitalPerson::class, 'vital_person_type_id')->active();
+        return $this->hasMany(VitalPerson::class, 'vital_person_type_id')->oldest('rank')->active();
     }
 
 }

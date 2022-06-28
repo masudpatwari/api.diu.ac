@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Rent extends Model
 {
-    protected $connection = 'hms';
+    protected $connection = 'hostel';
 
     public $timestamps = false;
+    
+    protected $guarded = ['id'];
 }

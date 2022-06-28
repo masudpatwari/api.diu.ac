@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
-    protected $connection = 'hms';
+    protected $connection = 'hostel';
 
     public $timestamps = false;
 }

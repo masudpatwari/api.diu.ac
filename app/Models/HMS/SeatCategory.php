@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models\HMS;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Transaction extends Model
+class SeatCategory extends Model
 {
     protected $connection = 'hostel';
 
-    protected $guarded = ['id'];
+    public $timestamps = false;
 }

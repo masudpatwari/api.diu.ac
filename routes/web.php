@@ -873,6 +873,32 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
         $router->group(['prefix' => 'employee', 'namespace' => 'CMS',], function () use ($router) {
             $router->GET('microsoft-employee-account-token', ['as' => 'microsoftEmployee.index', 'uses' => 'MicrosoftController@index']);
         });
+
+
+        $router->group(['as' => 'hostel.', 'prefix' => 'hostel', 'namespace' => 'HMS',], function () use ($router) {
+            $router->GET('/', ['as' => 'index', 'uses' => 'HostelController@index']);
+            $router->GET('/rooms/{hostel}', ['as' => 'index', 'uses' => 'HostelController@rooms']);
+            $router->GET('/{id}/show', ['as' => 'show', 'uses' => 'HostelController@show']);
+            $router->POST('/', ['as' => 'hostelSave', 'uses' => 'HostelController@store']);
+            $router->POST('/{id}/update', ['as' => 'update', 'uses' => 'HostelController@updateData']);
+            $router->DELETE('/{id}', ['as' => 'destroy', 'uses' => 'HostelController@delete']);
+
+            $router->group(['as' => 'room.', 'prefix' => 'room'], function () use ($router) {
+                $router->GET('/', ['as' => 'index', 'uses' => 'RoomController@index']);
+                $router->GET('/{id}', ['as' => 'show', 'uses' => 'RoomController@show']);
+                $router->DELETE('/{id}', ['as' => 'destroy', 'uses' => 'RoomController@delete']);
+                $router->POST('/', ['as' => 'roomSave', 'uses' => 'RoomController@store']);
+                $router->POST('/{id}/update', ['as' => 'update', 'uses' => 'RoomController@update']);
+            });
+
+            $router->group(['as' => 'seat.', 'prefix' => 'seat'], function () use ($router) {
+                $router->GET('/', ['as' => 'index', 'uses' => 'SeatController@index']);
+                $router->GET('/{id}/show', ['as' => 'show', 'uses' => 'SeatController@show']);
+                $router->DELETE('/{id}', ['as' => 'destroy', 'uses' => 'SeatController@delete']);
+                $router->POST('/', ['as' => 'seatSave', 'uses' => 'SeatController@store']);
+                $router->POST('/{id}/update', ['as' => 'update', 'uses' => 'SeatController@update']);
+            });
+        });
     });
 
     $router->group(['middleware' => ['LeaveAttendanceMiddleware']], function () use ($router) {

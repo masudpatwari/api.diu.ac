@@ -173,7 +173,8 @@ class DiuAcController extends Controller
             ->orderBy('serial_no')
             ->get();
 
-        $vitalPerson = VitalPerson::active()->get();
+//        return
+        $vitalPerson = VitalPerson::active()->oldest('rank')->get();
 
         $data = [
             'vitalPersonType' => $vitalPersonType,

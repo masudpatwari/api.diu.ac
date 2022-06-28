@@ -13,7 +13,7 @@ class RoomController extends Controller
     {
     	$rooms = Room::with('hostel')->get();
 
- 	return  response()->json($rooms);
+ 	    return  response()->json($rooms);
     }
 
     function store(Request $request)
@@ -23,7 +23,6 @@ class RoomController extends Controller
                 'hostel_id' => 'required|numeric',
                 'room_number'  => 'required',
                 'capacity'      => 'required|numeric',
-                'user_id'   => 'required',
             ],
             [
                 'hostel_id.required'     => 'Hostel name is required.',
@@ -31,18 +30,12 @@ class RoomController extends Controller
                 'room_number.required' => 'Room Number is required.',
                 'capacity.required'     => 'Room capacity is required.',
                 'capacity.numeric'     => 'Room number must be numeric.',
-                'user_id.required'  => 'You are not authenticated to create',
             ]
         );
 
-        $info = [
-            'hostel_id'          => $data['hostel_id'],
-            'room_number'      => $data['room_number'],
-            'capacity'          => $data['capacity'],
-            'created_by'    => $data['user_id'],
-        ];
+        $data['created_by'] = $request->auth->id;
 
-        $room = Room::create($info);
+        $room = Room::create($data);
 
         if (!empty($room->id)) {
             return response()->json($room, 201);
@@ -63,8 +56,6 @@ class RoomController extends Controller
                 'hostel_id' => 'required|numeric',
                 'room_number'  => 'required',
                 'capacity'      => 'required|numeric',
-                'created_by'    => 'required',
-                'updated_by'    => 'required',
             ],
             [
                 'hostel_id.required'     => 'Hostel name is required.',
@@ -72,12 +63,13 @@ class RoomController extends Controller
                 'room_number.required' => 'Room Number is required.',
                 'capacity.required'     => 'Room capacity is required.',
                 'capacity.numeric'     => 'Room number must be numeric.',
-                'created_by.required'   => 'You are not authenticated to create',
-                'updated_by.required'   => 'You are not authenticated to update',
             ]
         );
 
         $room = Room::find($id);
+
+        $data['created_by'] = $room->created_by;
+        $data['updated_by'] = $request->auth->id;
 
         $room->update($data);
 
@@ -92,10 +84,14 @@ class RoomController extends Controller
     {
         $room = Room::find($id);
         if (!empty($room)) {
-            if ($room->delete()) {
-                return response()->json(NULL, 204);
+
+            try {
+                $room->delete();
+                return response()->json(['Delete Successful.'], 200);
+
+            }catch (\Exception $e){
+                return response()->json(['error' => $e->getMessage()], 400);
             }
-            return response()->json(['error' => 'Delete Failed.'], 400);
         }
         return response()->json(NULL, 404);
     }

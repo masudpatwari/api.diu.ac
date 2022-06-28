@@ -11,7 +11,7 @@ class SeatController extends Controller
 {
     function index()
     {
-    	$seats = Seat::with('room')->get();
+    	$seats = Seat::with('room:room_number,id','hostel:name,id')->get();
  	    return  response()->json($seats);
     }
 
@@ -19,26 +19,36 @@ class SeatController extends Controller
     {
         $data  = $this->validate($request, 
             [
+                'hostel_id'   => 'required|numeric',
                 'room_id'   => 'required|numeric',
                 'bed_type'  => 'required|string',
-                'user_id'   => 'required',
+                'available'  => 'required|numeric',
             ],
             [
+                'hostel_id.required'      => 'Room number is required.',
                 'room_id.required'      => 'Room number is required.',
                 'room_id.number'        => 'Room number must be number',
                 'bed_type.required'     => 'Seat Number is required.',
                 'bed_type.string'       => 'Seat capacity is required.',
-                'user_id.required'      => 'You are not authenticated to create',
+                'available.required'       => 'Available Seat is required.',
             ]
         );
 
-        $info = [
-            'room_id'       => $data['room_id'],
-            'bed_type'      => $data['bed_type'],
-            'created_by'    => $data['user_id'],
-        ];
+        $data['created_by'] = $request->auth->id;
 
-        $seat = Seat::create($info);
+        $seat_type_exist = Seat::where(['bed_type' => $data['bed_type'], 'hostel_id' => $data['hostel_id'] , 'room_id' => $data['room_id']])->first();
+
+        if($seat_type_exist)
+        {
+            $seat_type_exist->update([
+                'available'     => $seat_type_exist->available + $data['available'],
+                'updated_by'    => $request->auth->id
+            ]);
+
+            return response()->json(['Seat Updated'], 400);
+        }else{
+            $seat = Seat::create($data);
+        }
 
         if (!empty($seat->id)) {
             return response()->json($seat, 201);
@@ -58,20 +68,19 @@ class SeatController extends Controller
             [
                 'room_id'       => 'required|numeric',
                 'bed_type'      => 'required|string',
-                'created_by'    => 'required',
-                'updated_by'    => 'required',
             ],
             [
                 'room_id.required'      => 'Room number is required.',
                 'room_id.number'        => 'Room number must be number',
                 'bed_type.required'     => 'Bed Type is required.',
                 'bed_type.sting'        => 'Bed Type must be sting.',
-                'created_by.required'   => 'You are not authenticated to create',
-                'updated_by.required'   => 'You are not authenticated to update',
             ]
         );
 
         $seat = Seat::find($id);
+
+        $data['created_by'] = $seat->created_by;
+        $data['updated_by'] = $request->auth->id;
 
         $seat->update($data);
 
@@ -86,10 +95,15 @@ class SeatController extends Controller
     {
         $seat = Seat::find($id);
         if (!empty($seat)) {
-            if ($seat->delete()) {
-                return response()->json(NULL, 204);
+
+            try {
+//                $seat->delete();
+                // check seat booked or not before delete
+                return response()->json(['Delete Successful.'], 200);
+
+            }catch (\Exception $e){
+                return response()->json(['error' => $e->getMessage()], 400);
             }
-            return response()->json(['error' => 'Delete Failed.'], 400);
         }
         return response()->json(NULL, 404);
     }

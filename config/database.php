@@ -233,7 +233,7 @@ return [
         
         
 
-        'hms' => [
+        'hostel' => [
             'driver' => 'mysql',
             'host' => env('DB_HMS_HOST', ''),
             'port' => env('DB_HMS_PORT', ''),
