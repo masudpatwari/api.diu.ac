@@ -320,7 +320,7 @@ class StudentsAuthController extends Controller
                     'IS_VERIFIED' => 1
                 ]);
 
-                return response()->json(['success' => 'Your Account verification successfull'], 201);
+                return response()->json(['success' => 'Your Account verification successfully'], 201);
             }
             return response()->json(['error' => 'Token verification Failed! Try again.'], 404);
         }

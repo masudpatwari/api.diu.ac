@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Models\HMS;
-use App\Models\Hostel;
-use App\Models\Room;
+use App\Models\HMS\Hostel;
+use App\Models\HMS\Room;
 
 use Illuminate\Database\Eloquent\Model;
 

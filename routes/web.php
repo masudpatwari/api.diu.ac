@@ -262,11 +262,6 @@ $router->PUT('auth/password/reset', ['uses' => 'ForgetPasswordResetController@pa
 // });
 
 
-$router->GET('/booking', 'HMS\BookingController@index');
-$router->GET('/booking/{id}', 'HMS\BookingController@show');
-$router->PUT('/booking/{id}', 'HMS\BookingController@update');
-$router->DELETE('booking/{id}', 'HMS\BookingController@delete');
-$router->POST('/booking', 'HMS\BookingController@store');
 
 // Student
 $router->POST('student/registration', ['as' => 'students.registration', 'uses' => 'STD\StudentsAuthController@registration']);
@@ -875,31 +870,10 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
         });
 
 
-        $router->group(['as' => 'hostel.', 'prefix' => 'hostel', 'namespace' => 'HMS',], function () use ($router) {
-            $router->GET('/', ['as' => 'index', 'uses' => 'HostelController@index']);
-            $router->GET('/rooms/{hostel}', ['as' => 'index', 'uses' => 'HostelController@rooms']);
-            $router->GET('/{id}/show', ['as' => 'show', 'uses' => 'HostelController@show']);
-            $router->POST('/', ['as' => 'hostelSave', 'uses' => 'HostelController@store']);
-            $router->POST('/{id}/update', ['as' => 'update', 'uses' => 'HostelController@updateData']);
-            $router->DELETE('/{id}', ['as' => 'destroy', 'uses' => 'HostelController@delete']);
-
-            $router->group(['as' => 'room.', 'prefix' => 'room'], function () use ($router) {
-                $router->GET('/', ['as' => 'index', 'uses' => 'RoomController@index']);
-                $router->GET('/{id}', ['as' => 'show', 'uses' => 'RoomController@show']);
-                $router->DELETE('/{id}', ['as' => 'destroy', 'uses' => 'RoomController@delete']);
-                $router->POST('/', ['as' => 'roomSave', 'uses' => 'RoomController@store']);
-                $router->POST('/{id}/update', ['as' => 'update', 'uses' => 'RoomController@update']);
-            });
-
-            $router->group(['as' => 'seat.', 'prefix' => 'seat'], function () use ($router) {
-                $router->GET('/', ['as' => 'index', 'uses' => 'SeatController@index']);
-                $router->GET('/{id}/show', ['as' => 'show', 'uses' => 'SeatController@show']);
-                $router->DELETE('/{id}', ['as' => 'destroy', 'uses' => 'SeatController@delete']);
-                $router->POST('/', ['as' => 'seatSave', 'uses' => 'SeatController@store']);
-                $router->POST('/{id}/update', ['as' => 'update', 'uses' => 'SeatController@update']);
-            });
-        });
     });
+
+
+
 
     $router->group(['middleware' => ['LeaveAttendanceMiddleware']], function () use ($router) {
 
@@ -1201,7 +1175,7 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
         $router->PUT('apply-extra-fee-on-students', ['as' => 'cms_student_module.apply-extra-fee-on-students', 'uses' => 'STD\StudentsController@applyExtraFeeOnStudents']);
 
         $router->GET('students', ['as' => 'cms_student_module.students_list', 'uses' => 'STD\StudentsController@index']);
-        $router->GET('all-student/{query}', ['as' => 'cms_student_module.students.list', 'uses' => 'STD\StudentsController@all']);
+        $router->GET('all-student/{query}', ['as' => 'hostel.students_list', 'uses' => 'STD\StudentsController@all']);
         $router->GET('student/{query}', ['as' => 'cms_student_module.students.info', 'uses' => 'STD\StudentsController@info']);
         $router->POST('mailtostudents', ['as' => 'cms_student_module.send_email_to_students', 'uses' => 'MailController@store']);
 
@@ -1282,9 +1256,74 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
         $router->post('mobile-banking/manual-entry', ['as' => 'mobile_banking.save', 'uses' => 'rms\MobilebankingController@store']);
         $router->post('mobile-banking/verify-payment/{stdId}/{mobileBaningRowId}', ['as' => 'mobile_banking.save', 'uses' => 'rms\MobilebankingController@verifyPayment']);
         $router->delete('mobile-banking/{mobileBaningRowId}', ['as' => 'mobile_banking.delete', 'uses' => 'rms\MobilebankingController@deleteMobilepayment']);
+
+
+
+
     });
 });
 
+$router->group(['middleware' => ['token.auth']], function () use ($router) {
+
+    $router->group(['as' => 'hostel.', 'prefix' => 'hostel', 'namespace' => 'HMS', 'middleware' => 'CommonAccessMiddleware'], function () use
+    ($router) {
+        $router->GET('/', ['as' => 'index', 'uses' => 'HostelController@index']);
+        $router->GET('/bed-type/{id}', ['as' => 'bed_types', 'uses' => 'HostelController@bed_types']);
+        $router->GET('/rooms/{hostel}', ['as' => 'index', 'uses' => 'HostelController@rooms']);
+        $router->GET('/{id}/show', ['as' => 'show', 'uses' => 'HostelController@show']);
+        $router->POST('/', ['as' => 'hostelSave', 'uses' => 'HostelController@store']);
+    //            $router->POST('/pay', ['as' => 'pay', 'uses' => 'HostelController@pay']);
+
+        $router->POST('/{id}/update', ['as' => 'update', 'uses' => 'HostelController@updateData']);
+        $router->DELETE('/{id}', ['as' => 'destroy', 'uses' => 'HostelController@delete']);
+
+
+        $router->group(['as' => 'room.', 'prefix' => 'room'], function () use ($router) {
+            $router->GET('/', ['as' => 'index', 'uses' => 'RoomController@index']);
+            $router->GET('/available/{hostel}/{id}', ['as' => 'available.rooms', 'uses' => 'RoomController@available_rooms']);
+            $router->GET('/{id}', ['as' => 'show', 'uses' => 'RoomController@show']);
+            $router->DELETE('/{id}', ['as' => 'destroy', 'uses' => 'RoomController@delete']);
+            $router->POST('/', ['as' => 'roomSave', 'uses' => 'RoomController@store']);
+            $router->POST('/{id}/update', ['as' => 'update', 'uses' => 'RoomController@update']);
+
+        });
+
+        $router->group(['as' => 'seat.', 'prefix' => 'seat'], function () use ($router) {
+            $router->GET('/', ['as' => 'index', 'uses' => 'SeatController@index']);
+            $router->GET('/shifts', ['as' => 'shift', 'uses' => 'SeatController@shifts']);
+            $router->GET('/student-with-booking/{query}', 'SeatController@bookings');
+            $router->GET('/{id}/show', ['as' => 'show', 'uses' => 'SeatController@show']);
+            $router->GET('/type', ['as' => 'type', 'uses' => 'SeatController@bed_types']);
+            $router->DELETE('/{id}', ['as' => 'destroy', 'uses' => 'SeatController@delete']);
+            $router->DELETE('/migration/{id}', ['as' => 'migration.delete', 'uses' => 'SeatController@deleteMigration']);
+            $router->POST('/', ['as' => 'seatSave', 'uses' => 'SeatController@store']);
+            $router->POST('/migration/approve/{id}', ['as' => 'migration.approve', 'uses' => 'SeatController@approveMigration']);
+            $router->POST('/{id}/update', ['as' => 'update', 'uses' => 'SeatController@update']);
+        });
+
+        $router->group(['as' => 'rent.', 'prefix' => 'rent'], function () use ($router) {
+            $router->GET('/', ['as' => 'index', 'uses' => 'RentController@index']);
+            $router->GET('/{id}/show', ['as' => 'show', 'uses' => 'RentController@show']);
+            $router->DELETE('/{id}', ['as' => 'destroy', 'uses' => 'RentController@destroy']);
+            $router->POST('/', ['as' => 'seatSave', 'uses' => 'RentController@store']);
+            $router->PUT('/{id}/update', ['as' => 'update', 'uses' => 'RentController@update']);
+        });
+
+        $router->group(['as' => 'booking.', 'prefix' => 'booking'], function () use ($router) {
+
+            $router->GET('/', ['as' => 'index', 'uses' => 'BookingController@index']);
+            $router->POST('/migration', ['as' => 'migrate', 'uses' => 'BookingController@migrate']);
+            $router->GET('/approved', ['as' => 'show', 'uses' => 'BookingController@show']);
+            $router->PUT('/{id}', ['as' => 'bookingUpdate', 'uses' => 'BookingController@update']);
+            $router->DELETE('/{id}', ['as' => 'delete', 'uses' => 'BookingController@delete']);
+            $router->POST('/', ['as' => 'bookingStore', 'uses' => 'BookingController@store']);
+            $router->POST('/approve/{id}', ['as' => 'approve', 'uses' => 'BookingController@approve']);
+            $router->GET('/info/{query}', ['as' => 'info', 'uses' => 'BookingController@info']);
+            $router->POST('/pay', ['as' => 'payment', 'uses' => 'BookingController@pay']);
+
+        });
+    });
+});
 
 $router->GET('/confirm-mail/{token}', ['as' => 'email.confirm.from.leave', 'uses' => 'LeaveController@confirm_email']);
 
@@ -1337,6 +1376,10 @@ $router->group(['prefix' => 'bapi', 'namespace' => 'koha',], function () use ($r
     $router->GET('profile/rating-category', ['as' => 'public.ratingCategory', 'uses' => 'KohaController@ratingCategory']);
     $router->GET('profile/profile-rating-details', ['as' => 'public.ratingDetails', 'uses' => 'KohaController@ratingDetails']);
 });
+
+
+
+
 
 
 $router->group(['prefix' => 'whats-app', 'namespace' => 'WhatsApp',], function () use ($router) {

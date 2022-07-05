@@ -220,7 +220,7 @@ function getAllRouteNameAsArray()
     if (count($routeNames)) {
         return $routeNames;
     }
-
+//dd(Route::getRoutes());
 	$avoidableMiddlewares = ['token.auth', 'CommonAccessMiddleware'];
 
 	foreach (Route::getRoutes() as $key=>$route){

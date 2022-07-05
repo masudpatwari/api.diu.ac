@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Models\HMS;
-use App\Models\Seat;
-use App\Models\Room;
 
+
+use App\Models\HMS\Room;
+use App\Models\HMS\Seat;
 use Illuminate\Database\Eloquent\Model;
 
 class Shift extends Model
@@ -25,8 +26,8 @@ class Shift extends Model
         return $this->belongsTo(Seat::class, 'to');
     }
 
-    public function room()
-    {
-        return $this->belongsTo(Room::class, 'to');
-    }
+     public function room()
+     {
+         return $this->belongsTo(Room::class, 'room_id');
+     }
 }

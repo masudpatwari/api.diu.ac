@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models\HMS;
+
 use App\Models\HMS\Hostel;
 
 use Illuminate\Database\Eloquent\Model;

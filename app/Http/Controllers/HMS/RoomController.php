@@ -5,6 +5,7 @@ namespace App\Http\Controllers\HMS;
 
 use App\Http\Controllers\Controller;
 use App\Models\HMS\Room;
+use App\Models\HMS\Seat;
 use Illuminate\Http\Request;
 
 class RoomController extends Controller
@@ -18,6 +19,7 @@ class RoomController extends Controller
 
     function store(Request $request)
     {
+
         $data  = $this->validate($request, 
             [
                 'hostel_id' => 'required|numeric',
@@ -94,5 +96,23 @@ class RoomController extends Controller
             }
         }
         return response()->json(NULL, 404);
+    }
+
+
+    function available_rooms($hostel, $bed_type)
+    {
+        $bed_type = str_replace('_', ' ', $bed_type);
+
+        $seats  = Seat::with('room')
+            ->where(['hostel_id' => $hostel, 'bed_type' => $bed_type])
+            ->where('available', '<>', 0)
+            ->get();
+
+        if($seats)
+        {
+            return response()->json($seats->pluck('room', 'id'));
+        }else {
+            return response()->json(['error' => 'No Rooms Available.'], 404);
+        }
     }
 }

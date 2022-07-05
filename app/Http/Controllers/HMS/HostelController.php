@@ -6,6 +6,7 @@ namespace App\Http\Controllers\HMS;
 use App\Http\Controllers\Controller;
 use App\Models\HMS\Hostel;
 use App\Models\HMS\Room;
+use App\Models\HMS\Seat;
 use Illuminate\Http\Request;
 
 class HostelController extends Controller
@@ -175,7 +176,7 @@ class HostelController extends Controller
 
             try {
                 $hostel->delete();
-                return response()->json(['Delete Successful.'], 200);
+                return response()->json(['Deleted Successfully.'], 200);
 
             }catch (\Exception $e){
                 return response()->json(['error' => $e->getMessage()], 400);
@@ -183,6 +184,16 @@ class HostelController extends Controller
         }
         return response()->json(NULL, 404);
     }
+
+
+
+    function bed_types($id)
+    {
+        $seats      = Seat::where('hostel_id', $id)->where('available', '<>', 0)->get();
+        $bed_types  = $seats->groupBy('bed_type');
+        return  response()->json($bed_types->keys());
+    }
+
 
 
     public function rooms($hostel)
