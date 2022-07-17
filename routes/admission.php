@@ -310,6 +310,11 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
                 'uses' => 'StudentRegCardStatusController@index'
             ]);
 
+            $router->get('student-reg-card-print/{department_id}', [
+                'as' => 'studentRegCardStatus.print',
+                'uses' => 'StudentRegCardStatusController@print'
+            ]);
+
             $router->put('student-reg-card-status/{batch_id}', [
                 'as' => 'studentRegCardStatus.update',
                 'uses' => 'StudentRegCardStatusController@update'
