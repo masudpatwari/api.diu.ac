@@ -139,7 +139,6 @@ class BookingController extends Controller
             ->orWhere('reg_no', 'LIKE' , "%{$query}")
             ->first();
 
-//return
         $shift = Shift::where('student_name',  $query)
             ->orWhere('reg_no', $query)
             ->orWhere('reg_no', 'LIKE' , "%{$query}")
@@ -151,7 +150,6 @@ class BookingController extends Controller
         {
             $rent_after_shift = $this->rentPay($shift->shift_date, $shift->bed_type);
 
-//            $data['booking'] = Booking::find($shift->booking_id);
 
             $data['booking_date'] = Carbon::parse($data['booking']->issue_date)->format('d M Y');
 
@@ -159,7 +157,6 @@ class BookingController extends Controller
 
             $data['total_due'] = $shift->due_amount + $rent_after_shift - $paid_amount;
 
-//            return $shift->booking_id;
             return response()->json($data, 201);
 
         }else {
@@ -178,89 +175,70 @@ class BookingController extends Controller
                 ->oldest('start_date')->get();
 
 
-//            return [$data, $all_rent];
             if($all_rent->count() > 1)
             {
                 $effected_rent = $all_rent->filter(function($value, $key) use($booking, $issue_date) {
-                    if ($value['end_date'] >= $issue_date) {
-                        return true;
-                    }else if($value['end_date'] == null) {
+                    if ($value['end_date'] >= $issue_date && $value['start_date'] <= Carbon::now()->format('Y-m-d')) {
                         return true;
                     }
-                });
+                })->toArray();
 
+//                dd($effected_rent, $issue_date);
 
                 foreach($effected_rent as $key => $partial_rent)
                 {
-                    $row_rent = $partial_rent->whereDate('start_date', '<=', $issue_date)
-                        ->whereDate('end_date', '>=', $issue_date)->first();
+                    $row_rent = collect($partial_rent)->where('start_date', '<=', $issue_date);
 
-                    if(($partial_rent->end_date) != null and $partial_rent->start_date <= $issue_date and $partial_rent->end_date >= $issue_date)
+                    if(($partial_rent['end_date']) != null and $partial_rent['start_date'] <= $issue_date and $partial_rent['end_date'] >= $issue_date)
                     {
-                        // return response()->json($partial_rent, 201);
-                        $diff_in_months = $this->monthsDifference($issue_date, $partial_rent->end_date);
+
+                        $diff_in_months = $this->monthsDifference($issue_date, $partial_rent['end_date']);
+
 
                         if($diff_in_months == 0)
                         {
                             $from = Carbon::createFromFormat('Y-m-d', $issue_date);
-                            $to = Carbon::createFromFormat('Y-m-d', $partial_rent->end_date);
+                            $to = Carbon::createFromFormat('Y-m-d', $partial_rent['end_date']);
                             $days = $to->diffInDays($from);
 
-                            $new_rent =  ($diff_in_months + 1) * $partial_rent->monthly_fee;
+                            $new_rent =  ($diff_in_months + 1) * $partial_rent['monthly_fee'];
 
                         }else {
-                            $new_rent =  ($diff_in_months) * $partial_rent->monthly_fee;
+                            $new_rent =  ($diff_in_months + 1) * $partial_rent['monthly_fee'];
                         }
-
-                        array_push($rent, $new_rent);
-
-                    }else if(($partial_rent->end_date) != null and $partial_rent->start_date >= $issue_date and $partial_rent->end_date >= $issue_date)
-                    {
-
-                        $diff_in_months = $this->monthsDifference($issue_date, $partial_rent->end_date);
-
-                        // return response()->json([$partial_rent, $diff_in_months], 201);
-                        if($diff_in_months == 0)
-                        {
-                            $new_rent =  ($diff_in_months + 1) * $partial_rent->monthly_fee;
-                        }else
-                        {
-                            $new_rent =  ($diff_in_months) * $partial_rent->monthly_fee;
-                        }
-
-                        // return response()->json($diff_in_months, 201);
-                        array_push($rent, $new_rent);
-
-                    }else if(($partial_rent->end_date) == null and $partial_rent->start_date < Carbon::now())
-                    {
-                        $diff_in_months = $this->monthsDifference($partial_rent->start_date, null);
-
-                        $new_rent =  ($diff_in_months + 1) * $partial_rent->monthly_fee;
 
                         array_push($rent, $new_rent);
                     }
-                    // else {
+                    else if(($partial_rent['end_date']) != null and $partial_rent['start_date'] >= $issue_date and $partial_rent['end_date'] >= $issue_date)
+                    {
+                        $diff_in_months = $this->monthsDifference($partial_rent['start_date'], Carbon::now() >
+                            $partial_rent['end_date'] ? $partial_rent['end_date'] : Carbon::now()->format('Y-m-d'));
 
-                    //     $date1 = Carbon::createFromFormat('Y-m-d', $partial_rent->start_date);
-                    //     $date2 = now();
+                        if($diff_in_months == 0)
+                        {
+                            $new_rent =  ($diff_in_months + 1) * $partial_rent['monthly_fee'];
+                        }else
+                        {
+                            $new_rent =  ($diff_in_months+1) * $partial_rent['monthly_fee'];
+                        }
 
-                    //     $result = $date1->gt($date2);
-                    //     // return response()->json($partial_rent->start_date > now(), 201);
-                    //     return response()->json($result, 201);
+                        array_push($rent, $new_rent);
+                    }
+                    else if(($partial_rent['end_date']) == null and $partial_rent['start_date'] < Carbon::now())
+                    {
+                        $diff_in_months = $this->monthsDifference($partial_rent['start_date'], null);
 
-                    // }
+                        $new_rent =  ($diff_in_months + 1) * $partial_rent['monthly_fee'];
 
-                    // $new_rent =  ($diff_in_months + 1) * $partial_rent->monthly_fee;
-
-                    // array_push($rent, $new_rent);
+                        array_push($rent, $new_rent);
+                    }
                 }
-                // return response()->json($rent, 201);
-
                 $total_rent = array_sum($rent);
             }else
             {
                 try {
                     $rent_per_month = Rent::where('bed_type', $booking->bed_type)->first()->monthly_fee;
+
 
                     $total_rent = $data['total_months'] * $rent_per_month;
 
@@ -271,7 +249,7 @@ class BookingController extends Controller
                 }
             }
 
-
+//    dd($total_rent);
             $data['paid_amount'] = Transaction::where('user_id', $booking->student_id)->sum('amount');
 
             $data['total_due'] = $total_rent - $data['paid_amount'];
@@ -434,7 +412,6 @@ class BookingController extends Controller
         $data['booking_date'] = Carbon::parse($issue_date)->format('d M, Y');
 
         $data['total_months'] = $diff_in_months + 1;
-
 
         $all_rent = Rent::where('bed_type', $bed_type)
                 ->oldest('start_date')->get();

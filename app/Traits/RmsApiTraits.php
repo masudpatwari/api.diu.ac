@@ -581,7 +581,6 @@ trait RmsApiTraits
 
     public function student_provisional_transcript_marksheet_info_by_student_id($s_id)
     {
-//        return $s_id;
         $url = env('RMS_API_URL') . '/provisional-transcript-marksheet-info/' . $s_id;
         $curl = Curl::to($url)->returnResponseObject();
         $curl->asJson(true);
