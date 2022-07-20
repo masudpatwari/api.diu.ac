@@ -94,6 +94,7 @@ $app->routeMiddleware([
     // 'CorsMiddleware' => App\Http\Middleware\CorsMiddleware::class,
 //    'CorsMiddleware' => 	Vluzrmos\LumenCors\CorsMiddleware::class,
     'CommonAccessMiddleware' => App\Http\Middleware\CommonAccessMiddleware::class,
+    'HostelAccessMiddleware' => App\Http\Middleware\HostelAccessMiddleware::class,
     'LeaveAttendanceMiddleware' => App\Http\Middleware\LeaveAttendanceMiddleware::class,
     'AdministrationMiddleware' => App\Http\Middleware\AdministrationMiddleware::class,
     'SupperUserMiddleware' => App\Http\Middleware\SupperUserMiddleware::class,

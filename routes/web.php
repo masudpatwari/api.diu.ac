@@ -1263,22 +1263,23 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
     });
 });
 
-$router->group(['middleware' => ['token.auth']], function () use ($router) {
+//$router->group(['middleware' => ['HostelAccessMiddleware']], function () use ($router) {
+$router->group(['middleware' => ['HostelAccessMiddleware', 'token.auth']], function () use ($router) {
 
-    $router->group(['as' => 'hostel.', 'prefix' => 'hostel', 'namespace' => 'HMS', 'middleware' => 'CommonAccessMiddleware'], function () use
+    $router->group(['as' => 'hostel', 'prefix' => 'hostel', 'namespace' => 'HMS'], function () use
+//    $router->group(['as' => 'hostel', 'prefix' => 'hostel', 'namespace' => 'HMS', 'middleware' => 'HostelAccessMiddleware'], function () use
     ($router) {
         $router->GET('/', ['as' => 'index', 'uses' => 'HostelController@index']);
         $router->GET('/bed-type/{id}', ['as' => 'bed_types', 'uses' => 'HostelController@bed_types']);
         $router->GET('/rooms/{hostel}', ['as' => 'index', 'uses' => 'HostelController@rooms']);
         $router->GET('/{id}/show', ['as' => 'show', 'uses' => 'HostelController@show']);
         $router->POST('/', ['as' => 'hostelSave', 'uses' => 'HostelController@store']);
-    //            $router->POST('/pay', ['as' => 'pay', 'uses' => 'HostelController@pay']);
 
         $router->POST('/{id}/update', ['as' => 'update', 'uses' => 'HostelController@updateData']);
         $router->DELETE('/{id}', ['as' => 'destroy', 'uses' => 'HostelController@delete']);
 
 
-        $router->group(['as' => 'room.', 'prefix' => 'room'], function () use ($router) {
+        $router->group(['as' => 'room', 'prefix' => 'room'], function () use ($router) {
             $router->GET('/', ['as' => 'index', 'uses' => 'RoomController@index']);
             $router->GET('/available/{hostel}/{id}', ['as' => 'available.rooms', 'uses' => 'RoomController@available_rooms']);
             $router->GET('/{id}', ['as' => 'show', 'uses' => 'RoomController@show']);
@@ -1288,7 +1289,7 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
 
         });
 
-        $router->group(['as' => 'seat.', 'prefix' => 'seat'], function () use ($router) {
+        $router->group(['as' => 'seat', 'prefix' => 'seat'], function () use ($router) {
             $router->GET('/', ['as' => 'index', 'uses' => 'SeatController@index']);
             $router->GET('/shifts', ['as' => 'shift', 'uses' => 'SeatController@shifts']);
             $router->GET('/student-with-booking/{query}', 'SeatController@bookings');
@@ -1301,7 +1302,7 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
             $router->POST('/{id}/update', ['as' => 'update', 'uses' => 'SeatController@update']);
         });
 
-        $router->group(['as' => 'rent.', 'prefix' => 'rent'], function () use ($router) {
+        $router->group(['as' => 'rent', 'prefix' => 'rent'], function () use ($router) {
             $router->GET('/', ['as' => 'index', 'uses' => 'RentController@index']);
             $router->GET('/{id}/show', ['as' => 'show', 'uses' => 'RentController@show']);
             $router->DELETE('/{id}', ['as' => 'destroy', 'uses' => 'RentController@destroy']);
@@ -1309,7 +1310,7 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
             $router->PUT('/{id}/update', ['as' => 'update', 'uses' => 'RentController@update']);
         });
 
-        $router->group(['as' => 'booking.', 'prefix' => 'booking'], function () use ($router) {
+        $router->group(['as' => 'booking', 'prefix' => 'booking'], function () use ($router) {
 
             $router->GET('/', ['as' => 'index', 'uses' => 'BookingController@index']);
             $router->POST('/migration', ['as' => 'migrate', 'uses' => 'BookingController@migrate']);

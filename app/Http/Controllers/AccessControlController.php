@@ -31,7 +31,11 @@ class AccessControlController extends Controller
             foreach ($routes as $key => $route) {
                 $explode = explode(".", $route);
                 if (isset($explode[1]) && !empty($explode[1]))
-                    $data[$explode[0]][] = $explode[1];
+                    if(isset($explode[2]) && !empty($explode[2])){
+                        $data[$explode[0]][] = $explode[1].'.'.$explode[2];
+                    }else {
+                        $data[$explode[0]][] = $explode[1];
+                    }
             }
             if (!empty($data)) {
                 return response()->json($data, 200);
@@ -54,7 +58,7 @@ class AccessControlController extends Controller
                 'role_id.exists' => 'Role name does not exists.',
             ]
         );
-        $all_routes = getAllRouteNameAsArray();
+        $all_routes = $this->fullRouteNames();
         $permissions = $request->input('permissions');
         $check = checkPermissionArray($all_routes, $permissions);
 
@@ -98,7 +102,7 @@ class AccessControlController extends Controller
         );
 
         $check = true;
-        $all_routes = getAllRouteNameAsArray();
+        $all_routes = $this->fullRouteNames();
         $permissions = $request->input('permissions');
 
         if (empty($permissions)) {
@@ -202,7 +206,7 @@ class AccessControlController extends Controller
             ]
         );
         $check = true;
-        $all_routes = getAllRouteNameAsArray();
+        $all_routes = $this->fullRouteNames();
         $employee_id = $request->input('employee_id');
         $permissions = $request->input('permissions');
         $role_array = [
@@ -251,7 +255,8 @@ class AccessControlController extends Controller
         );
 
         $check = true;
-        $all_routes = getAllRouteNameAsArray();
+        $all_routes = $this->fullRouteNames();
+
         $employee_id = $request->input('employee_id');
         $permissions = $request->input('permissions');
 
@@ -348,6 +353,11 @@ class AccessControlController extends Controller
                         array_push($non_module_permissions, $old_permission);
                     }
                 }
+                if ($layout == 'hostel_management') {
+                    if ($permission_modules[0] != 'hostel') {
+                        array_push($non_module_permissions, $old_permission);
+                    }
+                }
 
             }
         }
@@ -375,5 +385,22 @@ class AccessControlController extends Controller
 
 
         return $permission_array;
+    }
+
+    private function fullRouteNames(): array
+    {
+        $data = [];
+        $routes = getAllRouteNameAsArray();
+        foreach ($routes as $key => $route) {
+            $explode = explode(".", $route);
+            if (isset($explode[1]) && !empty($explode[1]))
+                if(isset($explode[2]) && !empty($explode[2])){
+                    $data[] = $explode[0].'.'.$explode[1].'.'.$explode[2];
+                }else {
+                    $data[] = $explode[0].'.'.$explode[1];
+                }
+        }
+
+        return $data;
     }
 }
