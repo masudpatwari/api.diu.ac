@@ -14,6 +14,7 @@ use Illuminate\Console\Command;
 use App\Models\INTL\User;
 use App\Models\INTL\ForeignStudent;
 use App\Traits\RmsApiTraits;
+use Illuminate\Support\Facades\Log;
 
 
 /**
@@ -53,13 +54,14 @@ class ImportForeignStdToIntlSite extends Command
         $insertedStudentIdArray = ForeignStudent::where('is_admitted','true')
             ->pluck('student_id')
             ->toArray();
-                        
+
 
         $studentsAsArray =  $this->traits_latest_foreign_students( $insertedStudentIdArray );
 
         if ( $studentsAsArray !== false) {
             
             $studentCollection = collect( $studentsAsArray );
+
             $this->info( $studentCollection->count() . " student are importing at " . date("Y-m-d H:i:s"));
             foreach ($studentCollection as $student) {
                 $profile = $student;
@@ -108,6 +110,7 @@ class ImportForeignStdToIntlSite extends Command
                     //DB::commit();
                 } catch (\PDOException $e) {
                     //DB::rollBack();
+                    Log::error($e->getMessage());
                 }
                 
             }

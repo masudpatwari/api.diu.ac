@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admission;
 
+use App\Employee;
 use App\Http\Controllers\Controller;
 use App\Models\WhatsApp\WhatsAppTemplate;
 use Ixudra\Curl\Facades\Curl;

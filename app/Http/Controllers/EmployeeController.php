@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 use App\classes\vestacp;
 use App\classes\diuLdap;
 use App\Models\RMS\WpEmpRms;
+use Illuminate\Support\Facades\Log;
 
 class EmployeeController extends Controller
 {
@@ -373,6 +374,9 @@ class EmployeeController extends Controller
             return response()->json($diff_result, 200);
         } catch (\PDOException $e) {
             DB::rollBack();
+            
+            Log::error($e->getMessage());
+            
             return response()->json(['error' => 'Update Failed.' . $e], 400);
         }
     }

@@ -198,7 +198,7 @@ class LdapController extends Controller
 
             $wifiInfo->delete();
 
-            $radRow = Radcheck::where('username', $request->username)->first();
+            $radRow = Radcheck::where('username', $wifiInfo->username)->first();
 
             if ( $radRow ){
                 $radRow->delete();

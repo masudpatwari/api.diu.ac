@@ -1385,5 +1385,6 @@ $router->group(['prefix' => 'bapi', 'namespace' => 'koha',], function () use ($r
 
 $router->group(['prefix' => 'whats-app', 'namespace' => 'WhatsApp',], function () use ($router) {
     $router->GET('sms-recieve', ['as' => 'whatsApp.sms.recieve', 'uses' => 'WhatsAppController@recieve']);
+    $router->GET('delete-wifi', ['as' => 'whatsApp.wifi.delete', 'uses' => 'WhatsAppController@wifiDelete']);
 
 });

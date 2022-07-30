@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\WhatsApp;
 
+use App\Employee;
 use App\Http\Controllers\Controller;
+use App\Radcheck;
 
 class WhatsAppController extends Controller
 {
@@ -49,6 +51,61 @@ class WhatsAppController extends Controller
 
     public function recieve()
     {
-        return 'ok';
+//        $duplicates = Radcheck::selectRaw("identification, COUNT(*) AS count")->groupBy("identification")->get();
+        $deactivated_employees = Employee::where('activestatus', 0)->pluck('office_email');
+
+        $deletable_mails = [];
+
+        if($deactivated_employees){
+            foreach ($deactivated_employees as $employee) {
+                if (ends_with($employee, 'diu-bd.net')){
+                    $deletable_mails[] = str_replace('diu-bd.net', 'diu.ac', $employee);
+                }else{
+                    $deletable_mails[] = $employee;
+                }
+            }
+
+
+            foreach ($deletable_mails as $mail)
+            {
+                $hasWifi = Radcheck::where('identification', $mail)->first();
+
+                if($hasWifi)
+                {
+                    $hasWifi->delete();
+                }
+            }
+        }
+
+//        $ids_six_disit = [];
+//
+//        foreach($duplicates as $duplicate)
+//        {
+//            if($duplicate->count > 1)
+//            {
+////                Radcheck::where('identification', $duplicate->identification)->oldest('id')->take
+////                ($duplicate->count-1)->delete();
+//                dd($duplicate);
+//            }
+////            if(strlen($identification) == 6){
+//////                $ids_six_disit[] = $identification;
+////
+//////                $new_mail = str_replace('diu-bd.net', 'diu.ac', $email);
+//////                return
+////                $redInfo = Radcheck::where('identification', $identification)->first()->delete();
+////
+//////                $redInfo->update([
+//////                    'identification' => $new_mail
+//////                ]);
+////            }
+//        }
+//
+        return $deletable_mails;
     }
+
+//    public function wifiDelete()
+//    {
+//        return
+//
+//    }
 }

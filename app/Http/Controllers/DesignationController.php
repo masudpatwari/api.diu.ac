@@ -50,7 +50,11 @@ class DesignationController extends Controller
             'created_by' => $request->auth->id
         ];
 
-        $designation = Designation::create($designation_array);
+        try {
+            $designation = Designation::create($designation_array);
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+        }
 
         if(!empty($designation->id))
         {
