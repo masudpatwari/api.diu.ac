@@ -23,10 +23,17 @@ use App\Models\indlkg\Users;
 use App\Models\STD\AttendanceData;
 use App\Models\WhatsApp\WhatsApp;
 
+
 $router->GET('/cache-clear', function () use ($router) {
     Cache::flush();
     return response()->json(['message' => 'Cache Clear Successfully'], 200);
 });
+
+
+// $router->GET('bapi/cache-clear', function () use ($router) {
+
+//     return response()->json(['message' => 'Bapi Cache Clear Successfully'], 200);
+// });
 
 Route::get('get-tolets', "ToLetController@test");
 // Route::get('change-dob-doj', "ToLetController@change");
@@ -355,7 +362,7 @@ $router->group(['prefix' => 'public'], function () use ($router) {
     $router->GET('std_account_info/{ora_uid}', ['as' => 'students_website.std_account_info', 'uses' => 'STD\StudentsController@student_account_info']);
     $router->GET('std_account_info_summary/{ora_uid}', ['as' => 'students_website.std_account_info_summary', 'uses' => 'STD\StudentsController@student_account_info_summary']);
 
-    $router->GET('download_regular_admit_card/{ora_uid}', ['as' => 'accounts.download_regular_admit_card', 'uses' => 'STD\RegularAdmitCardController@download_regular_admit_card']);
+    $router->GET('download_regular_admit_card/{ora_uid}/{term}', ['as' => 'accounts.download_regular_admit_card', 'uses' => 'STD\RegularAdmitCardController@download_regular_admit_card']);
     $router->GET('get_purpose_pay', ['as' => 'accounts.get_purpose_pay', 'uses' => 'STD\RegularAdmitCardController@getPurposePay']);
 
     /*
@@ -894,6 +901,7 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
         $router->GET('leaves/review[/{employee_id}]', ['as' => 'leave_application.yearly_review', 'uses' => 'LeaveController@yearly_review']);
 
         $router->GET('leaves/pending', ['as' => 'leave_application.pending_on_others_status_list', 'uses' => 'LeaveStatusController@pending']);
+        $router->GET('app/leaves/pending', ['as' => 'leave_application.pending_on_others_status_list_app', 'uses' => 'LeaveStatusController@pendingApp']);
         $router->GET('leaves/approval', ['as' => 'leave_application.waiting_for_approval_list', 'uses' => 'LeaveStatusController@approval']);
         $router->GET('leaves/approved', ['as' => 'leave_application.approved_list', 'uses' => 'LeaveStatusController@approved']);
         $router->GET('leaves/deny_by_others', ['as' => 'leave_application.deny_by_other_list', 'uses' => 'LeaveStatusController@deny_by_others']);
@@ -1384,7 +1392,11 @@ $router->group(['prefix' => 'bapi', 'namespace' => 'koha',], function () use ($r
 
 
 $router->group(['prefix' => 'whats-app', 'namespace' => 'WhatsApp',], function () use ($router) {
-    $router->GET('sms-recieve', ['as' => 'whatsApp.sms.recieve', 'uses' => 'WhatsAppController@recieve']);
-    $router->GET('delete-wifi', ['as' => 'whatsApp.wifi.delete', 'uses' => 'WhatsAppController@wifiDelete']);
+//    $router->GET('sms-recieve', ['as' => 'whatsApp.sms.recieve', 'uses' => 'WhatsAppController@recieve']);
+//    $router->GET('delete-wifi', ['as' => 'whatsApp.wifi.delete', 'uses' => 'WhatsAppController@wifiDelete']);
 
+});
+
+$router->group(['prefix' => 'bapi', 'namespace' => 'bapi',], function () use ($router) {
+   $router->GET('cache-clear', ['as' => 'cache.clear', 'uses' => 'BapiController@index']);
 });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\WhatsApp;
 use App\Employee;
 use App\Http\Controllers\Controller;
 use App\Radcheck;
+use Illuminate\Support\Facades\DB;
 
 class WhatsAppController extends Controller
 {
@@ -51,6 +52,17 @@ class WhatsAppController extends Controller
 
     public function recieve()
     {
+        return
+        $mobile_nos = DB::connection('intl')->table('local_students')->where('is_admitted', 'false')
+            ->where('created_at', '>=', '2021-01-01')
+            ->pluck('mobile_no');
+
+
+//        $number?
+
+        return  json_encode(array_values($mobile_nos->toArray()));
+        return view('pbx');
+        dd(trim('   ok   '));
 //        $duplicates = Radcheck::selectRaw("identification, COUNT(*) AS count")->groupBy("identification")->get();
         $deactivated_employees = Employee::where('activestatus', 0)->pluck('office_email');
 

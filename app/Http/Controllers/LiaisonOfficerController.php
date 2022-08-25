@@ -300,7 +300,7 @@ class LiaisonOfficerController extends Controller
 
             foreach ($stddata as $key => $std) {
 
-                $stddata[$key]['amount'] = $this->get_amount_for_officer($std);
+                $stddata[$key]['amount'] = $this->get_amount_for_officer($std) ?? 0;
 
                 if (in_array($std['id'], $printDoneStudentsArray)) {
                     $stddata[$key]['printdone'] = true;
@@ -322,7 +322,7 @@ class LiaisonOfficerController extends Controller
         try {
             $stddata = self::traits_get_single_ref_student_for_liaison_officer($studentId);
 
-            $stddata['amount'] = $this->get_amount_for_officer($stddata);
+            $stddata['amount'] = $this->get_amount_for_officer($stddata) ?? 0;
             // dd($stddata);
 
             $liaisonCodes = $stddata['ref_val'];
@@ -384,7 +384,8 @@ class LiaisonOfficerController extends Controller
     {
 
         if (strpos(trim(strtolower($stddata['nationality'])), 'ban') !== false) {
-            return Liaison_programs::where('name', $stddata['department']['name'])->first()->amount_liaison_local;
+            return optional(Liaison_programs::where('name', $stddata['department']['name'])->first())
+                ->amount_liaison_local;
 
         } else {
 

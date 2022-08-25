@@ -9,6 +9,7 @@ use App\Employee;
 use App\SystemSetting;
 use App\LeaveApplicationDenyByOther;
 use App\Http\Resources\LeaveResource;
+use App\Http\Resources\LeaveResourceFlutter;
 use App\Http\Resources\LeaveDetailsResource;
 use Illuminate\Support\Facades\DB;
 
@@ -49,6 +50,21 @@ class LeaveStatusController extends Controller
         if (!empty($leaves))
         {
             return LeaveResource::collection($leaves);
+        }
+        return response()->json(NULL, 404);
+    }
+
+    /**
+    * Leave_application status those are not approved yet. status = pending.
+    * Default this will send application list status for current_user's.
+    * if user_id passed then this will send application list status for that user.
+    */
+    public function pendingApp(Request $request)
+    {
+        $leaves = LeaveApplication::where(['status' => 'Pending', 'employee_id' => $request->auth->id])->get();
+        if (!empty($leaves))
+        {
+            return LeaveResourceFlutter::collection($leaves);
         }
         return response()->json(NULL, 404);
     }

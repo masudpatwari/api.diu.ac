@@ -25,8 +25,10 @@ class PublicController extends Controller
 
     public function get_all_course_fee()
     {
-        $course_fee = Program::select('name','short_name', 'duration', 'credit', 'semester', 'shift', 'type', 'admission_fee', 'tuition_fee')
-            ->groupBy('name','short_name', 'duration', 'credit', 'semester', 'shift', 'type', 'admission_fee', 'tuition_fee')
+        // Program::where('id', 23)->update(['tuition_fee' => 165000]);
+        // return Program::active()->get();
+        $course_fee = Program::select('name', 'short_name', 'duration', 'credit', 'semester', 'shift', 'type', 'admission_fee', 'tuition_fee')
+            ->groupBy('name', 'short_name', 'duration', 'credit', 'semester', 'shift', 'type', 'admission_fee', 'tuition_fee')
             ->orderBy('type')
             ->active()
             ->get();

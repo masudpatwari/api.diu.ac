@@ -60,7 +60,7 @@ class RegularAdmitCardController extends Controller
         }
     }
 
-    public function download_regular_admit_card($ora_uid)
+    public function download_regular_admit_card($ora_uid, $term)
     {
         $url = env('RMS_API_URL') . '/download_regular_admit_card';
         $array = [
@@ -69,11 +69,18 @@ class RegularAdmitCardController extends Controller
 
         $result = json_decode(@file_get_contents('' . env('RMS_API_URL') . '/student_account_info_summary/' . $ora_uid . '', false, self::ssl()));
 
-        if ($result->summary->total_current_due > 501) {
+        if ($term == 'final' && $result->summary->total_current_due > 501) {
 
             return response()->json(['error' => 'Please clear current due amount'], 401);
         }
 
+        //     return [$result->summary->per_semester_fee_without_scholarship];
+
+        if ($term == 'mid' && $result->summary->total_current_due > 501+($result->summary->per_semester_fee_without_scholarship/2)) {
+
+            return response()->json(['error' => 'Please clear current due amount'], 401);
+        }
+        
 
         $response = Curl::to($url)->withData($array)->returnResponseObject()->asJsonResponse(true)->post();
 
@@ -88,7 +95,12 @@ class RegularAdmitCardController extends Controller
         $token = md5($student_id);
 
         $file_path = storage_path('admit_cards/regular_admit_card_' . $student_id . '.pdf');
-        $view = view('admit_cards/regular_admit_card', $data);
+        if($term == 'mid')
+        {
+            $view = view('admit_cards/regular_mid_admit_card', $data);
+        }else{
+            $view = view('admit_cards/regular_admit_card', $data);
+        }
         $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('temp'), 'mode' => 'utf-8', 'format' => 'A4-P', 'orientation' => 'P']);
         $mpdf->SetTitle('regular_admit_card' . $token . '');
         $mpdf->WriteHTML(file_get_contents(storage_path('assets/improvement_admit_card.css')), 1);

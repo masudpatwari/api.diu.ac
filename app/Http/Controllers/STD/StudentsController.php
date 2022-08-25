@@ -475,10 +475,9 @@ class StudentsController extends Controller
         $current_email = $request->current_email;
         $to_email = $request->to_email;
 
-        $student = DB::connection('std')->table("student")->where('REG_CODE', $reg_code)->where('EMAIL',
-            $current_email)
-            ->first();
-
+         $student = DB::connection('std')->table("student")->where('REG_CODE', $reg_code)->where('EMAIL',
+             $current_email)
+             ->first();
 
         if (!$student) {
             return response()->json(['error' => 'Student Not found with Reg. Code and Email!'], 400);
@@ -490,7 +489,7 @@ class StudentsController extends Controller
         DB::connection('std')->table("student")->where('REG_CODE', $reg_code)->where('EMAIL',
             $current_email)
             ->update([
-                'email' => $to_email
+                'email' => trim($to_email)
             ]);
 //        $student->update([
 //            'email' => $to_email
@@ -760,7 +759,7 @@ class StudentsController extends Controller
         ]);
         $email = $request->get("email");
         DB::connection('std')->table("student")->where('id', $id)->update([
-            'EMAIL' => $email
+            'EMAIL' => trim($email)
         ]);
     }
 

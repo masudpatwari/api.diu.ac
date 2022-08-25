@@ -905,6 +905,9 @@ trait RmsApiTraits
             ->asJson(true)
             ->post();
 
+
+    // dd($response);
+
         if ($response->status == 200) {
             return $response->content;
         }
@@ -1077,6 +1080,7 @@ trait RmsApiTraits
             ->asJson()
             ->get();
 
+            // dd($response);
         if ($response->status == 200) {
             return $response->content;
         }
@@ -1085,6 +1089,18 @@ trait RmsApiTraits
 
     }
 
+
+
+    public function bapiCacheClear()
+    {
+        $url = env('RMS_API_URL') . '/cache-clear';
+
+        $response = Curl::to($url)
+            ->asJson(true)
+            ->get();
+
+        return true;
+    }
 
     public function fetchDepartmentWiseInactiveBatch($data)
     {

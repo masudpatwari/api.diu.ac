@@ -78,7 +78,7 @@ class StudentsAuthController extends Controller
                 'REG_SL_NO' => $std->reg_sl_no,
                 'GROUP_ID' => $std->group_id,
                 'BLOOD_GROUP' => $std->blood_group,
-                'EMAIL' => $request->email,
+                'EMAIL' => trim($request->email),
                 'PHONE_NO' => $std->phone_no,
                 'ADM_FRM_SL' => $std->adm_frm_sl,
                 'RELIGION' => $std->religion_id,
