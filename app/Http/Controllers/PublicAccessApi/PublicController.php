@@ -50,8 +50,21 @@ class PublicController extends Controller
 
     public function international_tuition_fee()
     {
+//        return Faculty::with('relPrograms')->get();
         $tuition_fees = Faculty::with(['relPrograms' => function ($query) {
-            $query->whereIn('shift', ['Day']);
+            $query->whereIn('shift', ['First Shift', 'Friday/Saturday'])->where('type', 'Masters');
+        }])->orderBy('id', 'asc')->get();
+        if (!empty($tuition_fees)) {
+            return TuitionFeeResource::collection($tuition_fees);
+        }
+        return response()->json(NULL, 404);
+    }
+
+    public function international_tuition_fee_hons()
+    {
+//        return Faculty::with('relPrograms')->get();
+        $tuition_fees = Faculty::with(['relPrograms' => function ($query) {
+            $query->whereIn('shift', ['First Shift', 'Friday/Saturday'])->where('type', 'Hons');
         }])->orderBy('id', 'asc')->get();
         if (!empty($tuition_fees)) {
             return TuitionFeeResource::collection($tuition_fees);

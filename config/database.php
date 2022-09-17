@@ -251,6 +251,24 @@ return [
 
 
 
+        'students' => [
+            'driver' => 'mysql',
+            'host' => env('DB_BSTD_HOST', ''),
+            'port' => env('DB_BSTD_PORT', ''),
+            'database' => env('DB_BSTD_DATABASE', ''),
+            'username' => env('DB_BSTD_USERNAME', ''),
+            'password' => env('DB_BSTD_PASSWORD', ''),
+            'unix_socket' => env('DB_BSTD_SOCKET', ''),
+            'charset' => env('DB_BSTD_CHARSET', 'utf8mb4'),
+            'collation' => env('DB_BSTD_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => env('DB_BSTD_PREFIX', ''),
+            'strict' => env('DB_BSTD_STRICT_MODE', true),
+            'engine' => env('DB_BSTD_ENGINE', null),
+            'timezone' => env('DB_BSTD_TIMEZONE', '+00:00'),
+        ],
+
+
+
         'test' => [
             'driver' => 'mysql',
             'host' => env('DB_TEST_HOST', ''),

@@ -339,6 +339,7 @@ $router->GET('get_all_course_fee', ['as' => 'get_all_course_fee.all_tuition_fee'
 $router->GET('faculty_tuition_fee/{faculty}', ['as' => 'tuition_fee.faculty_tuition_fee', 'uses' => 'PublicAccessApi\PublicController@faculty_tuition_fee']);
 
 $router->GET('international_tuition_fee', ['as' => 'tuition_fee.international_tuition_fee', 'uses' => 'PublicAccessApi\PublicController@international_tuition_fee']);
+$router->GET('international_tuition_fee_hons', ['as' => 'tuition_fee.international_tuition_fee_hons', 'uses' => 'PublicAccessApi\PublicController@international_tuition_fee_hons']);
 $router->GET('international_faculty_tuition_fee/{faculty}', ['as' => 'tuition_fee.international_faculty_tuition_fee', 'uses' => 'PublicAccessApi\PublicController@international_faculty_tuition_fee']);
 
 $router->group(['prefix' => 'public'], function () use ($router) {
@@ -1274,6 +1275,9 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
 //$router->group(['middleware' => ['HostelAccessMiddleware']], function () use ($router) {
 $router->group(['middleware' => ['HostelAccessMiddleware', 'token.auth']], function () use ($router) {
 
+    $router->GET('blocked-student', ['as' => 'blocked.student', 'uses' => 'bapi\BapiController@blockedStudent']);
+    $router->POST('blocked-student', ['as' => 'blocked.student.store', 'uses' => 'bapi\BapiController@store']);
+
     $router->group(['as' => 'hostel', 'prefix' => 'hostel', 'namespace' => 'HMS'], function () use
 //    $router->group(['as' => 'hostel', 'prefix' => 'hostel', 'namespace' => 'HMS', 'middleware' => 'HostelAccessMiddleware'], function () use
     ($router) {
@@ -1332,7 +1336,18 @@ $router->group(['middleware' => ['HostelAccessMiddleware', 'token.auth']], funct
 
         });
     });
+
+    $router->GET('resume-status/{id}', ['as' => 'resume.status', 'uses' => 'resume\ResumeController@status']);
+    $router->GET('resume-status-change/{id}', ['as' => 'resume.status', 'uses' => 'resume\ResumeController@statusNotEligible']);
+    $router->GET('resume-status-change-eligible/{id}', ['as' => 'resume.status', 'uses' => 'resume\ResumeController@statusEligible']);
 });
+
+
+$router->GET('resumes', ['as' => 'resumes', 'uses' => 'resume\ResumeController@index']);
+$router->POST('resume-submit', ['as' => 'resume.store', 'uses' => 'resume\ResumeController@store']);
+$router->POST('file-submit', ['as' => 'file.store', 'uses' => 'resume\ResumeController@file']);
+$router->GET('consent-resumes', ['as' => 'consent.resumes', 'uses' => 'resume\ResumeController@consent']);
+$router->GET('submit-information/{info}', ['as' => 'resume.information.submit', 'uses' => 'resume\ResumeController@informationSubmit']);
 
 $router->GET('/confirm-mail/{token}', ['as' => 'email.confirm.from.leave', 'uses' => 'LeaveController@confirm_email']);
 
@@ -1399,4 +1414,7 @@ $router->group(['prefix' => 'whats-app', 'namespace' => 'WhatsApp',], function (
 
 $router->group(['prefix' => 'bapi', 'namespace' => 'bapi',], function () use ($router) {
    $router->GET('cache-clear', ['as' => 'cache.clear', 'uses' => 'BapiController@index']);
+   $router->GET('session-assign', ['as' => 'session.assign', 'uses' => 'BapiController@session']);
+   $router->GET('supervisor-change', ['as' => 'supervisor.change', 'uses' => 'BapiController@supervisor_change']);
 });
+

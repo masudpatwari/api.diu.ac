@@ -771,7 +771,7 @@ trait RmsApiTraits
         $curl = Curl::to($url)->returnResponseObject();
         $curl->asJson(true);
         $response = $curl->get();
-
+//dd($response);
         if ($response->status == 200) {
             return $response->content;
         }
@@ -1341,6 +1341,20 @@ trait RmsApiTraits
         }
 
         return false;
+    }
+
+
+    public function traits_get_session_assign()
+    {
+
+        $url = '' . env('RMS_API_URL') . '/assign-session/';
+        $response = Curl::to($url)->returnResponseObject()->asJson(true)->get();
+        if ($response->status == 200) {
+            return $response->content;
+        }
+        return [$response];
+        throw new \Exception("Session not found", 1);
+
     }
 }
 

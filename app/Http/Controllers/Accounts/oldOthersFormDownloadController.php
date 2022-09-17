@@ -52,7 +52,7 @@ class OthersFormDownloadController extends Controller
 
 
 
-        return ['ok'];
+//        return ['ok'];
 
         if ($request->receipt_no && ($request->bank_id == 7 || $request->bank_id == 8 || $request->bank_id == 9) && \App\Models\Cms\OtherStudentForm::wherereceiptNo($request->receipt_no)->exists()) {
             return response()->json(['message' => 'This receipt no already used'], 406);
