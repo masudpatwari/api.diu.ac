@@ -304,7 +304,7 @@ class AccessControlController extends Controller
 
 
                 if ($layout == 'students_management') {
-                    if ($permission_modules[0] != 'students_website' && $permission_modules[0] != 'cms_transcript_update' && $permission_modules[0] != 'campusAdda' && $permission_modules[0] != 'microsoftStudent' && $permission_modules[0] != 'photoContest' && $permission_modules[0] != 'talentHunt' && $permission_modules[0] != 'cms_student_module' && $permission_modules[0] != 'student_doc_mtg' && $permission_modules[0] != 'newStudentAccount' && $permission_modules[0] != 'studentSession' && $permission_modules[0] != 'studentRegCardStatus' && $permission_modules[0] != 'studentImage' && $permission_modules[0] != 'student' && $permission_modules[0] != 'studentPendingIdCard' && $permission_modules[0] != 'mobile_banking') {
+                    if ($permission_modules[0] != 'students_website' && $permission_modules[0] != 'blocked' && $permission_modules[0] != 'cms_transcript_update' && $permission_modules[0] != 'campusAdda' && $permission_modules[0] != 'microsoftStudent' && $permission_modules[0] != 'photoContest' && $permission_modules[0] != 'talentHunt' && $permission_modules[0] != 'cms_student_module' && $permission_modules[0] != 'student_doc_mtg' && $permission_modules[0] != 'newStudentAccount' && $permission_modules[0] != 'studentSession' && $permission_modules[0] != 'studentRegCardStatus' && $permission_modules[0] != 'studentImage' && $permission_modules[0] != 'student' && $permission_modules[0] != 'studentPendingIdCard' && $permission_modules[0] != 'mobile_banking') {
                         array_push($non_module_permissions, $old_permission);
                     }
                 }

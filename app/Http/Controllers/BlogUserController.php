@@ -69,7 +69,9 @@ class BlogUserController extends Controller
         );
 
 
+
         $currentUser = Employee::find($request->auth->id);
+
         $realInputFields = $request->post();
         $usernameOrEmail = $currentUser->office_email;
         $nameOrDisplayName = $currentUser->name;

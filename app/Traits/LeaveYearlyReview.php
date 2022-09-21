@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\LeaveApplication;
 use Illuminate\Http\Request;
 use App\LeaveApplicationHistory;
 use App\Http\Resources\EmployeeShortDetailsResource;
@@ -273,6 +274,83 @@ trait LeaveYearlyReview
 		        'total_maternity' => $current_year_total_maternity,
 		        'total_others' => $current_year_total_others,
 		    ]
+		];
+	}
+
+	public function leave_yearly_reviews_date_range( $employee_id, $str_date, $end_date )
+	{
+		$current_year_str = strtotime($str_date);
+        $current_year_end = strtotime($end_date);
+
+        $current_year_total_earned = LeaveApplication::where('employee_id', $employee_id)
+            ->where('status', 'Approved')
+            ->whereHas('relLeaveApplicationHistory',function($q) use($current_year_str, $current_year_end) {
+                $q  ->where('start_date', '>=', $current_year_str)
+                    ->where('end_date', '<=', $current_year_end)
+                    ->where('kindofleave', 'Earned');
+            })
+            ->get()->sum(function ($region) {
+                return $region->relLeaveApplicationHistory->sum('number_of_days');
+            });
+
+
+        $current_year_total_without_pay = LeaveApplication::where('employee_id', $employee_id)
+            ->where('status', 'Approved')
+            ->whereHas('relLeaveApplicationHistory',function($q) use($current_year_str, $current_year_end) {
+                $q  ->where('start_date', '>=', $current_year_str)
+                    ->where('end_date', '<=', $current_year_end)
+                    ->where('kindofleave', 'Without Pay');
+            })
+            ->get()->sum(function ($region) {
+                return $region->relLeaveApplicationHistory->sum('number_of_days');
+            });
+
+        $current_year_total_study = LeaveApplication::where('employee_id', $employee_id)
+            ->where('status', 'Approved')
+            ->whereHas('relLeaveApplicationHistory',function($q) use($current_year_str, $current_year_end) {
+                $q  ->where('start_date', '>=', $current_year_str)
+                    ->where('end_date', '<=', $current_year_end)
+                    ->where('kindofleave', 'Study');
+            })
+            ->get()->sum(function ($region) {
+                return $region->relLeaveApplicationHistory->sum('number_of_days');
+            });
+
+        $current_year_total_maternity = LeaveApplication::where('employee_id', $employee_id)
+            ->where('status', 'Approved')
+            ->whereHas('relLeaveApplicationHistory',function($q) use($current_year_str, $current_year_end) {
+                $q  ->where('start_date', '>=', $current_year_str)
+                    ->where('end_date', '<=', $current_year_end)
+                    ->where('kindofleave', 'Maternity');
+            })
+            ->get()->sum(function ($region) {
+                return $region->relLeaveApplicationHistory->sum('number_of_days');
+            });
+
+        $current_year_total_others = LeaveApplication::where('employee_id', $employee_id)
+            ->where('status', 'Approved')
+            ->whereHas('relLeaveApplicationHistory',function($q) use($current_year_str, $current_year_end) {
+                $q  ->where('start_date', '>=', $current_year_str)
+                    ->where('end_date', '<=', $current_year_end)
+                    ->where('kindofleave', 'Others');
+            })
+            ->get()->sum(function ($region) {
+                return $region->relLeaveApplicationHistory->sum('number_of_days');
+            });
+
+        $employee = Employee::find($employee_id);
+
+		return [
+            'id' => $employee->id,
+            'name' => $employee->name ?? '',
+            'email' => $employee->office_email,
+            'designation' => $employee->relDesignation->name,
+            'department' => $employee->relDepartment->name,
+            'total_earned' => $current_year_total_earned,
+            'total_without_pay' => $current_year_total_without_pay,
+            'total_study' => $current_year_total_study,
+            'total_maternity' => $current_year_total_maternity,
+            'total_others' => $current_year_total_others,
 		];
 	}
 }

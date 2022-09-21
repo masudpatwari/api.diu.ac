@@ -22,7 +22,7 @@ class BapiController extends Controller
 
         }
 
-        return response()->json(['message' => 'Bapi Cache Cleaered Successfully'], 200);
+        return response()->json(['message' => 'Bapi Cache Cleared Successfully'], 200);
     }
 
 

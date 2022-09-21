@@ -920,6 +920,7 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
         $router->POST('salary-report-sort-settings', ['as' => 'attendance_report.salaryReportSortSettings', 'uses' => 'AttendanceReportController@salaryReportSortSettings']);
         $router->GET('salary_report', ['as' => 'salary.report', 'uses' => 'SalaryReportController@index']);
         $router->GET('leave_review_report', ['as' => 'salary.leave_review_report', 'uses' => 'SalaryReportController@leave_review_report']);
+        $router->POST('leave_review_reports', ['as' => 'salary.leave_review_reports', 'uses' => 'SalaryReportController@leave_review_reports']);
         $router->GET('salaryreportable_employee_ids', ['as' => 'salary.get_salary_reportable_employee_ids', 'uses' => 'SalaryReportController@getEmployeeIDsForSalaryReport']);
 
         $router->GET('switchoffday/approved[/{user_id}]', ['as' => 'switchoffday.show_approved_switchoffday', 'uses' => 'SwitchOffDaysController@show_approved_switchoffday']);
@@ -1340,13 +1341,16 @@ $router->group(['middleware' => ['HostelAccessMiddleware', 'token.auth']], funct
     $router->GET('resume-status/{id}', ['as' => 'resume.status', 'uses' => 'resume\ResumeController@status']);
     $router->GET('resume-status-change/{id}', ['as' => 'resume.status', 'uses' => 'resume\ResumeController@statusNotEligible']);
     $router->GET('resume-status-change-eligible/{id}', ['as' => 'resume.status', 'uses' => 'resume\ResumeController@statusEligible']);
+    $router->POST('local-students', ['as' => 'resumes', 'uses' => 'masud\SpecialController@local']);
+    $router->GET('resume-declaration/', ['as' => 'resume.declaration', 'uses' => 'resume\ResumeController@declaration']);
+    $router->GET('resumes', ['as' => 'resumes', 'uses' => 'resume\ResumeController@index']);
+    $router->GET('consent-resumes', ['as' => 'consent.resumes', 'uses' => 'resume\ResumeController@consent']);
+    $router->GET('resume-status-change-from-consent/{id}', ['as' => 'consent.from.consent', 'uses' => 'resume\ResumeController@fromConsent']);
 });
 
 
-$router->GET('resumes', ['as' => 'resumes', 'uses' => 'resume\ResumeController@index']);
 $router->POST('resume-submit', ['as' => 'resume.store', 'uses' => 'resume\ResumeController@store']);
 $router->POST('file-submit', ['as' => 'file.store', 'uses' => 'resume\ResumeController@file']);
-$router->GET('consent-resumes', ['as' => 'consent.resumes', 'uses' => 'resume\ResumeController@consent']);
 $router->GET('submit-information/{info}', ['as' => 'resume.information.submit', 'uses' => 'resume\ResumeController@informationSubmit']);
 
 $router->GET('/confirm-mail/{token}', ['as' => 'email.confirm.from.leave', 'uses' => 'LeaveController@confirm_email']);

@@ -34,6 +34,13 @@ class LeaveApplication extends Model
         return $this->hasMany('App\LeaveApplicationHistory', 'leaveApplication_id', 'id');
     }
 
+    public function scopeDays()
+    {
+        return $this->hasMany('App\LeaveApplicationHistory', 'leaveApplication_id', 'id')
+            ->selectRaw('SUM(number_of_days) as leaves')
+            ;
+    }
+
     public function relLeaveApplicationHistorySingle()
     {
         return $this->hasOne('App\LeaveApplicationHistory', 'leaveApplication_id', 'id');

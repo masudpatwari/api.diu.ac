@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -17,15 +18,13 @@ class ResumeController extends Controller
 {
     public function index()
     {
-//        return Resume::where('a_status', 1)->latest('id')->get();
-        return Resume::where('a_status', 1)->get();
+        return Resume::where('a_status', 1)->latest('id')->get();
     }
 
     public function consent()
     {
         return Resume::where('a_status', 3)->get();
     }
-
 
     public function store(Request $request)
     {
@@ -86,6 +85,7 @@ class ResumeController extends Controller
     }
 
     public function status($id){
+
         $resume = Resume::find($id);
 
         if($resume && $resume->a_status== 1)
@@ -102,7 +102,7 @@ class ResumeController extends Controller
                 return Resume::where('a_status', 1)->get();
             }catch (\Exception $exception)
             {
-                return response('mail send error', 400);
+                return $exception->getMessage();
             }
 
         }
@@ -119,6 +119,10 @@ class ResumeController extends Controller
 
             Mail::to($resume->email)->send(new CandidateRejectionMail($resume));
 
+            if(isset($resume->file))
+            {
+                return Resume::where('a_status', 3)->get();
+            }
 
             return Resume::where('a_status', 1)->get();
         }
@@ -225,5 +229,45 @@ class ResumeController extends Controller
         }
 
         return response('error', 400);
+    }
+
+    public function declaration()
+    {
+        $datas =  Resume::where('a_status', 1)->latest('id')->get();
+
+
+        foreach ($datas as $data)
+        {
+            try {
+                $exists =  Storage::disk('image_path')->exists('resumes/'.$data->id. "_" .$data->name. '.pdf');
+
+                if(!$exists) {
+                    $view = view('candidate/admission_officer_declaration_form', compact('data'));
+
+
+                    $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('temp'), 'mode' => 'utf-8', 'format' => 'A4-P', 'orientation' => 'P']);
+                    $mpdf->curlAllowUnsafeSslRequests = true;
+                    $mpdf->WriteHTML($view, 2);
+
+                    $mpdf->Output(storage_path('images/resumes/' . $data->id . "_" . $data->name . '.pdf'), 'F');
+                }
+            }catch (\Exception $exception)
+            {
+                return response(['error' => $exception->getMessage()], 500);
+            }
+        }
+
+        return response(['success' => 'declaration generated for new candidates'],200);
+    }
+
+    public function fromConsent($id)
+    {
+        $resume = Resume::find($id);
+
+
+
+        if(!$resume){
+            return response(['error' => 'candidate not found'], 404);
+        }
     }
 }

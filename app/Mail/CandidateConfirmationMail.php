@@ -16,7 +16,7 @@ class CandidateConfirmationMail extends Mailable
 
     protected $candidate;
     public $subject;
-//    public $message;
+    public $link;
 //    public $leave;
 
     /**
@@ -46,14 +46,15 @@ class CandidateConfirmationMail extends Mailable
         $token = encrypt($info);
 
 
-        $link = env('APP_URL').'submit-information/'.$token;
+        $this->link = env('APP_URL').'submit-information/'.$token;
 
-        $this->subject = 'Confirmation Email for Interview';
+        $this->subject = 'Application for the Junior Officer (Admission & Information) position.';
 
 //        $start_date = date('d/m/Y', $leave->start_date);
 //        $end_date = date('d/m/Y', $leave->end_date);
 
-        $this->message = "{$candidate->name} is selected for initial interview. click to submit information {$link}";
+        $this->message = "Dear {$candidate->name}";
+
     }
 
     /**
@@ -66,6 +67,7 @@ class CandidateConfirmationMail extends Mailable
         $mailable = $this->subject($this->subject)->view('emails.mail_candidate_selection_template', [
             'data' => [
                 'message' => $this->message,
+                'link' => $this->link
 //                'auth' => [
 //                    'name' => $this->employee->name,
 //                    'designation' => $this->employee->relDesignation->name,
@@ -75,7 +77,10 @@ class CandidateConfirmationMail extends Mailable
             ]
         ]);
 
-        $attachment =  storage_path($this->candidate->resume);
+        $attachment =  storage_path('images/resumes/'.$this->candidate->id. "_" .$this->candidate->name. '.pdf');
+//        dd($attachment);
+//        $attachment =  storage_path($this->candidate->resume);
+
 
 //        dd($attachment, $attachment->getClientMimeType(), $attachment->getClientOriginalName());
 
