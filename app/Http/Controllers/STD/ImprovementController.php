@@ -32,6 +32,17 @@ class ImprovementController extends Controller
         return response()->json(NULL, 404);
     }
 
+//    public function eligible_for_final_test(Request $request, int $examSchedule)
+//    {
+//        $id = $request->auth->ID;
+////        return
+//        $result = $this->traits_eligible_for_final_test( $id , $examSchedule);
+//        if (!empty($result)) {
+//            return response()->json($result, 200);
+//        }
+//        return response()->json(NULL, 404);
+//    }
+
     public function get_current_improvement_exam_schedule()
     {
         $result = $this->traits_get_current_improvement_exam_schedule();
@@ -78,6 +89,7 @@ class ImprovementController extends Controller
 
         $std = $this->traits_get_student_by_id( $id );
 
+//        dd($std
 
         $this->validate($request,
             [

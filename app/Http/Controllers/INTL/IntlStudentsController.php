@@ -174,8 +174,8 @@ class IntlStudentsController extends Controller
             $batch = $batch_info_collection->where('id', $student->batch_id)->first();
             
             $dataArray  [] = [
-                "name" =>$student->relUser->name,
-                "email" => $student->relUser->email,
+                "name" =>$student->relUser->name ?? '',
+                "email" => $student->relUser->email ?? '',
                 "interested_subject" => $student->interested_subject,
                 "batch_id" => $batch['batch_name'] ?:'NA'  , 
                 "roll" => $student->roll,

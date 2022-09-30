@@ -34,6 +34,9 @@
                     $url = "";
                 }
             }
+
+            $total_applied_courses = count($applied_courses) ?? 12;
+
         @endphp
         @if(empty($url))
             <p style="margin-top: 0.5in">Passport size photo</p>
@@ -114,7 +117,7 @@
     <p>Course No and Title of the Courses appearing at the {{ $type }} Improvement Examination</p>
 </div>
 
-@for($i=1; $i<=14;$i=$i+2)
+@for($i=1; $i<=$total_applied_courses ?? 12;$i=$i+2)
     <div style="overflow: hidden; margin: 5px 0;">
         <div style="width: 0.26in; float: left;">({{ integerToRoman($i) }})</div>
         <div style="width: 3.19in; float: left; border-bottom: 1px dotted #000;">&nbsp;{{ isset($applied_courses[ $i-1 ]) ? $applied_courses[ $i-1 ]['code'].' - '.$applied_courses[ $i-1 ]['name'] : '' }}</div>

@@ -26,6 +26,18 @@ class ResumeController extends Controller
         return Resume::where('a_status', 3)->get();
     }
 
+
+    public function cancelled()
+    {
+        return Resume::where('a_status', 0)->get();
+    }
+
+
+    public function pending()
+    {
+        return Resume::where('a_status', 2)->get();
+    }
+
     public function store(Request $request)
     {
         $info = $this->validate($request, [
@@ -88,7 +100,7 @@ class ResumeController extends Controller
 
         $resume = Resume::find($id);
 
-        if($resume && $resume->a_status== 1)
+        if($resume)
         {
             //send mail with attachment
             try {
@@ -233,7 +245,7 @@ class ResumeController extends Controller
 
     public function declaration()
     {
-        $datas =  Resume::where('a_status', 1)->latest('id')->get();
+        $datas =  Resume::get();
 
 
         foreach ($datas as $data)

@@ -43,10 +43,13 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
             $router->GET('payment-system', ['as' => 'admissionFetchData.paymentSystem', 'uses' => 'AdmissionFetchDataController@paymentSystem']);
             $router->GET('department-wise-inactive-batch/{department_id}', ['as' => 'admissionFetchData.departmentWiseInactiveBatch', 'uses' => 'AdmissionFetchDataController@departmentWiseInactiveBatch']);
 
+            $router->POST('monthly', ['as' => 'monthly.admission', 'uses' => 'AdmissionFetchDataController@monthlyAdmission']);
+
         });
 
 
     });
+  
 
 
 
@@ -432,4 +435,6 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
         // message lists end
 
     });
+   
 });
+

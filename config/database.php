@@ -87,6 +87,22 @@ return [
             'timezone' => env('DB_INTL_TIMEZONE', '+00:00'),
         ],
 
+        'exam' => [
+            'driver' => 'mysql',
+            'host' => env('DB_EXAM_HOST', ''),
+            'port' => env('DB_EXAM_PORT', ''),
+            'database' => env('DB_EXAM_DATABASE', ''),
+            'username' => env('DB_EXAM_USERNAME', ''),
+            'password' => env('DB_EXAM_PASSWORD', ''),
+            'unix_socket' => env('DB_EXAM_SOCKET', ''),
+            'charset' => env('DB_EXAM_CHARSET', 'utf8mb4'),
+            'collation' => env('DB_EXAM_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => env('DB_EXAM_PREFIX', ''),
+            'strict' => env('DB_EXAM_STRICT_MODE', true),
+            'engine' => env('DB_EXAM_ENGINE', null),
+            'timezone' => env('DB_EXAM_TIMEZONE', '+00:00'),
+        ],
+
 //        'ILNK' => [
 //            'driver' => 'mysql',
 //            'host' => env('DB_ILNK_HOST', ''),

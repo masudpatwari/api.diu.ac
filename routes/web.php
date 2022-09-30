@@ -425,6 +425,7 @@ $router->group(['middleware' => ['token.student.auth']], function () use ($route
     /* Improvement Routes */
     $router->GET('eligible_for_incourse/{examSchedule}', ['as' => 'students_website.eligible_for_incourse', 'uses' => 'STD\ImprovementController@eligible_for_incourse']);
     $router->GET('eligible_for_final/{examSchedule}', ['as' => 'students_website.eligible_for_final', 'uses' => 'STD\ImprovementController@eligible_for_final']);
+//    $router->GET('eligible_for_final_test/{examSchedule}', ['as' => 'students_website.eligible_for_final', 'uses' => 'STD\ImprovementController@eligible_for_final_test']);
     $router->GET('get_current_improvement_exam_schedule', ['as' => 'students_website.get_current_improvement_exam_schedule', 'uses' => 'STD\ImprovementController@get_current_improvement_exam_schedule']);
     $router->GET('get_applied_improvement_exam_schedule', ['as' => 'students_website.get_applied_improvement_exam_schedule', 'uses' => 'STD\ImprovementController@get_applied_improvement_exam_schedule']);
     $router->POST('apply_improvement_request', ['as' => 'students_website.apply_improvement_request', 'uses' => 'STD\ImprovementController@store']);
@@ -1345,11 +1346,21 @@ $router->group(['middleware' => ['HostelAccessMiddleware', 'token.auth']], funct
     $router->GET('resume-declaration/', ['as' => 'resume.declaration', 'uses' => 'resume\ResumeController@declaration']);
     $router->GET('resumes', ['as' => 'resumes', 'uses' => 'resume\ResumeController@index']);
     $router->GET('consent-resumes', ['as' => 'consent.resumes', 'uses' => 'resume\ResumeController@consent']);
+    $router->GET('consent-pending-resumes', ['as' => 'consent.pending', 'uses' => 'resume\ResumeController@pending']);
+    $router->GET('cancelled-resumes', ['as' => 'cancelled.resumes', 'uses' => 'resume\ResumeController@cancelled']);
     $router->GET('resume-status-change-from-consent/{id}', ['as' => 'consent.from.consent', 'uses' => 'resume\ResumeController@fromConsent']);
+
+    
+    // Routes for exam diu ac
+
+    $router->GET('exam-settings', ['as' => 'exam.settings', 'uses' => 'masud\SpecialController@examSettings']);
+    $router->POST('question-update', ['as' => 'question.update', 'uses' => 'masud\SpecialController@questionUpdate']);
+
+
 });
 
 
-$router->POST('resume-submit', ['as' => 'resume.store', 'uses' => 'resume\ResumeController@store']);
+// $router->POST('resume-submit', ['as' => 'resume.store', 'uses' => 'resume\ResumeController@store']);
 $router->POST('file-submit', ['as' => 'file.store', 'uses' => 'resume\ResumeController@file']);
 $router->GET('submit-information/{info}', ['as' => 'resume.information.submit', 'uses' => 'resume\ResumeController@informationSubmit']);
 
@@ -1421,4 +1432,7 @@ $router->group(['prefix' => 'bapi', 'namespace' => 'bapi',], function () use ($r
    $router->GET('session-assign', ['as' => 'session.assign', 'uses' => 'BapiController@session']);
    $router->GET('supervisor-change', ['as' => 'supervisor.change', 'uses' => 'BapiController@supervisor_change']);
 });
+
+
+
 

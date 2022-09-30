@@ -337,6 +337,8 @@ trait RmsApiTraits
 
         $data_result = json_decode(@file_get_contents('' . env('RMS_API_URL') . '/get_batch_id_name/' . $department_id . '', false, self::ssl()));
 
+//        dd($data_result);
+
         if (!empty($data_result)) {
 
             Cache::put('rms_get_batch_id_name_' . $department_id, $data_result, 1440); //1440 minute = 1 day
@@ -431,8 +433,23 @@ trait RmsApiTraits
         if (!empty($result)) {
             return $result;
         }
+
+
         return NULL;
     }
+
+//    public function traits_eligible_for_final_test($ora_std_uid, $examSchedule)
+//    {
+////        dd($ora_std_uid, $examSchedule);
+//        $result = json_decode(@file_get_contents('' . env('RMS_API_URL') . '/eligible_for_final_test/' . $ora_std_uid . '/' . $examSchedule, false, self::ssl()));
+//        if (!empty($result)) {
+//            return $result;
+//        }
+//
+//        dd($result);
+//
+//        return NULL;
+//    }
 
     public function traits_get_current_improvement_exam_schedule()
     {
@@ -1105,6 +1122,19 @@ trait RmsApiTraits
     public function fetchDepartmentWiseInactiveBatch($data)
     {
         $url = env('RMS_API_URL') . '/admission/department-wise-inactive-batch/' . $data;
+        $curl = Curl::to($url)->returnResponseObject();
+        $curl->asJson(true);
+        $response = $curl->get();
+
+        if ($response->status == 200) {
+            return $response->content;
+        }
+
+        return false;
+    }
+    public function fetchAdmissionMonthlyStudent($start,$end)
+    {
+        $url = env('RMS_API_URL') . '/admission/monthly-admission-student/' . $start.'/'.$end;
         $curl = Curl::to($url)->returnResponseObject();
         $curl->asJson(true);
         $response = $curl->get();

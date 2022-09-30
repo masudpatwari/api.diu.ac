@@ -225,13 +225,13 @@ class CMSStudentImprovementController extends Controller
      */
     public function download_improvement_admit_card(Request $request, $reg_code, $ies_id, $type)
     {
-
         $url = env('RMS_API_URL').'/get_improvement_admit_card';
         $array = [
             'reg_code' => $reg_code,
             'ies_id' => $ies_id,
             'type' => $type,
         ];
+
         $response = Curl::to($url)->withData($array)->returnResponseObject()->asJsonResponse(true)->post();
 
         $data = "";
@@ -242,7 +242,7 @@ class CMSStudentImprovementController extends Controller
         }else{
             return response()->json(['error'=> $response->content['error']], 400);
         }
-        
+
         $student_id = $data['id'];
         $token = md5($student_id);
         

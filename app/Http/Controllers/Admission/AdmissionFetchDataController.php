@@ -6,6 +6,11 @@ use App\Models\Admission\Thana;
 use App\Traits\RmsApiTraits;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\STD\Student;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use DateInterval;
+use DateTime;
 
 class AdmissionFetchDataController extends Controller
 {
@@ -113,6 +118,39 @@ class AdmissionFetchDataController extends Controller
         }
 
         return $fetchDepartmentWiseInactiveBatch;
+    }
+    public function monthlyAdmission(Request $request){
+
+        $start = $request->start_date;
+        $end = $request->end_date;
+
+
+    //    return Student::find(588);
+
+        // $data['dept'] = Student::with('relDepartment')->whereBetween('adm_date',['2022-01-01','2022-08-01'])->select('department_id')->distinct()->get();
+
+        // foreach ($data['dept'] as $list) {
+        //     $info[$list->id] = array_values(Student::
+        //     where('department_id',$list->department_id)
+        //         ->whereBetween('adm_date',['2022-01-01','2022-08-01'])
+        //         ->get()
+        //         ->groupBy(function($d) { return Carbon::parse($d->adm_date)->format('M');})->map(function ($students, $month) use($list){
+        //             return [
+        //                 'month' => $month. ', '.Carbon::parse($list->adm_date)->format('Y'),
+        //                 'total admission' => count($students),
+                        
+        //             ];
+        //         })->toArray());
+        // }
+
+
+        // return response()->json(["data" => $info], 200);
+        
+        $fetchAdmissionMonthlyStudent = $this->fetchAdmissionMonthlyStudent($start,$end);
+        if (!$fetchAdmissionMonthlyStudent) {
+            return response()->json(['error' => 'data not found'], 406);
+        }
+        return $fetchAdmissionMonthlyStudent;
     }
 
 }
