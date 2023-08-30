@@ -124,125 +124,34 @@
 
 <body>
 
-@php
+    @php
     $url = '';
     $img = '';
-
-   /*$arrContextOptions=array(
-      "ssl"=>array(
-            "verify_peer"=>false,
-            "verify_peer_name"=>false,
-      ),
-    );
-      /*"ssl"=>array(
-            "cafile" => 'etc/ssl/certs/diu-web.pem',
-            "verify_peer"=>true,
-            "verify_peer_name"=>true,
-      ),*/
-
-    try {
-
-        if(@file_get_contents("ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student->id . ".JPG")){
-            $img = @file_get_contents_ssl("ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student->id . ".JPG");
-            $url = "ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student->id . ".JPG";
-        }
-
-        file_get_contents_ssl($url);
-
-        if($img != ''){
-           // dd('ok try if', file_get_contents_ssl($url));
-
-            if( strlen($img) == 2739 || strlen($img) == 32634 || strlen($img) == 0 ){
-                $url = env("APP_URL") . "images/student_profile_photo_" . $student->id . ".jpg";
-
-                dd('ok try if if');
-            }
-        }
-
-        //dd('ok try', $img, $url);
-        //dd(@file_get_contents($url));
-        //$url = "http://api.diu.ac/images/student_profile_photo_" . $student->id . ".jpg";
-        //$img =
-        //if()
+    try{
+        $img = file_get_contents("ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student['id'] . ".JPG");
+        $url = "ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student['id'] . ".JPG";
 
 
-        /*dd(@file_get_contents("ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student->id . ".JPG"));
-        if(!file_get_contents($url))
+        if( strlen($img) == 2739 || strlen($img) == 32634 || strlen($img) == 0 ){
+
+
+            $url = env("APP_URL") . "images/student_profile_photo_" . $student['id'] . ".jpg";
+
+        }else
         {
-
-
-        }
-
-                        dd("yes in if");
-        $url = env("APP_URL") . "images/no_image.jpg";
-            $img = file_get_contents($url);*/
-    } catch (\Exception $e) {
-
-        try {
-
-            dd('catch');
-            $url = "https://api.diu.ac/images/student_profile_photo_" . $student->id . ".jpg";
-            //$url = env("APP_URL") . "images/student_profile_photo_" . $student->id . ".jpg";
-            $img = file_get_contents_ssl($url);
-
-        } catch (\Exception $e) {
             $url = "";
-            $img = "";
         }
-
-        $url = env("APP_URL") . "images/no_image.jpg";
-        $img = @file_get_contents_ssl($url);
-
-
-        //dd($e->getMessage());
-        //$img = file_get_contents($url);
-          //  dd(file_get_contents('http://api.diu.ac/images/no_image.jpg'));
     }
-    //try{
-        //$img = file_get_contents_ssl("ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student->id . ".JPG", false, stream_context_create($arrContextOptions));
-        //$url = "ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student->id . ".JPG";
-    /*try{
-            $url = env("APP_URL") . "images/student_profile_photo_" . $student->id . ".jpg";
-            file_get_contents($url, false, stream_context_create($arrContextOptions));
-
-            $img =   file_get_contents($url, false, stream_context_create($arrContextOptions));
-
-
-        }
-        catch (\Throwable $exception){
-            $url = env("APP_URL") . "images/no_image.jpg";
-        }
-        //file_get_contents_ssl($url);
-
-        /*if($img != ''){
-            if( strlen($img) == 2739 || strlen($img) == 32634 || strlen($img) == 0 ){
-                $url = env("APP_URL") . "images/student_profile_photo_" . $student->id . ".jpg";
-
-            }
-        }*/
-
-
-    /*}
-    catch (\Throwable $e){
-
-
+    catch (\Exception $exception){
         try{
-            $url = env("APP_URL") . "images/student_profile_photo_" . $student->id . ".jpg";
-            file_get_contents_ssl($url);
 
-            $img = file_get_contents_ssl($url);
-
+            $url = env("APP_URL") . "images/student_profile_photo_" . $student['id'] . ".jpg";
         }
-        catch (\Throwable $exception){
-            $url = env("APP_URL") . "images/no_image.jpg";
+        catch (\Exception $exception){
+            $url = "";
         }
-    }*/
-    if(isset($error))
-    {
-        dd('fuck');
-        $error_img = env("APP_URL") . "images/student_profile_photo_" . $student->id . ".png";
     }
-//dd($url, $img);
+
 @endphp
 
 
@@ -328,7 +237,7 @@ Banani, Dhaka-1213, Bangladesh</span>
     </div>
 
     {{--    @dd($url)--}}
-    <div style="float: left;width: 49%;margin-left: 10px;">
+    {{-- <div style="float: left;width: 49%;margin-left: 10px;">
         <table>
             <tr>
                 <td class="b-none" style="text-align: right">
@@ -341,7 +250,7 @@ Banani, Dhaka-1213, Bangladesh</span>
                 </td>
             </tr>
         </table>
-    </div>
+    </div> --}}
 </div>
 
 
@@ -350,21 +259,22 @@ Banani, Dhaka-1213, Bangladesh</span>
         <td class="br-none p-2">1.</td>
         <td colspan="2" class="w-20">Student's Name</td>
         <td class="w-1 bl-none br-none">:</td>
-        <td class="br-none" colspan="3"><b>{{ $student->name ?? 'N/A' }}</b></td>
+        <td class="br-none" colspan="3"><b>{{ $student['name'] ?? 'N/A' }}</b></td>
+      
     </tr>
 
     <tr class="b-none">
         <td class="br-none p-3">2.</td>
         <td colspan="2">Father's Name</td>
         <td class="w-1 bl-none br-none">:</td>
-        <td class="br-none" colspan="3"><b>{{ $student->f_name ?? 'N/A' }}</b></td>
+        <td class="br-none" colspan="3"><b>{{ $student['f_name'] ?? 'N/A' }}</b></td>
     </tr>
 
     <tr class="b-none">
         <td class="br-none p-5">3.</td>
         <td colspan="2">Mother's Name</td>
         <td class="w-1 bl-none br-none">:</td>
-        <td class="br-none" colspan="3"><b>{{ $student->m_name ?? 'N/A' }}</b></td>
+        <td class="br-none" colspan="3"><b>{{ $student['m_name'] ?? 'N/A' }}</b></td>
     </tr>
 
     <tr class="b-none">
@@ -372,19 +282,19 @@ Banani, Dhaka-1213, Bangladesh</span>
         <td rowspan="2" class="w-10 br-none">Address</td>
         <td style="width: 15%">a) Present</td>
         <td class="w-1 bl-none br-none">:</td>
-        <td class="br-none" colspan="3"><b>{{ $student->mailing_add ?? 'N/A' }}</b></td>
+        <td class="br-none" colspan="3"><b>{{ $student['mailing_add'] ?? 'N/A' }}</b></td>
     </tr>
 
     <tr class="b-none">
         <td>b) Permanent</td>
         <td class="w-1 bl-none br-none">:</td>
-        <td colspan="3" class="br-none"><b>{{ $student->parmanent_add ?? 'N/A' }}</b></td>
+        <td colspan="3" class="br-none"><b>{{ $student['parmanent_add'] ?? 'N/A' }}</b></td>
     </tr>
 
     <tr class="b-none">
         <td class="br-none">5.</td>
-        <td colspan="4" class="br-none">Nationality : <b>{{ $student->nationality ?? 'N/A' }}</b></td>
-        <td colspan="2" class="br-none">Mobile No : <b>{{ $student->phone_no ?? 'N/A' }}</b></td>
+        <td colspan="4" class="br-none">Nationality : <b>{{ $student['nationality'] ?? 'N/A' }}</b></td>
+        <td colspan="2" class="br-none">Mobile No : <b>{{ $student['phone_no'] ?? 'N/A' }}</b></td>
 
     </tr>
 
@@ -409,16 +319,16 @@ Banani, Dhaka-1213, Bangladesh</span>
                 <b>N/A</b>
             @endif
         </td>
-        <td colspan="2" class="br-none">Roll No: <b>{{ $student->roll_no ?? 'N/A' }}</b></td>
+        <td colspan="2" class="br-none">Roll No: <b>{{ $student['roll_no'] ?? 'N/A' }}</b></td>
     </tr>
 
 
     <tr class="b-none">
         <td class="br-none p-5">8.</td>
-        <td colspan="5" class="br-none">Registration No : <b>{{ $student->reg_code ?? 'N/A' }}</b> <span
-                    style="padding-left: 15px;">Session: <b>{{ $student->batch->sess ?? 'N/A' }}</b></span>
+        <td colspan="5" class="br-none">Registration No : <b>{{ $student['reg_code']?? 'N/A' }}</b> <span
+                    style="padding-left: 15px;">Session: <b>{{ $student['batch']['sess'] ?? 'N/A' }}</b></span>
         </td>
-        <td colspan="2">Batch: <b>{{ $student->batch->batch_name ?? 'N/A' }}</b></td>
+        <td colspan="2">Batch: <b>{{ $student['batch']['batch_name'] ?? 'N/A' }}</b></td>
     </tr>
 
     <tr class="b-none">

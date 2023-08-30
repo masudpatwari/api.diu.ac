@@ -12,7 +12,8 @@ class MicrosoftController extends Controller
     use Microsoft;
     public function index()
     {
-        $token = $this->token();
+        
+       $token = $this->token();
 
         $data = [
             'token' => $token ?? 'N/A',

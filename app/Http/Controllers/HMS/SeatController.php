@@ -20,7 +20,7 @@ class SeatController extends Controller
 {
     function index()
     {
-    	$seats = Seat::with('room:room_number,id','hostel:name,id')->get();
+    	$seats = Seat::with('room:room_number,id','hostel:name,id')->orderBy('hostel_id','asc')->get();
  	    return  response()->json($seats);
     }
 
@@ -211,28 +211,28 @@ class SeatController extends Controller
 
     public function approveMigration(Request $request, $id)
     {
-        $shift = Shift::findorFail($id);
+        
+          $shift = Shift::findorFail($id);
 
-        $latest_shifting = Shift::where('student_id', $shift->student_id)->get();
-
+          $latest_shifting = Shift::where('student_id', $shift->student_id)->get();
         if($latest_shifting->count() > 1)
         {
             // rent calculation after shifting
-            $booking = Booking::find($shift->booking_id);
+              $booking = Booking::find($shift->booking_id);
             $last_shifting = Shift::where('student_id', $shift->student_id)->latest('shift_date')->first();
             $previous_shifting = Shift::where('student_id', $shift->student_id)->latest('shift_date')->skip(1)->first();
-            $rent = $this->rentCalculation($previous_shifting->shift_date, $last_shifting->shift_date, $previous_shifting->bed_type);
+             $rent = $this->rentCalculation($previous_shifting->shift_date, $last_shifting->shift_date, $previous_shifting->bed_type,$previous_shifting->hostel_id);
 
             $rent += $previous_shifting->due_amount;
         }else{
             // rent calculation from booking date to shifting date.
-            $booking = Booking::find($shift->booking_id);
-            $rent = $this->rentCalculation($booking->issue_date, $shift->shift_date, $booking->bed_type);
+             $booking = Booking::find($shift->booking_id);
+            $rent = $this->rentCalculation($booking->issue_date, $shift->shift_date, $booking->bed_type,$booking->hostel_id);
         }
-
+        
         try {
 
-            $exception = DB::connection('hostel')->transaction(function () use($shift, $request, $rent){
+            DB::transaction(function () use ($shift, $request, $rent) {
 
                 $shift->oldSeat->increment('available');
 
@@ -254,7 +254,7 @@ class SeatController extends Controller
 
 
 
-    public function rentCalculation($issue_date, $shift_date, $bed_type)
+    public function rentCalculation($issue_date, $shift_date, $bed_type,$hostel_id)
     {
 
 //        dd($issue_date, $shift_date, $bed_type);
@@ -269,10 +269,10 @@ class SeatController extends Controller
 
 //            $data['total_months'] = $diff_in_months + 1;
 
-            $all_rent = Rent::where('bed_type', $bed_type)
+           $all_rent = Rent::where('bed_type', $bed_type)->where('hostel_id',$hostel_id)
                 ->oldest('start_date')->get();
 
-
+               
 
             if($all_rent->count() > 1)
             {
@@ -335,7 +335,7 @@ class SeatController extends Controller
 
             else
             {
-                $rent_per_month = Rent::where('bed_type', $bed_type)->first()->monthly_fee;
+                $rent_per_month = Rent::where('bed_type', $bed_type)->where('hostel_id',$hostel_id)->first()->monthly_fee;
 
                 $total_rent = $diff_in_months * $rent_per_month;
             }

@@ -12,7 +12,7 @@ class RentController extends Controller
 {
     function index()
     {
-        $rents = Rent::get();
+        $rents = Rent::with('hostel')->orderBy('hostel_id','asc')->get();
         return  response()->json($rents);
     }
 
@@ -20,36 +20,46 @@ class RentController extends Controller
     {
         $data = $this->validate($request,
             [
+                'hostel_id'      => 'required',
                 'bed_type'      => 'required',
                 'monthly_fee'   => 'required',
                 'start_date'    => 'required',
             ]);
+            if($request->end_date == ""){
 
+                $data['end_date'] =  NULL;
+            }else{
+                $data['end_date'] = $request->end_date;
+    
+            }  
+
+        
         $data['created_by'] = $request->auth->id;
+       
 
-        $rent = Rent::where('bed_type', $request->bed_type)->whereNull('end_date')->first();
+        // $rent = Rent::where('bed_type', $request->bed_type)->whereNull('end_date')->first();
 
-        if($rent)
-        {
-            $end_date = Carbon::createFromFormat('Y-m-d', $request->start_date)
-                ->subMonth()
-                ->endOfMonth()
-                ->format('Y-m-d');
+        // if($rent)
+        // {
+        //     $end_date = Carbon::createFromFormat('Y-m-d', $request->start_date)
+        //         ->subMonth()
+        //         ->endOfMonth()
+        //         ->format('Y-m-d');
 
-            $rent->update(['end_date' => $end_date]);
-        }
+        //     $rent->update(['end_date' => $end_date]);
+        // }
 
         $rent = Rent::create($data);
 
-        if (!empty($rent->id)) {
-            return response()->json($rent, 201);
-        }
-        return response()->json(['error' => 'Insert Failed.'], 400);
+        // if (!empty($rent->id)) {
+        //     return response()->json($rent, 201);
+        // }
+        return response()->json(['error' => 'Insert Successfully done.'], 201);
     }
 
     public function show($id)
     {
-        $rent = Rent::find($id);
+        $rent = Rent::with('hostel')->find($id);
         return  response()->json($rent);
     }
 
@@ -57,11 +67,13 @@ class RentController extends Controller
     {
         $data  = $this->validate($request,
             [
+                'hostel_id'      => 'required',
                 'bed_type'      => 'required|string',
                 'monthly_fee'   => 'required|numeric',
                 'start_date'    => 'required',
             ],
-            [
+            [   
+                
                 'monthly_fee.required'      => 'Monthly Rent is required.',
                 'monthly_fee.number'        => 'Monthly Rent must be number',
                 'bed_type.required'         => 'Bed Type is required.',
@@ -69,10 +81,16 @@ class RentController extends Controller
                 'start_date.required'       => 'Effected Date is required.',
             ]
         );
-
         $rent = Rent::find($id);
 
-        $data['created_by'] = $rent->created_by;
+        if($request->end_date == ""){
+
+            $data['end_date'] =  NULL;
+        }else{
+            $data['end_date'] = $request->end_date;
+
+        }
+
         $data['updated_by'] = $request->auth->id;
 
         $rent->update($data);

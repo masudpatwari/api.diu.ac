@@ -22,4 +22,10 @@ class Booking extends Model
     {
     	return $this->belongsTo(Room::class, 'room_id');
     }
+    public function  transection()
+    {
+    	return $this->hasMany(Transaction::class, 'user_id','student_id');
+    }
+
+   
 }

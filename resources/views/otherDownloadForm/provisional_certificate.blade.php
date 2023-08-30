@@ -177,7 +177,7 @@
             }
         }
 
-       // dd($url, $img);
+    //    dd($url, $img);
 @endphp
 
 
@@ -260,7 +260,7 @@ Banani, Dhaka-1213, Bangladesh</span>
     </div>
 
     {{--    @dd($url)--}}
-    <div style="float: left;width: 49%;margin-left: 10px;">
+    {{-- <div style="float: left;width: 49%;margin-left: 10px;">
         <table>
             <tr>
                 <td class="b-none" style="text-align: right">
@@ -273,7 +273,7 @@ Banani, Dhaka-1213, Bangladesh</span>
                 </td>
             </tr>
         </table>
-    </div>
+    </div> --}}
 </div>
 
 

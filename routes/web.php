@@ -1296,6 +1296,7 @@ $router->group(['middleware' => ['HostelAccessMiddleware', 'token.auth']], funct
         $router->group(['as' => 'room', 'prefix' => 'room'], function () use ($router) {
             $router->GET('/', ['as' => 'index', 'uses' => 'RoomController@index']);
             $router->GET('/available/{hostel}/{id}', ['as' => 'available.rooms', 'uses' => 'RoomController@available_rooms']);
+            $router->GET('/available-seat/{id}', ['as' => 'available.rooms', 'uses' => 'RoomController@available_seats']);
             $router->GET('/{id}', ['as' => 'show', 'uses' => 'RoomController@show']);
             $router->DELETE('/{id}', ['as' => 'destroy', 'uses' => 'RoomController@delete']);
             $router->POST('/', ['as' => 'roomSave', 'uses' => 'RoomController@store']);
@@ -1335,6 +1336,13 @@ $router->group(['middleware' => ['HostelAccessMiddleware', 'token.auth']], funct
             $router->POST('/approve/{id}', ['as' => 'approve', 'uses' => 'BookingController@approve']);
             $router->GET('/info/{query}', ['as' => 'info', 'uses' => 'BookingController@info']);
             $router->POST('/pay', ['as' => 'payment', 'uses' => 'BookingController@pay']);
+            $router->get('/due/{id}', ['as' => 'DueReport', 'uses' => 'BookingController@DueCalculation']);
+            $router->get('/account-statement/{query}', ['as' => 'AccountStatement', 'uses' => 'BookingController@accountStatement']);
+            $router->get('/release-student/{query}', ['as' => 'ReleaseStudent', 'uses' => 'BookingController@releaseStudent']);
+            $router->get('/edit/{query}', ['as' => 'BookingEdit', 'uses' => 'BookingController@bookingEdit']);
+            $router->get('/receipt/edit/{query}', ['as' => 'ReceiptEdit', 'uses' => 'BookingController@receiptEdit']);
+            $router->POST('/receipt/update', ['as' => 'ReceiptEdit', 'uses' => 'BookingController@receiptUpdate']);
+            $router->POST('/update-date', ['as' => 'BookingUpdate', 'uses' => 'BookingController@bookingUpdateDate']);
 
         });
     });

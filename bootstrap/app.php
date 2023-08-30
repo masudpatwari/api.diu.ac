@@ -125,8 +125,8 @@ $app->register(App\Providers\CorsProvider::class);
 $app->register(Appzcoder\LumenRoutesList\RoutesCommandServiceProvider::class);
 $app->register(Vluzrmos\Tinker\TinkerServiceProvider::class);
 $app->register(Ixudra\Curl\CurlServiceProvider::class);
-$app->register(LaravelQRCode\Providers\QRCodeServiceProvider::class);
-$app->register(SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class);
+// $app->register(LaravelQRCode\Providers\QRCodeServiceProvider::class);
+// $app->register(SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class);
 
 
 /*

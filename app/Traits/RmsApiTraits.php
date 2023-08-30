@@ -374,8 +374,10 @@ trait RmsApiTraits
     }
 
     public function traits_get_student_by_id($std_id, $by_array = false)
-    {
-        $result = json_decode(@file_get_contents('' . env('RMS_API_URL') . '/get_student_by_id/' . $std_id . '', false, self::ssl()), $by_array);
+    { 
+           
+     
+        return $result = json_decode(@file_get_contents('' . env('RMS_API_URL') . '/get_student_by_id/' . $std_id . '', false, self::ssl()), $by_array);
         if (!empty($result)) {
             return $result;
         }

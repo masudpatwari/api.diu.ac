@@ -300,12 +300,12 @@
                 </table>
             </td>
             <td class="b-none tr">
-                @if ($url)
+                {{-- @if ($url)
                     <img src="data:image/png;base64, {!! base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')
                                 ->merge($url, 0.3, true)
                                 ->size(150)->errorCorrection('H')
                                 ->generate($details)) !!} ">
-                @endif
+                @endif --}}
             </td>
         </tr>
     </table>

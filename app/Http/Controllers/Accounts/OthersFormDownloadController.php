@@ -715,13 +715,15 @@ class OthersFormDownloadController extends Controller
             'passing_year' => 'required',
             'roll' => 'required',
         ]);
+       
+        // return $otherStudentForm = OtherStudentForm::find(6686);
+       $otherStudentForm = OtherStudentForm::with('employee:id,name,designation_id', 'employee.relDesignation:id,name')->find($request->id);    
 
-        // $otherStudentForm = OtherStudentForm::find(48);
-        $otherStudentForm = OtherStudentForm::with('employee:id,name,designation_id', 'employee.relDesignation:id,name')->find($request->id);
+       
 
-        $student = $this->traits_get_student_by_id($otherStudentForm->student_id);
+             $student = $this->traits_get_student_by_id($otherStudentForm->student_id);
+        //   dd( $student);
         $student_account_info_summary = $this->student_account_info_summary($otherStudentForm->student_id);
-
         //qr code start
         $formId = $otherStudentForm->code . '-' . $otherStudentForm->id;
         $details = ($formId);
@@ -731,12 +733,22 @@ class OthersFormDownloadController extends Controller
 
             $view = view('otherDownloadForm/professional_short_course', compact('otherStudentForm', 'student', 'student_account_info_summary', 'details'));
         } elseif ($otherStudentForm->form_name == 'Provisional Certificate' || $otherStudentForm->form_name == 'Transcript / Mark Certificate') {
-            $student_provisional_transcript_marksheet_info = $this->student_provisional_transcript_marksheet_info_by_student_id($otherStudentForm->student_id);
-           if($otherStudentForm->student_id == '1790') {
-//                return 'ok';
-//                return [$student, $otherStudentForm, $student_provisional_transcript_marksheet_info, $details];
 
-               $view = view('otherDownloadForm/provisional_certificate_test', compact('student', 'student_provisional_transcript_marksheet_info', 'otherStudentForm', 'details'));
+            $student_provisional_transcript_marksheet_info = $this->student_provisional_transcript_marksheet_info_by_student_id($otherStudentForm->student_id);
+
+                // return [$student];
+                
+           if($otherStudentForm->student_id == '1981
+           ') {  
+            
+                // $url = env('RMS_API_URL') . '/admission/student-filter/' . $otherStudentForm->reg_code;
+                // $curl = Curl::to($url)->returnResponseObject();
+                // $curl->asJson(true);
+                // $response = $curl->get();            
+                // $student = $response->content;
+            
+
+               $view = view('otherDownloadForm/provisional_certificate', compact('student', 'student_provisional_transcript_marksheet_info', 'otherStudentForm', 'details'));
 
                 try {
                     $this->mpdf_show($view);
@@ -752,6 +764,9 @@ class OthersFormDownloadController extends Controller
             $view = view('otherDownloadForm/provisional_certificate', compact('student', 'student_provisional_transcript_marksheet_info', 'otherStudentForm', 'details'));
         } elseif ($otherStudentForm->form_name == 'Convocation') {
 
+          
+
+
             $student_provisional_transcript_marksheet_info = $this->student_provisional_transcript_marksheet_info_by_student_id($otherStudentForm->student_id);
 
             if ($student_provisional_transcript_marksheet_info == false) {
@@ -759,7 +774,6 @@ class OthersFormDownloadController extends Controller
             }
 
             $otherStudentFormConvocationSecondDegree = OtherStudentFormConvocationSecondDegree::whereotherStudentFormId($otherStudentForm->id)->first();
-
             $view = view('otherDownloadForm/convocation', compact('student', 'otherStudentForm', 'student_provisional_transcript_marksheet_info', 'otherStudentFormConvocationSecondDegree', 'details'));
         } elseif ($otherStudentForm->form_name == 'Research /Internship / Project / Thesis') {
 

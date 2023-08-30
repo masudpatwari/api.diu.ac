@@ -2,7 +2,6 @@
 /.idea
 Homestead.json
 Homestead.yaml
-.env
 /app/Http/Middleware/TokenAuthMiddleware.php
 storage/images/*
 storage/*
