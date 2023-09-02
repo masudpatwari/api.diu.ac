@@ -363,6 +363,8 @@ $router->group(['prefix' => 'public'], function () use ($router) {
     $router->GET('std_account_info/{ora_uid}', ['as' => 'students_website.std_account_info', 'uses' => 'STD\StudentsController@student_account_info']);
     $router->GET('std_account_info_summary/{ora_uid}', ['as' => 'students_website.std_account_info_summary', 'uses' => 'STD\StudentsController@student_account_info_summary']);
 
+    $router->GET('hostel-due/{query}', ['as' => 'DueReport', 'uses' => 'HMS\BookingController@hostelCurrentDue']);
+
     $router->GET('download_regular_admit_card/{ora_uid}/{term}', ['as' => 'accounts.download_regular_admit_card', 'uses' => 'STD\RegularAdmitCardController@download_regular_admit_card']);
     $router->GET('get_purpose_pay', ['as' => 'accounts.get_purpose_pay', 'uses' => 'STD\RegularAdmitCardController@getPurposePay']);
 
@@ -1344,6 +1346,9 @@ $router->group(['middleware' => ['HostelAccessMiddleware', 'token.auth']], funct
             $router->POST('/receipt/update', ['as' => 'ReceiptEdit', 'uses' => 'BookingController@receiptUpdate']);
             $router->POST('/update-date', ['as' => 'BookingUpdate', 'uses' => 'BookingController@bookingUpdateDate']);
 
+            $router->get('mail-check', ['as' => 'HosteDueReport', 'uses' => 'BookingController@mailCheck']);
+            
+
         });
     });
 
@@ -1440,6 +1445,11 @@ $router->group(['prefix' => 'bapi', 'namespace' => 'bapi',], function () use ($r
    $router->GET('session-assign', ['as' => 'session.assign', 'uses' => 'BapiController@session']);
    $router->GET('supervisor-change', ['as' => 'supervisor.change', 'uses' => 'BapiController@supervisor_change']);
 });
+
+$router->get('/student-portal-hostel-due/{id}', ['as' => 'HosteDueReport', 'uses' => 'HMS\BookingController@studentPortalHostelDue']);
+
+$router->get('/mail-check', ['as' => 'HosteDueReport', 'uses' => 'HMS\BookingController@mailCheck']);
+
 
 
 
