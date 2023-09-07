@@ -117,7 +117,17 @@ class CourseFeeCalculationController extends Controller
     {
         $totalPoint = number_format(number_format($ssc_result, 2) + number_format($hsc_result, 2), 2);
 
-        $scholarshipPercentage = '20';
+        $scholarshipPercentage = '10';
+
+        if ( $totalPoint < 6.00) {
+            $scholarshipPercentage = '10';
+        }
+        if ($totalPoint >= 6.00 && $totalPoint <= 6.99) {
+            $scholarshipPercentage = '15';
+        }
+        if ($totalPoint >= 7.00 && $totalPoint <= 7.99) {
+            $scholarshipPercentage = '20';
+        }
 
         if ($totalPoint >= 8.00 && $totalPoint <= 8.99) {
             $scholarshipPercentage = '25';

@@ -1344,9 +1344,7 @@ $router->group(['middleware' => ['HostelAccessMiddleware', 'token.auth']], funct
             $router->get('/edit/{query}', ['as' => 'BookingEdit', 'uses' => 'BookingController@bookingEdit']);
             $router->get('/receipt/edit/{query}', ['as' => 'ReceiptEdit', 'uses' => 'BookingController@receiptEdit']);
             $router->POST('/receipt/update', ['as' => 'ReceiptEdit', 'uses' => 'BookingController@receiptUpdate']);
-            $router->POST('/update-date', ['as' => 'BookingUpdate', 'uses' => 'BookingController@bookingUpdateDate']);
-
-            $router->get('mail-check', ['as' => 'HosteDueReport', 'uses' => 'BookingController@mailCheck']);
+            $router->POST('/update-date', ['as' => 'BookingUpdate', 'uses' => 'BookingController@bookingUpdateDate']);            
             
 
         });
@@ -1448,7 +1446,7 @@ $router->group(['prefix' => 'bapi', 'namespace' => 'bapi',], function () use ($r
 
 $router->get('/student-portal-hostel-due/{id}', ['as' => 'HosteDueReport', 'uses' => 'HMS\BookingController@studentPortalHostelDue']);
 
-$router->get('/mail-check', ['as' => 'HosteDueReport', 'uses' => 'HMS\BookingController@mailCheck']);
+// $router->get('/mail-check', ['as' => 'HosteDueReport', 'uses' => 'HMS\BookingController@mailCheck']);
 
 
 
