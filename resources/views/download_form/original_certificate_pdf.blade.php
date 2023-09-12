@@ -216,6 +216,17 @@
             }
         }
 
+        try {
+            $qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')
+                ->merge($url, 0.3, true)
+                ->size(150)->errorCorrection('H')
+                ->generate($details);
+        } catch (\Exception $e) {
+            // Handle the error gracefully (e.g., display an error message)
+            $qrCode = null;
+            $errorMessage = "QR Code generation failed: " . $e->getMessage();
+        }
+
        // dd($url, $img);
 @endphp
 
@@ -300,6 +311,13 @@
                 </table>
             </td>
             <td class="b-none tr">
+
+                @if (!empty($qrCode))
+                <img src="data:image/png;base64, {!! base64_encode($qrCode) !!} ">              
+                
+                {{-- @else
+                    <p>{{ $errorMessage }}</p> --}}
+                @endif
                 {{-- @if ($url)
                     <img src="data:image/png;base64, {!! base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')
                                 ->merge($url, 0.3, true)

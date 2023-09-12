@@ -31,7 +31,7 @@ class LeaveStatusController extends Controller
     */
     public function approval(Request $request)
     {
-        $leaves = LeaveApplication::where(['status' => 'Pending', 'pending_in_employee_id' => $request->auth->id])->get();
+        $leaves = LeaveApplication::where(['status' => 'Pending', 'pending_in_employee_id' => $request->auth->id])->orderBy('id','desc')->limit(100)->get();
         if (!empty($leaves))
         {
             return LeaveResource::collection($leaves);

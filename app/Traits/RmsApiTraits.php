@@ -1388,6 +1388,25 @@ trait RmsApiTraits
         throw new \Exception("Session not found", 1);
 
     }
+
+    public function exam_controller_session_update($data)
+    {
+        
+        $url = env('RMS_API_URL') . '/exam-controller-session-update/';
+
+        $response = Curl::to($url)
+            ->withData($data)
+            ->returnResponseObject()
+            ->asJson(true)
+            ->post();
+
+        if ($response->status == 200 || $response->status == 202) {
+            return $response->content;
+        }
+
+        return false;
+
+    }
 }
 
 ?>

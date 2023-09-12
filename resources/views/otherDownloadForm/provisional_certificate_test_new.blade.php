@@ -121,43 +121,74 @@
 
     </style>
 </head>
+
 <body>
 
 @php
     $url = '';
     $img = '';
 
-    try{
 
-        $img = file_get_contents_ssl("ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student->id . ".JPG");
-        $url = "ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student->id . ".JPG";
+    try {
 
-        file_get_contents_ssl($url);
+        $url = env("APP_URL") . "images/student_profile_photo_" . $student->id . ".jpg";
 
-        if($img != ''){
-            if( strlen($img) == 2739 || strlen($img) == 32634 || strlen($img) == 0 ){
-                $url = env("APP_URL") . "images/student_profile_photo_" . $student->id . ".jpg";
+        $img = pick_desired_image($url, 'image/jpeg');
 
+        
+        if(!$img)
+        {
+            $url = env("APP_URL") . "images/student_profile_photo_" . $student->id . ".png";
+
+            $img = pick_desired_image($url, 'image/png');
+
+            if(!$img)
+            {
+                file_get_contents($url);
             }
         }
 
 
-    }
-    catch (\Exception $exception){
+    } catch (\Exception $e) {
 
+        try {
 
-        try{
-            $url = env("APP_URL") . "images/student_profile_photo_" . $student->id . ".jpg";
-            file_get_contents_ssl($url);
-
+            if(@file_get_contents("ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student->id . ".JPG")){
+                $img = @file_get_contents("ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student->id . ".JPG");
+                $url = "ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student->id . ".JPG";
+            }
+    
             $img = file_get_contents_ssl($url);
+    
 
-        }
-        catch (\Exception $exception){
-            $url = env("APP_URL") . "images/no_image.jpg";
-        }
-    }
+            if($img != ''){
+                if( strlen($img) == 2739 || strlen($img) == 32634 || strlen($img) == 0 ){
+                    $url = env("APP_URL") . "images/student_profile_photo_" . $student->id . ".jpg";
+    
+                }
+            }
 
+            file_get_contents($url);
+
+        } catch (\Exception $e) {
+    
+                $url = env("APP_URL") . "images/no_image.jpg";
+                $img = @file_get_contents_ssl($url);
+            }
+        }
+
+    //    dd($url, $img);
+
+            try {
+            $qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')
+                ->merge($url, 0.3, true)
+                ->size(150)->errorCorrection('H')
+                ->generate($details);
+        } catch (\Exception $e) {
+            // Handle the error gracefully (e.g., display an error message)
+            $qrCode = null;
+            $errorMessage = "QR Code generation failed: " . $e->getMessage();
+        }
 @endphp
 
 
@@ -173,7 +204,6 @@
             @endif
 
         </th>
-
         <td class="bt-none bb-none">
             <img src="{{ storage_path('assets/logo.png') }}" alt="Dhaka International University"
                  style="width: 80px;padding:0 2px;"> <br>
@@ -215,10 +245,14 @@ Banani, Dhaka-1213, Bangladesh</span>
     <div style="float: left;width: 49%">
         <table>
             <tr>
-                <td class="bb-none">Receipt No. <b>{{ $otherStudentForm->receipt_no ?? 'N/A' }}</b> Date: <b>{{ \Carbon\Carbon::parse($otherStudentForm->bank_payment_date)->format('d-m-Y') }}</b></td>
+                <td class="bb-none">Receipt No. <b>{{ $otherStudentForm->receipt_no ?? 'N/A' }}</b> Date:
+                    <b>{{ \Carbon\Carbon::parse($otherStudentForm->bank_payment_date)->format('d-m-Y') }}</b></td>
             </tr>
             <tr>
-                <td class="bb-none">Received TK. <b>{{ number_format($otherStudentForm->total_payable ?? '', 2) }}</b> (<span style="text-transform: capitalize"><b>{{ \App\classes\NumberToWord::numberToWord($otherStudentForm->total_payable) }}</b></span>) only.</td>
+                <td class="bb-none">Received TK. <b>{{ number_format($otherStudentForm->total_payable ?? '', 2) }}</b> (<span
+                            style="text-transform: capitalize"><b>{{ \App\classes\NumberToWord::numberToWord($otherStudentForm->total_payable) }}</b></span>)
+                    only.
+                </td>
             </tr>
 
             <tr>
@@ -230,26 +264,43 @@ Banani, Dhaka-1213, Bangladesh</span>
             </tr>
 
             <tr>
-                <td class="tr"><span style="border-top: 1px solid #000">{{ $otherStudentForm->employee->name ?? 'N/A' }}, {{ $otherStudentForm->employee->relDesignation->name ?? 'N/A' }}</span></td>
-            </tr>
-        </table>
-    </div>
-
-
-    <div style="float: left;width: 49%;margin-left: 10px;">
-        <table>
-            <tr>
-                <td class="b-none" style="text-align: right" >
-                    {{--  @if($url)  --}}
-                    <img src="data:image/png;base64, {!! base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')
-                            ->merge($url, 0.3, true)
-                            ->size(140)->errorCorrection('H')
-                            ->generate($details)) !!} ">
-                    {{--  @endif  --}}
+                <td class="tr"><span style="border-top: 1px solid #000">{{ $otherStudentForm->employee->name ?? 'N/A' }}, {{ $otherStudentForm->employee->relDesignation->name ?? 'N/A' }}</span>
                 </td>
             </tr>
         </table>
     </div>
+
+    @if (!empty($qrCode))
+    <div style="float: left;width: 49%;margin-left: 10px;">
+        <table>
+            <tr>
+                <td class="b-none" style="text-align: right">
+                    <img src="data:image/png;base64, {!! base64_encode($qrCode) !!} ">
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    @else
+        <p>{{ $errorMessage }}</p>
+    @endif
+
+
+    {{--    @dd($url)--}}
+    {{-- <div style="float: left;width: 49%;margin-left: 10px;">
+        <table>
+            <tr>
+                <td class="b-none" style="text-align: right">
+                    @if($url)
+                        <img src="data:image/png;base64, {!! base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')
+                            ->merge($url, 0.3, true)
+                            ->size(140)->errorCorrection('H')
+                            ->generate($details)) !!} ">
+                    @endif
+                </td>
+            </tr>
+        </table>
+    </div> --}}
 </div>
 
 
@@ -319,7 +370,6 @@ Banani, Dhaka-1213, Bangladesh</span>
         </td>
         <td colspan="2" class="br-none">Roll No: <b>{{ $student->roll_no ?? 'N/A' }}</b></td>
     </tr>
-
 
 
     <tr class="b-none">

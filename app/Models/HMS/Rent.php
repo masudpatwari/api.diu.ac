@@ -11,4 +11,9 @@ class Rent extends Model
     public $timestamps = false;
     
     protected $guarded = ['id'];
+
+    public function hostel()
+    {
+    	return $this->belongsTo(Hostel::class, 'hostel_id');
+    }
 }

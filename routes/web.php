@@ -1350,6 +1350,18 @@ $router->group(['middleware' => ['HostelAccessMiddleware', 'token.auth']], funct
         });
     });
 
+   
+
+    $router->group(['as' => 'examcontroller', 'prefix' => 'exam-controller'], function () use
+    ($router) {
+
+       $router->POST('session-update', ['as' => 'sessionUpdate', 'uses' => 'ExamController@sessionUpdate']);
+
+    });
+
+
+
+
     $router->GET('resume-status/{id}', ['as' => 'resume.status', 'uses' => 'resume\ResumeController@status']);
     $router->GET('resume-status-change/{id}', ['as' => 'resume.status', 'uses' => 'resume\ResumeController@statusNotEligible']);
     $router->GET('resume-status-change-eligible/{id}', ['as' => 'resume.status', 'uses' => 'resume\ResumeController@statusEligible']);
@@ -1446,7 +1458,7 @@ $router->group(['prefix' => 'bapi', 'namespace' => 'bapi',], function () use ($r
 
 $router->get('/student-portal-hostel-due/{id}', ['as' => 'HosteDueReport', 'uses' => 'HMS\BookingController@studentPortalHostelDue']);
 
-// $router->get('/mail-check', ['as' => 'HosteDueReport', 'uses' => 'HMS\BookingController@mailCheck']);
+$router->get('/mail-check', ['as' => 'HosteDueReport', 'uses' => 'HMS\BookingController@mailCheck']);
 
 
 

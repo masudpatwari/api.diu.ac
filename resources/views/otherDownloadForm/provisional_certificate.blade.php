@@ -124,12 +124,35 @@
 
 <body>
 
-@php
+    @php
     $url = '';
     $img = '';
 
 
     try {
+        if(@file_get_contents("ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student->id . ".JPG")){
+            $img = @file_get_contents("ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student->id . ".JPG");
+            $url = "ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student->id . ".JPG";
+        }
+
+        $img = file_get_contents_ssl($url);
+
+
+        if($img != ''){
+            if( strlen($img) == 2739 || strlen($img) == 32634 || strlen($img) == 0 ){
+                $url = env("APP_URL") . "images/student_profile_photo_" . $student->id . ".jpg";
+
+            }
+        }
+
+        
+
+
+    } catch (\Exception $e) {
+
+        try {
+
+            file_get_contents($url);
 
         $url = env("APP_URL") . "images/student_profile_photo_" . $student->id . ".jpg";
 
@@ -148,28 +171,6 @@
             }
         }
 
-
-    } catch (\Exception $e) {
-
-        try {
-
-            if(@file_get_contents("ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student->id . ".JPG")){
-                $img = @file_get_contents("ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student->id . ".JPG");
-                $url = "ftp://" . env("ERP_FTP_USERNAME") . ":" . env("ERP_FTP_USERPASSWORD") . "@" . env("ERP_FTP_HOST") ."/STD" . $student->id . ".JPG";
-            }
-    
-            $img = file_get_contents_ssl($url);
-    
-
-            if($img != ''){
-                if( strlen($img) == 2739 || strlen($img) == 32634 || strlen($img) == 0 ){
-                    $url = env("APP_URL") . "images/student_profile_photo_" . $student->id . ".jpg";
-    
-                }
-            }
-
-            file_get_contents($url);
-
         } catch (\Exception $e) {
     
                 $url = env("APP_URL") . "images/no_image.jpg";
@@ -178,6 +179,16 @@
         }
 
     //    dd($url, $img);
+        try {
+            $qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')
+                ->merge($url, 0.3, true)
+                ->size(150)->errorCorrection('H')
+                ->generate($details);
+        } catch (\Exception $e) {
+            // Handle the error gracefully (e.g., display an error message)
+            $qrCode = null;
+            $errorMessage = "QR Code generation failed: " . $e->getMessage();
+        }
 @endphp
 
 
@@ -259,16 +270,32 @@ Banani, Dhaka-1213, Bangladesh</span>
         </table>
     </div>
 
+    @if (!empty($qrCode))
+    <div style="float: left;width: 49%;margin-left: 10px;">
+        <table>
+            <tr>
+                <td class="b-none" style="text-align: right">
+                    <img src="data:image/png;base64, {!! base64_encode($qrCode) !!} ">
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    {{-- @else
+        <p>{{ $errorMessage }}</p> --}}
+    @endif
+
     {{--    @dd($url)--}}
     {{-- <div style="float: left;width: 49%;margin-left: 10px;">
         <table>
             <tr>
                 <td class="b-none" style="text-align: right">
                     @if($url)
-                        <img src="data:image/png;base64, {!! base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')
-                            ->merge($url, 0.3, true)
-                            ->size(140)->errorCorrection('H')
-                            ->generate($details)) !!} ">
+                  
+                    <img src="data:image/png;base64, {!! base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')
+                    ->merge($url, 0.3, true)
+                    ->size(150)->errorCorrection('H')
+                    ->generate($details)) !!} ">
                     @endif
                 </td>
             </tr>

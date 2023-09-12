@@ -717,7 +717,7 @@ class OthersFormDownloadController extends Controller
         ]);
        
         // return $otherStudentForm = OtherStudentForm::find(6686);
-       $otherStudentForm = OtherStudentForm::with('employee:id,name,designation_id', 'employee.relDesignation:id,name')->find($request->id);    
+        $otherStudentForm = OtherStudentForm::with('employee:id,name,designation_id', 'employee.relDesignation:id,name')->find($request->id);    
 
        
 
@@ -738,7 +738,7 @@ class OthersFormDownloadController extends Controller
 
                 // return [$student];
                 
-           if($otherStudentForm->student_id == '1981
+           if($otherStudentForm->student_id == '
            ') {  
             
                 // $url = env('RMS_API_URL') . '/admission/student-filter/' . $otherStudentForm->reg_code;
@@ -748,7 +748,8 @@ class OthersFormDownloadController extends Controller
                 // $student = $response->content;
             
 
-               $view = view('otherDownloadForm/provisional_certificate', compact('student', 'student_provisional_transcript_marksheet_info', 'otherStudentForm', 'details'));
+               
+                $view = view('otherDownloadForm/provisional_certificate_test_new', compact('student', 'student_provisional_transcript_marksheet_info', 'otherStudentForm', 'details'));
 
                 try {
                     $this->mpdf_show($view);

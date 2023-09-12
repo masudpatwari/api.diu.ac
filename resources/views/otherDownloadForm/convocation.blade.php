@@ -637,13 +637,14 @@ Banani, Dhaka-1213, Bangladesh</span>
 <div class="pdf_image">
     <img src="{{ storage_path('assets/convocation.png') }}" alt="">
 </div>
-
-{{-- <div class="qr_image">
+{{-- @if($url)
+<div class="qr_image">
     <img src="data:image/png;base64, {!! base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')
                         ->merge($url, 0.3, true)
                         ->size(135)->errorCorrection('H')
                         ->generate($details)) !!} ">
-</div> --}}
+</div>
+@endif --}}
 
 </body>
 </html>
