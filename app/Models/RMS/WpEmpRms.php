@@ -96,6 +96,7 @@ class WpEmpRms extends Model
         $rms->oet = '0';
         $rms->att_id = $cms->relAttendanceIds->att_data_id;
         $rms->emp_short_position = $cms->relShortPosition->name;
+        $rms->activestatus = 1;
         $rms->save();
 
         return $status;

@@ -28,6 +28,7 @@ class ProgramResource extends JsonResource
             'credit' => $this->credit,
             'semester' => $this->semester,
             'tuition_fee' => $this->tuition_fee,
+            'int_tuition_fee' => $this->international_tuition_fee,
             'admission_fee' => $this->admission_fee,
             'total_fee' => $this->total_fee,
             'shift' => $this->shift,

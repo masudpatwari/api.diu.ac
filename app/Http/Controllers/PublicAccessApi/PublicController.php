@@ -52,7 +52,6 @@ class PublicController extends Controller
     {
 //        return Faculty::with('relPrograms')->get();
         $tuition_fees = Faculty::with(['relPrograms' => function ($query) {
-            $query->whereIn('shift', ['First Shift', 'Friday/Saturday'])->where('type', 'Masters');
         }])->orderBy('id', 'asc')->get();
         if (!empty($tuition_fees)) {
             return TuitionFeeResource::collection($tuition_fees);

@@ -298,7 +298,7 @@ class DocumentsController extends Controller
 
         $view = view()->make('foreign_student_docs/' . $filename . '', $data);
 
-        $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('temp'), 'mode' => 'utf-8', 'format' => 'A4-P', 'orientation' => 'P']);
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('temp'), 'mode' => 'utf-8', 'format' => 'A4-P', 'orientation' => 'P','autoScriptToLang'=>true,'autoLangToFont'=>true]);
         $mpdf->SetTitle($filename);
         $mpdf->WriteHTML(file_get_contents(resource_path('views') . '/foreign_student_docs/css/' . $filename . '.css'), 1);
         $mpdf->WriteHTML($view, 2);

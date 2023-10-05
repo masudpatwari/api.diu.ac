@@ -1,8 +1,17 @@
 @php
     
     function convertSemester ( $number ){
+		if($number==10){
+			return $bn_number =  '১০ম' ;
+		}
+		if($number==11){
+			return $bn_number =  '১১তম' ;
+		}
+		if($number==12){
+			return $bn_number =  '১২তম' ;
+		}
 	    $replace_array= array("1", "2", "3", "4", "5", "6", "7", "8", "9", "0");
-	    $search_array= array("১ম", "২য়", "৩য়", "৪র্থ", "৫ম", "৬ষ্ঠ", "৭ম", "৮ম", "৯ম", "০");
+	    $search_array= array("১ম", "২য়", "৩য়", "৪র্থ", "৫ম", "৬ষ্ঠ", "৭ম", "৮ম", "৯ম","০");
 	    $bn_number = str_replace($replace_array, $search_array, $number);
 	    return $bn_number;
 	}
@@ -15,10 +24,17 @@
 		return $bn_date;
 	}
 
+	
+	
+
 @endphp
 
-<div style="text-align: center; margin-bottom: 0.5in;">
+{{-- <div style="text-align: center; margin-bottom: 0.5in;">
     <h2><b>নোট নং </b></h2>
+</div> --}}
+
+<div style="text-align: center; margin-bottom: 0.5in;">
+    নোট নং 
 </div>
 
 

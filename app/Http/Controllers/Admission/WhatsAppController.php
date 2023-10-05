@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admission;
 use App\Employee;
 use App\Http\Controllers\Controller;
 use App\Models\WhatsApp\WhatsAppTemplate;
+use App\Models\WhatsApp\WhatsApp;
 use Ixudra\Curl\Facades\Curl;
 
 
@@ -36,8 +37,8 @@ class WhatsAppController extends Controller
     }
 
     public function getTemplates()
-    {
-        $templates = WhatsAppTemplate::get()->groupBy('type');
+    {        
+         $templates = WhatsAppTemplate::get()->groupBy('type');       
 
         if(count($templates) > 0)
         {
