@@ -66,7 +66,7 @@ trait ApplicationForm
             $course_as_array[] = json_decode($value, true);
         }
 
-        $student = json_encode($this->traits_get_student_by_id($student_id));
+         $student = json_encode($this->traits_get_student_by_id($student_id));
         $view = view('download_form/mid_term_retake', compact('course_as_array', 'student'));
 
         return $this->mpdf_show($view);

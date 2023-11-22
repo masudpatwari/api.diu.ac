@@ -55,18 +55,22 @@ class StudentsController extends Controller
 
     public function all(Request $request, $query)
     {
-        $student = Student::where('NAME',  $query)
-            ->orWhere('REG_CODE', $query)
-            ->orWhere('REG_CODE', 'LIKE', "%{$query}")
-            ->first();
+
+         $student = $this->studentSearch($query);   
+     
+        //  $student = Student::where('NAME',  $query)
+        //     ->orWhere('REG_CODE', $query)
+        //     ->orWhere('REG_CODE', 'LIKE', "%{$query}")
+        //     ->first();
+        //     
 
         if (!empty($student)) {
 
             $data['student']    = $student;
 
-            if ($student->GENDER == 'M') {
+            if ($student[0]['gender'] == 'M') {
                 $data['hostel']     = Hostel::where('type', 'boys')->get();
-            } elseif ($student->GENDER == 'F') {
+            } elseif ($student[0]['gender'] == 'F') {
                 $data['hostel']     = Hostel::where('type', 'girls')->get();
             }
 

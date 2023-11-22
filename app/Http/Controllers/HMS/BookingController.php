@@ -19,6 +19,7 @@ use App\Mail\StudentEmailVerify;
 use App\Mail\ResetStudentPassword;
 
 
+
 class BookingController extends Controller
 {
 
@@ -727,9 +728,10 @@ class BookingController extends Controller
 
 
      public function mailCheck(){
+       
         $email = 'omorfaruk5020@gmail.com';
-         $student = Student::where('email', $email)->first();
-        $token = $this->generate_token( $student );
+          $student = Student::where('email', $email)->first();
+           $token = $this->generate_token( $student );
         
         $mail =  Mail::to($email)->send(new StudentEmailVerify($token));
 

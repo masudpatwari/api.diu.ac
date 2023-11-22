@@ -141,7 +141,7 @@
     </tr>
 
     <tr>
-        <th>(Fee Per Course TK 500)</th>
+        <th>(Fee Per Course TK 1000)</th>
     </tr>
 </table>
 
@@ -153,7 +153,7 @@
 
     <tr>
         <td class="bl-none bb-none">Program: <b>{{ $decoded2['department']['name'] }}</b></td>
-        <td class="bb-none"><b> {{ count($course_as_array) * 500 }} </b> (<span style="text-transform: capitalize;"><b>{{ \App\classes\NumberToWord::numberToWord(count($course_as_array) * 500) }} taka only</b></span>) cash received.</td>
+        <td class="bb-none"><b> {{ count($course_as_array) * 1000 }} </b> (<span style="text-transform: capitalize;"><b>{{ \App\classes\NumberToWord::numberToWord(count($course_as_array) * 1000) }} taka only</b></span>) cash received.</td>
 
     <tr>
         <td class="bl-none bb-none"> Roll No: <b>{{ $decoded2['roll_no'] }}</b> ; Batch: <b>{{ $decoded2['batch']['batch_name'] }}</b> ;  Reg. Code: <b>{{ $decoded2['reg_code'] }}</b> ;  Semester: <b>{{ $decoded2['current_semester']  }}</b></td>

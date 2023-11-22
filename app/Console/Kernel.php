@@ -29,7 +29,8 @@ class Kernel extends ConsoleKernel
         Commands\ImageSyncCommand::class,
         Commands\RatingSyncCommand::class,
         Commands\ConvocationImageSyncCommand::class,
-        Commands\ConvocationPhoneNoSyncCommand::class
+        Commands\ConvocationPhoneNoSyncCommand::class,
+        Commands\SendSms::class
     ];
 
     /**

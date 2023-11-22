@@ -1407,6 +1407,52 @@ trait RmsApiTraits
         return false;
 
     }
+    public function get_student_by_like_reg_code($reg)
+    {
+        $url = '' . env('RMS_API_URL') . '/get_student_by_like_reg_code/' . $reg;
+        $response = Curl::to($url)->returnResponseObject()->asJson(true)->get();
+
+        if ($response->status == 200) {
+            return $response->content;
+        }
+        return false;
+    }
+    public function get_readmission_student_info($reg)
+    {
+        $url = '' . env('RMS_API_URL') . '/get_readmission_student_info/' . $reg;
+        $response = Curl::to($url)->returnResponseObject()->asJson(true)->get();
+
+        if ($response->status == 200) {
+            return $response->content;
+        }
+        return false;
+    }
+    public function readmission_student_store($data)     
+    {
+        $url = env('RMS_API_URL') . '/readmission_store/';
+
+        $response = Curl::to($url)
+            ->withData($data)
+            ->returnResponseObject()
+            ->asJson(true)
+            ->post();
+
+        if ($response->status == 200 || $response->status == 202) {
+            return $response->content;
+        }
+
+        return false;
+    }
+    public function get_department_by_short_code($short_code)
+    {
+        $url = '' . env('RMS_API_URL') . '/get_readmission_department/' . $short_code;
+        $response = Curl::to($url)->returnResponseObject()->asJson(true)->get();
+
+        if ($response->status == 200) {
+            return $response->content;
+        }
+        return false;
+    }
 }
 
 ?>

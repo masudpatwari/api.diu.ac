@@ -58,7 +58,7 @@ class SendSms extends Command
            
         }else{        
              
-            $sms = SmsSchedule::find(1); 
+            $sms = SmsSchedule::first(); 
             $numbers = Student::where('status','NEW')->take($sms->limit)->get();                
         
             if(count($numbers)>0){               
@@ -80,7 +80,7 @@ class SendSms extends Command
     
                         $number->update([
                             'message'=> $newMessage,
-                            'status'=>$response,
+                            'status'=>$res->message,
                             // 'error'=>$res->error,
                             // 'message_id'=> $res->message_id,
                             'date'=> date("Y-m-d H:i:s") 

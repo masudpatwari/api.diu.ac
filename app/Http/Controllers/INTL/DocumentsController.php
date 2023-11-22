@@ -255,7 +255,7 @@ class DocumentsController extends Controller
             return response()->json(['message' => 'Invalid Filename'], 400);
         }
 
-        $foreign_student = ForeignStudent::with('relUser', 'relReferralBy')
+         $foreign_student = ForeignStudent::with('relUser', 'relReferralBy')
             ->whereStudentId($studentRmsId)
             ->first();
 
@@ -290,13 +290,13 @@ class DocumentsController extends Controller
 
 //         dd($foreign_student);
 
-        $data['profile'] = $this->resource_employee($foreign_student);
+ $data['profile'] = $this->resource_employee($foreign_student);
 
         $data['doc'] = $doc;
         $data['visa_year'] = $request->visa_year;
         $data['sup'] = $this->sup($data['profile']['running_semester']);
 
-        $view = view()->make('foreign_student_docs/' . $filename . '', $data);
+         $view = view()->make('foreign_student_docs/' . $filename . '', $data);
 
         $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('temp'), 'mode' => 'utf-8', 'format' => 'A4-P', 'orientation' => 'P','autoScriptToLang'=>true,'autoLangToFont'=>true]);
         $mpdf->SetTitle($filename);
@@ -405,9 +405,9 @@ class DocumentsController extends Controller
         $departmentName = $departmentInfo['name'];
 
         return [
-            'id' => $foreign_student->id,
-            'name' => $foreign_student->relUser->name,
-            'email' => $foreign_student->relUser->email,
+            'id' => $foreign_student->id ?? null,
+            'name' => $foreign_student->relUser->name ?? null,
+            'email' => $foreign_student->relUser->email ?? null,
             'profile_photo' => $foreign_student->relUser->profile_photo,
             'permanent_address' => $foreign_student->permanent_address,
             'permanent_mobile' => $foreign_student->permanent_mobile,
@@ -424,7 +424,7 @@ class DocumentsController extends Controller
             'visa_date_of_issue' => ($foreign_student->visa_date_of_issue),
             'visa_place_of_issue' => $foreign_student->visa_place_of_issue,
             'nationality' => $foreign_student->present_nationality,
-            'father_name' => $foreign_student->father_name,
+            'father_name' => $foreign_student->father_name ,
             'mother_name' => $foreign_student->mother_name,
             'spouse_name' => $foreign_student->spouse_name,
             'country_of_birth' => $foreign_student->country_of_birth,

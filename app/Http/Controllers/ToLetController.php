@@ -120,26 +120,7 @@ class ToLetController extends Controller
     }
 
 
-    public function request(Request $request)
-    {
-        $this->validate($request, [
-            'seat' => ['required', 'numeric'],
-        ]);
-        $tolet = ToLet::where('id', $request->publish_id)->where("status", "=", 1)->firstOrFail();
-
-        $data = new ToletRequest;
-        $data->requested_by = $request->requested_by;
-        $data->phone = $request->phone;
-        $data->email = $request->email;
-        $data->requester_id = $request->requester_id;
-        $data->seat = $request->seat;
-        $data->publish_id = $request->publish_id;
-        $data->status = 0;
-        $data->creater_id = $request->creater_id;
-        $data->save();
-
-        return "data inserted";
-    }
+  
 
     public function toletRequest(Request $request)
     {

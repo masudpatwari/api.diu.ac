@@ -295,7 +295,7 @@ class DiuAcController extends Controller
             return response()->json(['message' => 'no data found'], 401);
         }
 
-        $websiteProgramFaculty = WebsiteProgramFaculty::whereWebsiteProgramId($websiteProgram->id)->first();
+         $websiteProgramFaculty = WebsiteProgramFaculty::whereWebsiteProgramId($websiteProgram->id)->first();
 
         if (!$websiteProgramFaculty) {
             return response()->json(['message' => 'no data found'], 401);

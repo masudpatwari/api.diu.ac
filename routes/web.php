@@ -112,21 +112,7 @@ Route::post("/add_alumni", 'Alumni\AlumniController@add_alumni');
 Route::post("/alumni_account_has/{reg_code}", 'Alumni\AlumniController@alumni_account_has');
 //});
 
-// To-let
 
-// Route::get('tolet', "ToLetController@show");
-// Route::post('tolet/tolet-publish', "ToLetController@toletpublish");
-// Route::get('toletsearch/{item}', "ToLetController@search");
-// Route::get('toletdetails/{id}', "ToLetController@details");
-// Route::post('tolet/publish', "ToLetController@store");
-// Route::post('tolet/publishupdate/{id}', "ToLetController@requestAccept");
-// Route::post('tolet/tolet-accept/{id}', "ToLetController@toletAccept");
-// Route::post('tolet/requestreject/{id}', "ToLetController@requestReject");
-// Route::post('tolet/request', "ToLetController@request");
-// Route::post('tolet-request', "ToLetController@toletRequest");
-// Route::get('getrequest/{id}', "ToLetController@getrequest");
-// Route::get('get-request-by-id', "ToLetController@getRequestById");
-// Route::get('tolet/searchgender/{id}', "ToLetController@searchGender");
 
 
 //convocation ticket booking
@@ -299,7 +285,6 @@ $router->group(['middleware' => ['token.student.auth']], function () use ($route
     $router->post('tolet/publishupdate/{id}', "ToLetController@requestAccept");
     $router->post('tolet/tolet-accept/{id}', "ToLetController@toletAccept");
     $router->post('tolet/requestreject/{id}', "ToLetController@requestReject");
-    $router->post('tolet/request', "ToLetController@request");
     $router->post('tolet-request', "ToLetController@toletRequest");
     $router->get('getrequest/{id}', "ToLetController@getrequest");
     $router->get('get-request-by-id', "ToLetController@getRequestById");
@@ -586,8 +571,8 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
 
         $router->group(['prefix' => 'phone-call',], function () use ($router) {
             $router->GET('index', ['as' => 'phoneCall.index', 'uses' => 'PhoneCall\PhoneCallController@index']);
-            //            $router->GET('search/{response_key}', ['as' => 'phoneCall.search', 'uses' => 'PhoneCall\PhoneCallController@search']);
-            //            $router->POST('store', ['as' => 'phoneCall.store', 'uses' => 'PhoneCall\PhoneCallController@store']);
+             $router->GET('search/{response_key}', ['as' => 'phoneCall.search', 'uses' => 'PhoneCall\PhoneCallController@search']);
+            $router->POST('store', ['as' => 'phoneCall.store', 'uses' => 'PhoneCall\PhoneCallController@store']);
         });
 
         $router->POST('voice-blast-upload-CSV-File', ['as' => 'voiceBlast.voiceBlastUploadCSVFile', 'uses' => 'PhoneCall\VoiceBlastController@voiceBlastUploadCSVFile']);
@@ -1356,6 +1341,15 @@ $router->group(['middleware' => ['HostelAccessMiddleware', 'token.auth']], funct
     ($router) {
 
        $router->POST('session-update', ['as' => 'sessionUpdate', 'uses' => 'ExamController@sessionUpdate']);
+
+    });
+
+    $router->group(['as' => 'registeroffice', 'prefix' => 'register-office'], function () use
+    ($router) {
+
+       $router->get('get_student_info/{reg}', ['as' => 'get_student_info', 'uses' => 'RegisterOfficeController@get_student_info']);
+       $router->get('get_department_by_short_code/{shrt_code}', ['as' => 'get_department', 'uses' => 'RegisterOfficeController@get_department']);
+       $router->post('readmission', ['as' => 'readmission-store', 'uses' => 'RegisterOfficeController@readmission_store']);
 
     });
 

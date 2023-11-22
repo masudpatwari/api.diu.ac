@@ -52,6 +52,7 @@ class ApplicationController extends Controller
 
     public function mid_term_retake_form(Request $request)
     {
+        // return $request->retake_subject;
 
         $this->validate($request, [
             'retake_subject' => 'required|array',
