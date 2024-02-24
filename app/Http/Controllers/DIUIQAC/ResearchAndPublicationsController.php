@@ -69,7 +69,7 @@ class ResearchAndPublicationsController extends Controller
         $this->validate($request, [
             'type' => 'required|in:articles,research,publication,materials,press_release',
             'title' => 'required|string|max:500',
-            'file' => 'nullable|mimes:jpeg,jpg,png|max:1024', // 1024 = 1MB
+            'file' => 'nullable|mimes:jpeg,jpg,png,pdf|max:1024', // 1024 = 1MB
             'cover_file' => 'nullable|mimes:jpeg,jpg,png|max:1024', // 1024 = 1MB
         ]);
 

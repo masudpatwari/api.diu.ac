@@ -20,45 +20,7 @@ class RegularAdmitCardController extends Controller
         return $result = $this->get_purpose_pay();
     }
 
-    public function make_regular_payments(Request $request)
-    {
-        $this->validate($request,
-            [
-                'department_id' => 'required|integer',
-                'batch_id' => 'required|integer',
-                'student_id' => 'required|integer',
-                'bank_id' => 'required|integer',
-                'bank_payment_date' => 'required|date_format:d-m-Y',
-                'purpose_id' => 'required|integer',
-                'receipt_no' => 'required',
-                'total_payable' => 'required|numeric',
-            ]
-        );
-
-        $url = env('RMS_API_URL') . '/general-payment';
-        $array = [
-            'bank_id' => $request->bank_id,
-            'bank_payment_date' => $request->bank_payment_date,
-            'purpose_id' => $request->purpose_id,
-            'receipt_no' => $request->receipt_no,
-            'total_payable' => $request->total_payable,
-            'employee_email' => $request->auth->office_email,
-            'student_id' => $request->student_id,
-            'note' => $request->note ?? '', // added by lemon
-        ];
-
-        $response = Curl::to($url)->withData($array)->returnResponseObject()->asJsonResponse(true)->post();
-
-        $data = "";
-        if ($response->status == 200) {
-
-            $this->sendStudentSmsForFeeCollection($request->purpose_id, $request->student_id, $request->total_payable);
-            return $response->content;
-
-        } else {
-            return response()->json($response->content, 400);
-        }
-    }
+   
 
     public function download_regular_admit_card($ora_uid, $term)
     {

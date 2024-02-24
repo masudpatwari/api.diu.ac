@@ -107,7 +107,7 @@ Route::get('/user', 'Alumni\AlumniAuthController@user');
 
 
 Route::get("/alumni_list", 'Alumni\AlumniController@alumni_list');
-Route::get("/alumni_info/{name}", 'Alumni\AlumniController@alumni_info');
+Route::get("/alumni_info/{id}", 'Alumni\AlumniController@alumni_info');
 Route::post("/add_alumni", 'Alumni\AlumniController@add_alumni');
 Route::post("/alumni_account_has/{reg_code}", 'Alumni\AlumniController@alumni_account_has');
 //});
@@ -931,7 +931,7 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
         $router->POST('mobile-payment/upload-csv-file', ['as' => 'mobilePayment.upload_CSV_File', 'uses' => 'MobilePaymentController@mobilePaymentCSVFileUpload']);
         $router->GET('mobile-payment/verify-payment/{id}', ['as' => 'mobilePayment.verify-payment', 'uses' => 'MobilePaymentController@verifyPayment']);
         $router->GET('covid-accounts-report/{batch_id}', ['as' => 'covid-accounts-report.report', 'uses' => 'MobilePaymentController@covidAccountsReport']);
-        $router->GET('covid-discount', ['as' => 'covid-accounts-report.discount', 'uses' => 'MobilePaymentController@covidDiscount']);
+        
 
 
         $router->GET('eligible-students-for-exam/{batch_id}', ['as' => 'eligible-students-for-exam.report', 'uses' => 'MobilePaymentController@eligibleStudentsForExam']);
@@ -1158,8 +1158,7 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
         'STD\CMSStudentImprovementController@get_student_for_payment_test']);
         $router->GET('get_banks', ['as' => 'cms_student_module.get_banks', 'uses' => 'STD\CMSStudentImprovementController@get_banks']);
         $router->POST('make_improvement_payment_complete', ['as' => 'cms_student_module.make_improvement_payment_complete', 'uses' => 'STD\CMSStudentImprovementController@make_improvement_payment_complete']);
-
-        $router->POST('make_regular_payments', ['as' => 'take_payment.make_regular_payments', 'uses' => 'STD\RegularAdmitCardController@make_regular_payments']);
+     
 
         $router->POST('get_courses_for_improvement_apply', ['as' => 'cms_student_module.get_courses_for_improvement_apply', 'uses' => 'STD\CMSStudentImprovementController@get_courses_for_improvement_apply']);
         $router->POST('get_courses_for_improvement_apply_test', ['as' => 'cms_student_module.get_courses_for_improvement_apply_test', 'uses' => 'STD\CMSStudentImprovementController@get_courses_for_improvement_apply_test']);
@@ -1351,6 +1350,8 @@ $router->group(['middleware' => ['HostelAccessMiddleware', 'token.auth']], funct
        $router->get('get_department_by_short_code/{shrt_code}', ['as' => 'get_department', 'uses' => 'RegisterOfficeController@get_department']);
        $router->post('readmission', ['as' => 'readmission-store', 'uses' => 'RegisterOfficeController@readmission_store']);
 
+       $router->get('convocation_information/{batch_id}', ['as' => 'convocation_information', 'uses' => 'RegisterOfficeController@convocation_information']);
+
     });
 
 
@@ -1360,6 +1361,8 @@ $router->group(['middleware' => ['HostelAccessMiddleware', 'token.auth']], funct
     $router->GET('resume-status-change/{id}', ['as' => 'resume.status', 'uses' => 'resume\ResumeController@statusNotEligible']);
     $router->GET('resume-status-change-eligible/{id}', ['as' => 'resume.status', 'uses' => 'resume\ResumeController@statusEligible']);
     $router->POST('local-students', ['as' => 'resumes', 'uses' => 'masud\SpecialController@local']);
+    $router->POST('foreign-students', ['as' => 'resumes', 'uses' => 'masud\SpecialController@foreign']);
+    $router->POST('import-number-upload-csv', ['as' => 'import.number', 'uses' => 'masud\SpecialController@impotNumberUploadCSVFile']);
     $router->GET('resume-declaration/', ['as' => 'resume.declaration', 'uses' => 'resume\ResumeController@declaration']);
     $router->GET('resumes', ['as' => 'resumes', 'uses' => 'resume\ResumeController@index']);
     $router->GET('consent-resumes', ['as' => 'consent.resumes', 'uses' => 'resume\ResumeController@consent']);

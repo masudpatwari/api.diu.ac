@@ -88,7 +88,7 @@ class LeaveController extends Controller
         );
 
         try {
-            DB::beginTransaction();
+            // DB::beginTransaction();
             $leave_array = [
                 'employee_id' => $request->auth->id,
                 'status' => 'Pending',
@@ -101,7 +101,7 @@ class LeaveController extends Controller
             $leave = LeaveApplication::create($leave_array);
 
             $leave_history_array = [
-                'leaveApplication_id' => $leave->id,
+                'leaveApplication_id' => $leave->id ?? $request->auth->id,
                 'kindofleave' => $request->input('kinds_of_leave'),
                 'start_date' => date_to_datestamp($request->input('str_date')),
                 'end_date' => date_to_datestamp($request->input('end_date')),
@@ -121,10 +121,10 @@ class LeaveController extends Controller
             }catch (\Exception $e) {
                 dd($e->getMessage());
             }
-            DB::commit();
+            // DB::commit();
             return response()->json(NULL, 201);
         } catch (\PDOException $e) {
-            DB::rollBack();
+            // DB::rollBack();
             return response()->json(['error' => 'Insert Failed.'], 400);
         }
     }

@@ -38,7 +38,14 @@ class EmployeeController extends Controller
 
     public function executive_employees()
     {
-        return $this->employees_group('executive');
+        
+        // return $this->employees_group('executive');
+        $employees = Employee::where('activestatus', '1')->whereIn('id',[1049,786,813])->orderBy('id', 'desc')->get();
+        if (!empty($employees))
+        {
+            return EmployeeResource::collection($employees);
+        }
+        return response()->json(NULL, 404);
     }
 
     public function faculty_employees()

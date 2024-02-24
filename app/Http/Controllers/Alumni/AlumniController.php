@@ -19,15 +19,15 @@ class AlumniController extends Controller
 
     public function alumni_list()
     {
-        $alumni = Alumni::select('name', 'avatar', 'user_name', 'department', 'facebook_link', 'linkedin_link',
-            'twitter_link')->latest()->paginate(8);
+        $alumni = Alumni::select('id','name','department','batch','roll','shift','session','phone','email', 'avatar', 'facebook_link', 'linkedin_link','twitter_link')->latest()->paginate(16);
+          
         return $alumni;
     }
 
-    public function alumni_info($name)
+    public function alumni_info($id)
     {
         try {
-            $alumni = Alumni::where('user_name', $name)->with('alumni_job_details')->firstOrFail();
+            $alumni = Alumni::where('id', $id)->with('alumni_job_details')->firstOrFail();
 //            $alumni = Alumni::where('user_name', $name)->whereHas('alumni_job_details')->with('alumni_job_details')->firstOrFail();
             return response([
                 "status" => "success",

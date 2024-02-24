@@ -18,11 +18,11 @@ class ProgramResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'faculty_name' => $this->relFaculty->name,
-            'department_name' => $this->relDepartment->name,
-            'name' => $this->name,
+            'faculty_name' => $this->relFaculty->name ?? null,
+            'department_name' => $this->relDepartment->name ?? null,
+            'name' => $this->name ?? null,
             'status' => $this->status,
-            'short_name' => $this->short_name,
+            'short_name' => $this->short_name ?? null,
             'description' => $this->description,
             'duration' => $this->duration,
             'credit' => $this->credit,

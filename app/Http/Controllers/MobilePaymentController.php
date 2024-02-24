@@ -133,18 +133,7 @@ class MobilePaymentController extends Controller
         return $this->rmsCovidAccountsReport($batchId);
     }
 
-    public function covidDiscount(Request $request)
-    {
 
-        $this->validate($request,
-            [
-                'std_id' => 'required|integer',
-                'amount' => 'required|numeric'
-            ]
-        );
-
-        return $this->rmsCovidDiscountAsScholarship($request, (int)$request->std_id, (float)$request->amount);
-    }
 
 
     public function eligibleStudentsForExam($batchId)

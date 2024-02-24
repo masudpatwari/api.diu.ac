@@ -284,15 +284,7 @@ trait RmsApiTraits
         return response()->json(NULL, 404);
     }
 
-    public function rmsCovidDiscountAsScholarship(Request $request, int $stdId, float $amount)
-    {
-        $office_email = Employee::findOrFail($request->auth->id)->office_email;
-
-        $url = '' . env('RMS_API_URL') . '/covid-discount-as-scholarhip?std_id=' . $stdId . '&amount=' . $amount . '&office_email=' . $office_email;
-        $response = Curl::to($url)->returnResponseObject()->asJson(true)->get();
-
-        return response()->json($response->content, $response->status);
-    }
+  
 
 
     public function save_student_scholarship_as_liaison_officer(Request $request, int $stdId, float $amount, string $receipt_no)
@@ -1452,6 +1444,28 @@ trait RmsApiTraits
             return $response->content;
         }
         return false;
+    }
+
+    public function traits_get_foreign_students($start, $end)
+    {
+        $url = '' . env('RMS_API_URL') . '/foreign-student/' . $start.'/'.$end;
+        $response = Curl::to($url)->returnResponseObject()->asJson(true)->get();
+
+        if ($response->status == 200) {
+            return $response->content;
+        }
+        return false;
+    }
+
+    public function get_convocation_information($batch_id){
+        $url = '' . env('RMS_API_URL') . '/convocation_information/' . $batch_id;
+        $response = Curl::to($url)->returnResponseObject()->asJson(true)->get();
+
+        if ($response->status == 200) {
+            return $response->content;
+        }
+        return false;
+
     }
 }
 
