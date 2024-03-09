@@ -18,7 +18,8 @@ class TeamResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->employee->name ?? null,
-            'designation' => $this->employee->relDesignation->name ?? null,
+            'diu_designation' => $this->employee->relDesignation->name ?? null,
+            'iqac_designation' => $this->designation,
             'profile_image' => env('APP_URL') . $this->employee->profile_photo_file,
             'profile_link' => "https://profile.diu.ac/{$this->employee->slug_name}",
         ];

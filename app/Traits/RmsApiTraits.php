@@ -542,10 +542,66 @@ trait RmsApiTraits
 
     }
 
+    public function trait_searchStudentInfo(Request $request)
+    {
+        $this->validate($request, 
+        [
+            'registration_code' => 'required|string|max:255',
+            
+        ]);
+         $regcode = $request->input('registration_code');  
+         $input = [
+            'registration_code' => $regcode,
+
+        ];
+        $token =  $request->input('token');      
+
+        $url = env('RMS_API_URL') . '/bank/search_student?token='. $token;
+        $response = Curl::to($url)->withData( $input)
+            ->returnResponseObject()
+            ->asJson(true)
+            ->post();
+        return response()->json($response->content, $response->status);
+
+    }
+    public function trait_confirmPayment(Request $request)
+    {
+        $this->validate($request, 
+        [
+            'confirm_amount' => 'required|numeric',
+            'student_id' => 'required|integer',
+            'type_of_fee' => 'required|integer',
+            'transaction_id' => 'required|string|max:255',
+            
+        ]);
+         $input = [
+            'confirm_amount' => $request->input('confirm_amount'),
+            'student_id' => $request->input('student_id'),
+            'type_of_fee' => $request->input('type_of_fee'),
+            'transaction_id' => $request->input('transaction_id')           
+
+        ];
+        $token=  $request->input('token');    
+
+        $url = env('RMS_API_URL') . '/bank/confirm_payment?token='.$token;
+        $response = Curl::to($url)->withData( $input)
+            ->returnResponseObject()
+            ->asJson(true)
+            ->post();
+        return response()->json($response->content, $response->status);
+
+    }
+
+    public function bankTransectionInfo(Request $request){
+        $token=  $request->input('token'); 
+        $url = env('RMS_API_URL') . '/bank/transection_info?token='.$token;
+        $response = Curl::to($url)->returnResponseObject()->asJson(true)->get();
+        return response()->json($response->content, $response->status);
+
+    }
 
     public function student_account_info_summary($ora_uid)
     {
-
         $url = '' . env('RMS_API_URL') . '/student_account_info_summary/' . $ora_uid;
         $response = Curl::to($url)->returnResponseObject()->asJson(true)->get();
 

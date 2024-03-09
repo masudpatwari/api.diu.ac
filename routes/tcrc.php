@@ -86,7 +86,10 @@ $router->group(['prefix' => 'public-diu-trc-website', 'namespace' => 'DIUTCRC'],
 
     $router->get('research-publication/{type}', ['as' => '[diuTcrc.researchPublication', 'uses' => 'DiuTcrcController@researchPublication']);
 
+    $router->get('publication/{id}', ['as' => '[diuTcrc.Publication', 'uses' => 'DiuTcrcController@publicationDetails']);
+
     $router->get('teams/{type}', ['as' => '[diuTcrc.teams', 'uses' => 'DiuTcrcController@teams']);
+    $router->get('teams', ['as' => '[diuTcrc.getteams', 'uses' => 'DiuTcrcController@getTeams']);
 
     $router->get('partner', ['as' => '[diuTcrc.partner', 'uses' => 'DiuTcrcController@partner']);
 

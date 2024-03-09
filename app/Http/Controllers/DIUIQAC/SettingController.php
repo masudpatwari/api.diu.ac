@@ -33,6 +33,7 @@ class SettingController extends Controller
         $this->validate($request, [
             'type' => 'required|in:iqac,sac,qac',
             'employee_id' => 'required|integer',
+            'designation' => 'required',
         ]);
 
         $form = $request->all();

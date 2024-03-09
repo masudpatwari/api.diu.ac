@@ -43,8 +43,8 @@ class EmployeeProfileResource extends JsonResource
             'signature_card_photo_file' => $this->signature_card_photo_file,
             'cover_photo_file' => $this->cover_photo_file,
             'weekly_working_hours' => $this->weekly_working_hours,
-            'attendance_card_id' => $this->relAttendanceIds->att_data_id,
-            'attendance_id' => $this->relAttendanceIds->att_card_id,
+            'attendance_card_id' => $this->relAttendanceIds->att_data_id ?? 'NA',
+            'attendance_id' => $this->relAttendanceIds->att_card_id ?? 'NA',
             'short_position' => [
                 'name' => $this->relShortPosition->name,
                 'description' => $this->relShortPosition->description,

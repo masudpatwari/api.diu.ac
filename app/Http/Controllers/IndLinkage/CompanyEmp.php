@@ -119,6 +119,22 @@ class CompanyEmp extends Controller
     public function test_db()
     {
 
+        
+
+        try {
+
+           return  DB::table('sliders')->pluck('id')->toArray();
+            // Execute a simple query to test the database connection
+            // DB::connection()->getPdo();
+        
+            // If the query executes without throwing an exception, the connection is successful
+            echo "Database connection is successful!";
+        } catch (\Exception $e) {
+            // If an exception is thrown, it indicates a connection error
+            echo "Database connection failed: " . $e->getMessage();
+        }
+
+
 
 
         //        $url = '';

@@ -1395,7 +1395,14 @@ $router->get('show_urls_with_routename_middleware', function () {
 $router->group(['prefix' => 'bank', 'middleware' => ['Bank']], function () use ($router) {
     //    $router->GET('students', ['as' => 'exim.getStudents', 'uses' => 'STD\BankController@getStudents']);
     $router->POST('students', ['as' => 'exim.getStudentDetail', 'uses' => 'STD\BankController@getStudentDetail']);
+
+    $router->GET('token', ['as' => 'exim.test', 'uses' => 'STD\BankController@test']);
+    $router->POST('search_student', ['as' => 'search_student', 'uses' => 'STD\BankController@searchStudent']);
+    $router->POST('confirm_payment', ['as' => 'confirm_payment', 'uses' => 'STD\BankController@confirmPayment']);
+    $router->GET('transectionn-info', ['as' => 'transectionn_info', 'uses' => 'STD\BankController@transectionInfo']);
 });
+
+
 
 
 $router->group(['prefix' => 'phone-call',], function () use ($router) {

@@ -45,13 +45,26 @@ class DiuTcrcController extends Controller
 
     public function researchPublication($type)
     {
-        return ResearchAndPublications::orderBy('id', 'DESC')->whereType($type)->get();
+        return ResearchAndPublications::orderBy('id', 'ASC')->whereType($type)->get();
+    }
+    public function publicationDetails($id)
+    {
+        return ResearchAndPublications::find($id);
     }
 
     public function teams($type)
     {
         $team = Team::with('employee', 'employee.relDesignation')
             ->whereType($type)
+            ->get();
+
+
+        $teamResource = TeamResource::collection($team);
+        return $teamResource ?? abort(404);
+    }
+    public function getTeams()
+    {
+        $team = Team::with('employee', 'employee.relDesignation')
             ->get();
 
 

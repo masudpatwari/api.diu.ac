@@ -13,6 +13,8 @@ class ResearchAndPublications extends Model
     protected $fillable = [
         'type',
         'title',
+        'description',
+        'file_link',
         'file_path',
         'created_by',
         'cover_file',

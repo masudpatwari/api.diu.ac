@@ -14,6 +14,7 @@ class Team extends Model
     protected $fillable = [
         'type',
         'employee_id',
+        'designation',
         'created_by',
     ];
 

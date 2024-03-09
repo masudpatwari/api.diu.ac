@@ -19,7 +19,7 @@ class ResearchAndPublicationsController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'type' => 'required|in:articles,research,publication,materials,press_release',
+            'type' => 'required',
             'title' => 'required|string|max:500',
             'file' => 'required|mimes:jpeg,jpg,png,pdf|max:1024', // 1024 = 1MB
             'cover_file' => 'required_if:type,research|mimes:jpeg,jpg,png|max:1024', // 1024 = 1MB
@@ -44,6 +44,8 @@ class ResearchAndPublicationsController extends Controller
             ResearchAndPublications::create([
                 'type' => $request->type,
                 'title' => $request->title,
+                'description' => $request->description,
+                'file_link' => $request->file_link,
                 'created_by' => $request->auth->id,
                 'file_path' => env('APP_URL') . "/images/diu_tcrc/researchAndPublications/{$file_name}",
                 'cover_file' => $file_name_cover_file,
@@ -104,6 +106,8 @@ class ResearchAndPublicationsController extends Controller
                 'title' => $request->title,
                 'file_path' => $image_url,
                 'cover_file' => $file_name_cover_file,
+                'description' => $request->description,
+                'file_link' => $request->file_link,
             ]);
 
         });
