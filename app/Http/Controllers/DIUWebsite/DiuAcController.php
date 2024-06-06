@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DIUWebsite\Convocation;
 use App\Models\DIUWebsite\VitalPerson;
 use App\Models\DIUWebsite\Publication;
+use App\Models\DIUWebsite\Journal;
 use App\Models\DIUWebsite\WebsiteProgram;
 use App\Models\DIUWebsite\VitalPersonType;
 use App\Models\DIUWebsite\WebsiteProgramIeb;
@@ -46,6 +47,14 @@ class DiuAcController extends Controller
     public function publication()
     {
         return Publication::active()->get();
+    }
+    public function journal()
+    {
+        return Journal::get();
+    }
+    public function journalDetails($id)
+    {
+        return Journal::find($id);
     }
 
     public function convocations()
@@ -344,6 +353,14 @@ class DiuAcController extends Controller
 
         WebsiteContactForm::create($request->all());
         return response()->json(['message' => 'Form Submitted Successfully'], 200);
+    }
+    public function notice(){
+        // return WebsiteNoticeEvent::get();
+        return NoticeResource::collection(WebsiteNoticeEvent::with('noticeFiles')
+        ->latest()
+        ->active()
+        ->paginate(40)
+    );
     }
 
     public function noticeEvent(Request $request)

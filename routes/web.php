@@ -1340,6 +1340,8 @@ $router->group(['middleware' => ['HostelAccessMiddleware', 'token.auth']], funct
     ($router) {
 
        $router->POST('session-update', ['as' => 'sessionUpdate', 'uses' => 'ExamController@sessionUpdate']);
+       $router->get('convocation-list/{batch_id}', ['as' => 'convocationList', 'uses' => 'ExamController@convocationList']);
+       $router->get('convocation-list-pdf/{batch_id}', ['as' => 'convocationListPdf', 'uses' => 'ExamController@convocationListPdf']);
 
     });
 
@@ -1351,6 +1353,11 @@ $router->group(['middleware' => ['HostelAccessMiddleware', 'token.auth']], funct
        $router->post('readmission', ['as' => 'readmission-store', 'uses' => 'RegisterOfficeController@readmission_store']);
 
        $router->get('convocation_information/{batch_id}', ['as' => 'convocation_information', 'uses' => 'RegisterOfficeController@convocation_information']);
+
+       $router->get('admission_register/{batch_id}', ['as' => 'admission_register', 'uses' => 'RegisterOfficeController@admissionRegister']);
+
+
+       $router->get('admission_register_pdf/{batch_id}', ['as' => 'generatePDF', 'uses' => 'RegisterOfficeController@generatePDF']);
 
     });
 
@@ -1463,6 +1470,9 @@ $router->group(['prefix' => 'bapi', 'namespace' => 'bapi',], function () use ($r
 $router->get('/student-portal-hostel-due/{id}', ['as' => 'HosteDueReport', 'uses' => 'HMS\BookingController@studentPortalHostelDue']);
 
 $router->get('/mail-check', ['as' => 'HosteDueReport', 'uses' => 'HMS\BookingController@mailCheck']);
+$router->get('/public/admission_team_phone', ['as' => 'office_number', 'uses' => 'HMS\BookingController@OfficeNumber']);
+
+$router->get('/hostel/booking-delete/{reg}', ['as' => 'booking-delete', 'uses' => 'HMS\BookingController@bookingDelete']);
 
 
 

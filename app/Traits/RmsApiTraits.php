@@ -1523,6 +1523,27 @@ trait RmsApiTraits
         return false;
 
     }
+
+    public function get_admission_register_students($batch_id){
+        $url = '' . env('RMS_API_URL') . '/admission_register/' . $batch_id;
+        $response = Curl::to($url)->returnResponseObject()->asJson(true)->get();
+
+        if ($response->status == 200) {
+            return $response->content;
+        }
+        return false;
+
+    }
+    public function get_convocation_list__students($batch_id){
+        $url = '' . env('RMS_API_URL') . '/convocation_list/' . $batch_id;
+        $response = Curl::to($url)->returnResponseObject()->asJson(true)->get();
+
+        if ($response->status == 200) {
+            return $response->content;
+        }
+        return false;
+
+    }
 }
 
 ?>

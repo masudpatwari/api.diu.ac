@@ -10,12 +10,12 @@ class ForeignStudentAttendanceReportResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'student_id' => $this->student_id,
-            'name' => $this->relUser->name,
-            'email' => $this->relUser->email,
-            'registrationNo' => $this->registration_no,
-            'lastClassAttainedOn' => $this->lastClassAttainedOn,            
-            'daysBefore' => $this->daysBefore,
+            'student_id' => $this->student_id ?? null,
+            'name' => $this->relUser->name ?? null,
+            'email' => $this->relUser->email ?? null,
+            'registrationNo' => $this->registration_no ?? null,
+            'lastClassAttainedOn' => $this->lastClassAttainedOn ?? null,            
+            'daysBefore' => $this->daysBefore ?? null,
             
         ];
     }

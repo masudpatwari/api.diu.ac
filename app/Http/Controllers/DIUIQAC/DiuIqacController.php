@@ -31,9 +31,9 @@ class DiuIqacController extends Controller
         $newsActivities = NewsActivities::with('user')
             ->orderBy('id', 'DESC')
             ->whereType($type)
-            ->paginate(20);
+            ->get();
         $newsActivitiesResource = NewsActivitiesResource::collection($newsActivities);
-        return $newsActivities ?? abort(404);
+        return $newsActivitiesResource?? abort(404);
     }
 
     public function newsActivity($id)

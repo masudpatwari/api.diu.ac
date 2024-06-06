@@ -65,7 +65,7 @@ class EmployeeController extends Controller
 
     public function admission_team()
     {
-        $employees = Employee::orderBy('merit', 'desc')->where('activestatus', '1')->where('groups', 'like', '%admission_team%')->get();
+        $employees = Employee::orderBy('merit', 'asc')->where('activestatus', '1')->where('groups', 'like', '%admission_team%')->get();
         if (!empty($employees))
         {
             return EmployeeResource::collection($employees);

@@ -127,9 +127,12 @@ $router->group(['prefix' => 'public-diu-website', 'namespace' => 'DIUWebsite'], 
     $router->get('programs', ['as' => '[diuAc.index', 'uses' => 'DiuAcController@programs']);
     $router->get('sliders', ['as' => 'diuAc.slider', 'uses' => 'DiuAcController@slider']);
     $router->get('notice-event', ['as' => 'diuAc.noticeEvent', 'uses' => 'DiuAcController@noticeEvent']);
+    $router->get('notice', ['as' => 'diuAc.notice', 'uses' => 'DiuAcController@notice']);
     $router->get('notice/{slug}', ['as' => 'diuAc.noticeDetails', 'uses' => 'DiuAcController@noticeDetails']);
     $router->get('partners', ['as' => 'diuAc.partners', 'uses' => 'DiuAcController@partners']);
     $router->get('publication', ['as' => 'diuAc.publication', 'uses' => 'DiuAcController@publication']);
+    $router->get('journal', ['as' => 'diuAc.journal', 'uses' => 'DiuAcController@journal']);
+    $router->get('journal/{id}', ['as' => 'diuAc.journal_details', 'uses' => 'DiuAcController@journalDetails']);
     $router->get('convocations', ['as' => 'diuAc.convocations', 'uses' => 'DiuAcController@convocations']);
     $router->get('department-basic-info/{slug}', ['as' => 'diuAc.departmentBasicInfo', 'uses' => 'DiuAcController@departmentBasicInfo']);
     $router->get('department-objectives/{slug}', ['as' => 'diuAc.departmentObjectives', 'uses' => 'DiuAcController@departmentObjectives']);

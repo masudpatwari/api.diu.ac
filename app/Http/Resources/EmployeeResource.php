@@ -36,6 +36,7 @@ class EmployeeResource extends JsonResource
             'rmsEmployeeId' => $this->rmsEmployee->id ?? '',
             'average_rating' => number_format($this->average_rating, 2) ?? 0,
             'total_rating_provider' => $this->total_rating_provider ?? 0,
+            'merit' => $this->merit ?? 0,
         ];
     }
 }

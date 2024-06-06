@@ -31,7 +31,7 @@ class SettingController extends Controller
     public function teamStore(Request $request)
     {
         $this->validate($request, [
-            'type' => 'required|in:iqac,sac,qac',
+            'type' => 'required',
             'employee_id' => 'required|integer',
             'designation' => 'required',
         ]);

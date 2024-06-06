@@ -17,8 +17,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\StudentEmailVerify;
 use App\Mail\ResetStudentPassword;
-
-
+use App\OfficeNumber;
 
 class BookingController extends Controller
 {
@@ -711,8 +710,11 @@ class BookingController extends Controller
     
 
      public function studentPortalHostelDue($student_id){      
-         $booking = Booking::with('hostel')->where(['student_id'=>$student_id])->first();
-         $data['account_info']= Transaction::where(['user_id'=>$student_id])->get();
+        $booking = Booking::with('hostel')->where(['student_id'=>$student_id,'status'=>1])->first();
+
+        if($booking){      
+        
+        $data['account_info']= Transaction::where(['user_id'=>$student_id])->get();
         $rent = Rent::where(['hostel_id'=>$booking->hostel_id,'bed_type'=>$booking->bed_type])->get();
 
         $due = $this->info($booking->reg_no);
@@ -722,6 +724,7 @@ class BookingController extends Controller
         $data['hostel']= $booking->hostel->name ?? null;
         $data['rent']= $rent ?? null;
         return response()->json($data, 200);
+        }
 
      }
 
@@ -746,6 +749,27 @@ class BookingController extends Controller
      {
          $token_string = $student->ID . '.0.0.0.0.' . $student->PASSWORD .'.0.0.0.0.' . $student->EMAIL . uniqid() . time();
          return encrypt($token_string);
+     }
+     public function OfficeNumber(){
+        return OfficeNumber::get();
+     }
+
+     public function bookingDelete($reg){
+        $student = Booking::where('reg_no', $reg)             
+        ->orWhere('reg_no', 'LIKE', "%{$reg}%")
+        ->first();
+
+        if($student){
+            Transaction::where(['user_id'=>$student->student_id])->delete();
+            $student->delete();
+            return "Booking Delete Successfully";
+
+
+        }else{
+            return "Student Not Found";
+        }
+
+        
      }
 
 

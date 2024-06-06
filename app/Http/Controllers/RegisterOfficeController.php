@@ -76,6 +76,43 @@ class RegisterOfficeController extends Controller
 
     }
 
+    public function admissionRegister($batch_id){
+        
+       return $this->get_admission_register_students($batch_id); 
+    }
+
+    public function generatePDF($batch_id)
+    
+    {
+
+        $students = $this->get_admission_register_students($batch_id); 
+        
+         $department =  $students['data'][0]['department']['name'];
+         $batch =  $students['data'][0]['batch']['batch_name'];
+       
+
+        $view = view('register/admission-register-pdf', compact('students'))->render();
+        $header = view('register/admission-register-header',compact('department','batch'))->render();
+        $mpdf = new \Mpdf\Mpdf([
+            'tempDir' => storage_path('temp'),
+            'mode' => 'utf-8',
+            'format' => 'A3-L',
+            'orientation' => 'L',
+            'margin_left' => 50,
+            'margin_right' => 5,
+            'margin_top' => 35,
+            'margin_bottom' => 5,
+            'mirrorMargins' => true, 
+        ]);
+         // Set the same header for the first page and subsequent pages
+         $mpdf->SetHTMLHeader($header, 'O'); // Header for Odd pages
+         $mpdf->SetHTMLHeader($header, 'E'); // Header for Even pages
+        $mpdf->WriteHTML( $view );
+        return $mpdf->Output('admission Register', 'I');
+       
+    }
+
+
 
 
    

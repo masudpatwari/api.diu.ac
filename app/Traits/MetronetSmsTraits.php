@@ -16,7 +16,7 @@ trait MetronetSmsTraits
 
         $contacts = "88{$cell_number}";
 
-        $url = "http://portal.metrotel.com.bd:8809/smsapi";
+        $url = "http://joy.metrotel.com.bd/smspanel/smsapi";
         $data = [
             "api_key" => env("SMS_API_KEY"),
             "type" => "text",

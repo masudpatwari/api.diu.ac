@@ -77,6 +77,7 @@ class StockController extends Controller
 
                 try {
                     FormDetails::insert($form_details);
+                    return response()->json(['message' => "Form Import Successfully"]);
 
                 }catch (\Exception $exception)
                 {
