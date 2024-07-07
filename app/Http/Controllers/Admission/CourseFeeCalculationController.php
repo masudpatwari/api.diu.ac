@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admission;
 
 use App\Employee;
 use App\Models\Admission\CourseCalculationProgramFee;
+use App\Models\Admission\MinumumCgpa;
 use App\Program;
 use App\Traits\MetronetSmsTraits;
 use Illuminate\Http\Request;
@@ -24,6 +25,13 @@ class CourseFeeCalculationController extends Controller
 
         return CourseCalculationProgramFee::active()->get();
     }
+    public function minumumCgpa(Request $request,$program_id)
+    {    
+
+        return CourseCalculationProgramFee::find($program_id);
+    }
+
+ 
 
     private function generalPrograms()
     {
@@ -86,8 +94,8 @@ class CourseFeeCalculationController extends Controller
                 'program' => $program,
                 'scholarshipPercentage' => $scholarshipPercentage,
                 'studentSex' => $request->sex,
-                'scholarshipAmount' => $scholarshipAmount,
-                'totalCostAfterScholarship' => $totalCostAfterScholarship,
+                'scholarshipAmount' => ceil($scholarshipAmount),
+                'totalCostAfterScholarship' => ceil($totalCostAfterScholarship),
                 'created_by' => [
                     'name' => $employee->name ?? 'N/A',
                     'phone_no' => $employee->alternative_phone_no ?? 'N/A',
@@ -173,8 +181,8 @@ class CourseFeeCalculationController extends Controller
             $data = [
                 'studentSex' => $request->sex,
                 'program' => $program,
-                'scholarshipAmount' => $scholarshipAmount,
-                'totalCostAfterScholarship' => $totalCostAfterScholarship,
+                'scholarshipAmount' => ceil($scholarshipAmount),
+                'totalCostAfterScholarship' => ceil($totalCostAfterScholarship),
                 'perSemesterFee' => number_format(($totalCostAfterScholarship - $program->admission_fee) / $program->total_semester),
             ];
 

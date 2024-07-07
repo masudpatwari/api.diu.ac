@@ -54,7 +54,7 @@ class StockController extends Controller
                     'to' => $request->end,
                     'count' => $request->count,
                     'ip' => $request->ip(),
-                    'employee_id' => $request->auth->id,
+                    'employee_id' => $request->auth->id ?? 222,
                     'time' => Carbon::now()->format('Y-m-d H:i:s')
                 ]);
 

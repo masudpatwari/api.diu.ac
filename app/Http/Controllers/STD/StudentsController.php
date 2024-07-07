@@ -956,4 +956,60 @@ class StudentsController extends Controller
             }
         }
     }
+
+
+    public function searchStudentPortal($item){
+        $student = Student::where('reg_code', $item)             
+        ->orWhere('reg_code', 'LIKE', "%{$item}%")
+        ->orWhere('email', 'LIKE', "%{$item}%")
+        ->orWhere('email', 'LIKE', "%{$item}%")
+        ->orWhere('phone_no', $item)
+        ->first();
+
+        if($student){
+            return $student;
+
+
+        }else{
+            return response(['error' => 'Student Not Found'], 404);
+        }
+    }
+
+
+    public function updateStudentPortal(Request $request){
+        $student = Student::where('reg_code', $request->reg_code);
+        if($student->exists()){
+            $student->update([
+                'NAME'=> $request->name,
+                'ROLL_NO'=> $request->roll_no,
+                'EMAIL'=> $request->email,
+                'PHONE_NO'=> $request->phone,
+                'DEPARTMENT_ID'=> $request->department_id,
+                'BATCH_ID'=> $request->batch_id,
+            ]);
+            return response(['message' => 'Student Portal Update Successfully'], 200);
+
+
+        }else{
+            return response(['error' => 'Update Failed'], 404);
+        }
+    }
+
+    public function deleteStudentPortal($item){
+         $student = Student::where('reg_code', $item)             
+        ->orWhere('reg_code', 'LIKE', "%{$item}%")
+        ->orWhere('email', 'LIKE', "%{$item}%")
+        ->orWhere('email', 'LIKE', "%{$item}%")
+        ->orWhere('phone_no', $item)
+        ->first();
+        
+        if($student){
+             Student::where('ID',$student->ID)->delete();
+            return response(['message' => 'Student Portal Delete Successfully'], 200);
+
+
+        }else{
+            return response(['error' => 'Student Not Found'], 404);
+        }
+    }
 }

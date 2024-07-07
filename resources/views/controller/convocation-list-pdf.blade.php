@@ -41,6 +41,7 @@
             <tr>
                 <th class="title" >R#</th>
                 <th class="title"  >Student Name </th>
+                <th class="title"  >Registration No </th>
                 <th class="title"  >Phone No</th>
                 <th class="title"  >Date</th>
                 <th class="title"  >Rac.No</th>
@@ -57,6 +58,7 @@
                     @if($con['purpose_pay_id'] == 12)
                     <td class="desc">{{ $student['roll_no'] ?? 'NA' }} </td>
                     <td class="desc">{{ $student['name'] ?? 'NA' }} </td>
+                    <td class="desc">{{ $student['reg_code'] ?? 'NA' }} </td>
                     <td class="desc">{{ $student['phone_no'] ?? 'NA' }} </td>
                     
                     <td class="desc">{{ date('Y-m-d', strtotime($con['pay_date'])) ?? 'NA' }} </td>

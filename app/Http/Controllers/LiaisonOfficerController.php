@@ -507,7 +507,7 @@ class LiaisonOfficerController extends Controller
 
     public function student_scholarship_not_posted_in_erp()
     {
-        $bills = BillOnStudentAdmission::where('posted_to_erp', 0)->where('type', 'liaison_student')->get();
+        $bills = BillOnStudentAdmission::where('posted_to_erp', 0)->where('type', 'liaison_student')->orderby('id','desc')->get();
         if ($bills->count() == 0) {
             return response()->json(['message' => 'No Bill found!'], 400);
         }
@@ -547,5 +547,117 @@ class LiaisonOfficerController extends Controller
 
         return response()->json($responseArray['content'], $responseArray['status']);
 
+    }
+
+    public function student_scholarship_eligible_store($id,$eligible_id){
+        $eligible =  BillOnStudentAdmission::find($id);
+
+        if(!empty($eligible)){
+             $receipt_no = $eligible->student_id.'-'.$eligible->person_id;
+             $eligible->update([
+                'eligible_id'=>$eligible_id,
+                'eligible_status'=>1,
+                'receipt_no'=>$receipt_no,
+            ]);
+
+             return response()->json(['message' => 'Eligible Store Successfully Done.'], 200);
+        }else{
+            return response()->json(['error' => 'Not Found.'], 404);
+        }
+
+    }
+
+    public function student_scholarship_eligible_calculate()
+    {
+        $bills = BillOnStudentAdmission::where('posted_to_erp', 0)->where('eligible_status', 1)->where('type', 'liaison_student')->orderby('id','desc')->get();
+        if ($bills->count() == 0) {
+            return response()->json(['message' => 'No Student found!'], 400);
+        }
+
+        return $bills;
+    }
+
+    public function student_scholarship_eligible_calculate_store(Request $request)
+    {
+        $this->validate($request,
+        [
+            'amount1' => 'required|numeric',
+            'description1' => 'required',
+            'amount2' => 'required|numeric',
+            'description2' => 'required',
+            'admission_fee' => 'required',
+            'tution_fee' => 'required',
+            'scholarship_amount' => 'required',
+            'scholarship_parcentage' => 'required',
+        ]);
+        $id = $request->id;   
+        // return $request->all();   
+
+        $eligible =  BillOnStudentAdmission::find($id);
+
+        if(!empty($eligible)){             
+             $eligible->update([                
+                'admission_fee'=>$request->admission_fee,
+                'tution_fee'=>$request->tution_fee,
+                'scholarship_amount'=> $request->scholarship_amount ,
+                'scholarship_note'=>$request->scholarship_parcentage.'%',
+                'amount1'=>$request->amount1,
+                'amount1_note'=>$request->description1,
+                'amount2'=>$request->amount2,
+                'amount2_note'=>$request->description2,
+                'number_of_semester'=>$request->number_of_semester,
+                'eligible_status'=>2,
+
+            ]);
+
+             return response()->json(['message' => 'Scholarship Store Successfully Done.'], 200);
+        }else{
+            return response()->json(['error' => 'Not Found.'], 404);
+        }
+    }
+
+    public function student_scholarship_eligible_fee_calculate($id){
+
+         $scholarship =  BillOnStudentAdmission::find($id);
+
+         $student = $this->student_infos($scholarship->eligible_id);
+         $account = $this->student_account_info($scholarship->eligible_id);
+         $sum_of_admission_fee = collect($account)->filter(function ($item) {
+            return $item['purpose_pay_id'] == 4;
+        })->sum('amount');
+         $total_payable = ($scholarship->admission_fee + $scholarship->tution_fee)-($scholarship->scholarship_amount+$scholarship->amount1+$scholarship->amount2);
+
+        $payable_semester = ($total_payable - $sum_of_admission_fee)  / $scholarship->number_of_semester;
+        $payable_mid = $payable_semester / 2;
+        $payable_final = $payable_semester / 2;
+        
+        return [            
+            'admission_fee'=>$scholarship->admission_fee,
+            'tution_fee'=>$scholarship->tution_fee,
+            'scholarship_amount'=>$scholarship->scholarship_amount,
+            'scholarship_note'=>$scholarship->scholarship_note,
+            'amount1'=>$scholarship->amount1,
+            'amount1_note'=>$scholarship->amount1_note,
+            'amount2'=>$scholarship->amount2,
+            'amount2_note'=>$scholarship->amount2_note,
+            'total_payable'=>$total_payable,
+            'sum_of_admission_fee'=>$sum_of_admission_fee,
+            'payable_mid'=>ceil($payable_mid),
+            'payable_final'=>ceil( $payable_final),
+            'eligible_id'=>$scholarship->eligible_id,
+            'student'=>$student,
+
+        ];
+       
+    }
+
+    public function student_scholarship_eligible_final_posting()
+    {
+        $bills = BillOnStudentAdmission::where('posted_to_erp', 0)->where('eligible_status', 2)->where('type', 'liaison_student')->orderby('id','desc')->get();
+        if ($bills->count() == 0) {
+            return response()->json(['message' => 'No Student found!'], 400);
+        }
+
+        return $bills;
     }
 }

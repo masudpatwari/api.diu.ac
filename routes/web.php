@@ -358,6 +358,9 @@ $router->group(['prefix' => 'public'], function () use ($router) {
         */
     $router->group(['prefix' => 'admission',], function () use ($router) {
         $router->get('generale-student-program', ['as' => 'admission.generalStudentPrograms', 'uses' => 'Admission\CourseFeeCalculationController@generalStudentPrograms']);
+
+        $router->get('generale-student-minimum-cgpa/{program_id}', ['as' => 'admission.generalStudentMimimumCgpa', 'uses' => 'Admission\CourseFeeCalculationController@minumumCgpa']);    
+
         $router->get('diploma-student-program', ['as' => 'admission.diplomaStudentPrograms', 'uses' => 'Admission\CourseFeeCalculationController@diplomaStudentPrograms']);
         $router->get('course-fee-calculation', ['as' => 'admission.courseFeeCalculationAdmissionSite', 'uses' => 'Admission\CourseFeeCalculationController@courseFeeCalculationAdmissionSite']);
     });
@@ -1148,6 +1151,12 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
     $router->group(['middleware' => 'STDMiddleware'], function () use ($router) {
 
 
+        $router->GET('student/search-portal/{item}', ['as' => 'cms_student_module.search_student_portal', 'uses' => 'STD\StudentsController@searchStudentPortal']);
+        $router->GET('student/delete-portal/{item}', ['as' => 'cms_student_module.delete_student_portal', 'uses' => 'STD\StudentsController@deleteStudentPortal']);
+
+        $router->POST('student/update-portal', ['as' => 'cms_student_module.update_student_portal', 'uses' => 'STD\StudentsController@updateStudentPortal']);
+
+
         $router->POST('student/search-by-regcode', ['as' => 'cms_student_module.search_by_reg_code', 'uses' => 'STD\StudentsController@search_by_reg_code']);
         $router->POST('student/change-current-email', ['as' => 'cms_student_module.change_current_email', 'uses' => 'STD\StudentsController@change_current_email']);
 
@@ -1407,6 +1416,7 @@ $router->group(['prefix' => 'bank', 'middleware' => ['Bank']], function () use (
     $router->POST('search_student', ['as' => 'search_student', 'uses' => 'STD\BankController@searchStudent']);
     $router->POST('confirm_payment', ['as' => 'confirm_payment', 'uses' => 'STD\BankController@confirmPayment']);
     $router->GET('transectionn-info', ['as' => 'transectionn_info', 'uses' => 'STD\BankController@transectionInfo']);
+    $router->GET('transection_delete/{receipt_no}', ['as' => 'transectionn_delete', 'uses' => 'STD\BankController@transectionDelete']);
 });
 
 
@@ -1473,6 +1483,8 @@ $router->get('/mail-check', ['as' => 'HosteDueReport', 'uses' => 'HMS\BookingCon
 $router->get('/public/admission_team_phone', ['as' => 'office_number', 'uses' => 'HMS\BookingController@OfficeNumber']);
 
 $router->get('/hostel/booking-delete/{reg}', ['as' => 'booking-delete', 'uses' => 'HMS\BookingController@bookingDelete']);
+
+
 
 
 

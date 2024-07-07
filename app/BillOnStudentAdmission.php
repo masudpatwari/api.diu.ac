@@ -8,5 +8,8 @@ class BillOnStudentAdmission extends Model
 {
 	protected $table = "billOnStudentAdmission";
     public $timestamps = false;
+    protected $guarded = [];
+       
+    
     
 }

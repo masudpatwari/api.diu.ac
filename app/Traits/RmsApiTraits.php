@@ -599,6 +599,13 @@ trait RmsApiTraits
         return response()->json($response->content, $response->status);
 
     }
+    public function bankTransectionDelete(Request $request, $receipt_no){
+        $token=  $request->input('token'); 
+        $url = env('RMS_API_URL') . '/bank/transection_delete/'.$receipt_no.'?token='.$token;
+        $response = Curl::to($url)->returnResponseObject()->asJson(true)->get();
+        return response()->json($response->content, $response->status);        
+
+    }
 
     public function student_account_info_summary($ora_uid)
     {

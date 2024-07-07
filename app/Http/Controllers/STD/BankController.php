@@ -42,6 +42,11 @@ class BankController extends Controller
         return $this->bankTransectionInfo($request);  
 
     }
+    public function transectionDelete( Request $request,$receipt_no)
+    { 
+        return $this->bankTransectionDelete($request, $receipt_no);  
+
+    }
 
 
     public function test(Request $request){

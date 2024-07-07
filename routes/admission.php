@@ -137,6 +137,14 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
         $router->get('student_scholarship_not_posted_in_erp', ['as' => 'liaison_bill_student.student_scholarship_not_posted_in_erp', 'uses' => 'LiaisonOfficerController@student_scholarship_not_posted_in_erp']);
         $router->get('student_scholarship_posted_in_erp', ['as' => 'liaison_bill_student.student_scholarship_posted_in_erp', 'uses' => 'LiaisonOfficerController@student_scholarship_posted_in_erp']);
 
+        $router->get('student_scholarship_eligible_store/{id}/{eligible_id}', ['as' => 'liaison_bill_student.student_scholarship_eligible_store', 'uses' => 'LiaisonOfficerController@student_scholarship_eligible_store']);
+        $router->get('student_scholarship_eligible_calculate', ['as' => 'liaison_bill_student.student_scholarship_eligible_calculate', 'uses' => 'LiaisonOfficerController@student_scholarship_eligible_calculate']);
+        $router->post('student_scholarship_eligible_calculate_store', ['as' => 'liaison_bill_student.student_scholarship_eligible_calculate_store', 'uses' => 'LiaisonOfficerController@student_scholarship_eligible_calculate_store']);
+
+        $router->get('student_scholarship_eligible_fee_calculate/{id}', ['as' => 'liaison_bill_student.student_scholarship_eligible_fee_calculate', 'uses' => 'LiaisonOfficerController@student_scholarship_eligible_fee_calculate']);
+
+        $router->get('student_scholarship_eligible_final_posting', ['as' => 'liaison_bill_student.student_scholarship_eligible_final_posting', 'uses' => 'LiaisonOfficerController@student_scholarship_eligible_final_posting']);
+
         /** admission in active batch start**/
         $router->group(['prefix' => 'admission', 'namespace' => 'Admission'], function () use ($router) {
             $router->get('admission-in-active-batch', [
