@@ -205,7 +205,7 @@ $router->PUT('auth/password/reset', ['uses' => 'ForgetPasswordResetController@pa
 // $router->DELETE('rooms/{id}', 'HMS\RoomController@delete');
 // $router->POST('/rooms', 'HMS\RoomController@store');
 
-// $router->GET('/seats', 'HMS\SeatController@index');
+$router->GET('/hostel_due', 'HMS\RentController@calculate_hostel_due');
 // $router->GET('/seats/{id}', 'HMS\SeatController@show');
 // $router->PUT('/seats/{id}', 'HMS\SeatController@update');
 // $router->DELETE('seats/{id}', 'HMS\SeatController@delete');

@@ -21,7 +21,7 @@ class Student extends Model
 //
 //    protected $guarded = ['email_one_time_password'];
 
-    protected $hidden = ['PASSWORD', 'diu_email_pass', 'wifi_password'];
+    protected $hidden = [ 'diu_email_pass', 'wifi_password'];
 
     protected $appends = ['email_one_time_password'];
 

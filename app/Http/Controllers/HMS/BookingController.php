@@ -152,7 +152,17 @@ class BookingController extends Controller
 
             $data['booking_date'] = Carbon::parse($data['booking']->issue_date)->format('d M Y');
 
-              $paid_amount = Transaction::where('user_id', $booking->student_id)->where('purpose', 'Rent Collection')->sum('amount');
+            //   $paid_amount = Transaction::where('user_id', $booking->student_id)->where('purpose', 'Rent Collection')->sum('amount');
+
+              $paid_amount = Transaction::where('user_id', $booking->student_id)
+                ->where(function ($query) {
+                    $query->where('purpose', 'Rent Collection')
+                        ->orWhere(function ($query) {
+                            $query->where('purpose', 'Late fee')
+                                ->where('amount', -500);
+                        });
+                })
+                ->sum('amount');
 
             $data['total_due'] = $shift->due_amount + $rent_after_shift - $paid_amount;
             $data['paid_amount'] = $paid_amount ?? 0;
@@ -247,7 +257,17 @@ class BookingController extends Controller
                 }
             }
             
-            $data['paid_amount'] = Transaction::where('user_id', $booking->student_id)->where('purpose', 'Rent Collection')->sum('amount');
+            // $data['paid_amount'] = Transaction::where('user_id', $booking->student_id)->where('purpose', 'Rent Collection')->sum('amount');
+
+            $data['paid_amount'] = Transaction::where('user_id', $booking->student_id)
+                ->where(function ($query) {
+                    $query->where('purpose', 'Rent Collection')
+                        ->orWhere(function ($query) {
+                            $query->where('purpose', 'Late fee')
+                                ->where('amount', -500);
+                        });
+                })
+                ->sum('amount');
 
             $data['total_due'] = $total_rent - $data['paid_amount'];
 
@@ -684,7 +704,7 @@ class BookingController extends Controller
             ->orWhere('reg_no', 'LIKE', "%{$query}")
             ->first();
 
-            return Transaction::where(['user_id'=>$student->student_id])->get();
+            return Transaction::where(['user_id'=>$student->student_id])->where('purpose', '!=', 'Late fee')->get();
             
 
     }
