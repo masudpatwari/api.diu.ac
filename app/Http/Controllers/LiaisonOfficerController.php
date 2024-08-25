@@ -18,6 +18,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Ixudra\Curl\Facades\Curl;
+use Carbon\Carbon;
+
 
 class LiaisonOfficerController extends Controller
 {
@@ -666,16 +668,17 @@ class LiaisonOfficerController extends Controller
     {
         $student = $this->student_infos($scholarship->student_id);
         $admited_person = $this->student_infos($scholarship->person_id);
-        $account = $this->student_account_info($scholarship->eligible_id);
+        $account = $this->student_account_info($scholarship->student_id);
         $sum_of_admission_fee = collect($account)->filter(function ($item) {
             return $item['purpose_pay_id'] == 4;
         })->sum('amount');
 
-        if ($scholarship->scholarship_type == 'special') {
-            $total_payable =  $scholarship->tution_fee - ($scholarship->scholarship_amount + $scholarship->amount1 + $scholarship->amount2);
-        } else {
-            $total_payable = ($scholarship->admission_fee + $scholarship->tution_fee) - ($scholarship->scholarship_amount + $scholarship->amount1 + $scholarship->amount2);
-        }
+        // if ($scholarship->scholarship_type == 'special') {
+        //     $total_payable =  $scholarship->tution_fee - ($scholarship->scholarship_amount + $scholarship->amount1 + $scholarship->amount2);
+        // } else {
+        //     $total_payable = ($scholarship->admission_fee + $scholarship->tution_fee) - ($scholarship->scholarship_amount + $scholarship->amount1 + $scholarship->amount2);
+        // }
+        $total_payable = ($scholarship->admission_fee + $scholarship->tution_fee) - ($scholarship->scholarship_amount + $scholarship->amount1 + $scholarship->amount2);
 
 
         $payable_semester = ($total_payable - $sum_of_admission_fee)  / $scholarship->number_of_semester;
@@ -776,7 +779,7 @@ class LiaisonOfficerController extends Controller
 
 
         $first_name = explode(' ', $get_name);
-        $name = $first_name[1];
+        $name = $first_name[1] ?? $first_name[0];
         $student_name = strtolower($name);
         $email = $student_name . $reg.'@students.diu.ac';
         $dob = substr($get_dob, 0, 4);
@@ -910,7 +913,6 @@ class LiaisonOfficerController extends Controller
     {
         $scholarship = BillOnStudentAdmission::where('posted_to_erp', 0)
             ->where('student_id', $id)
-            ->orWhere('eligible_id', $id)
             ->where('eligible_status', 2)
             ->first();
         if ($scholarship->count() == 0) {
@@ -923,7 +925,6 @@ class LiaisonOfficerController extends Controller
     public function student_scholarship_eligible_store_final_posting(Request $request, $student_id)
     {
          $eligible = BillOnStudentAdmission::where('student_id', $student_id)
-            ->orWhere('eligible_id', $student_id)
             ->where('posted_to_erp', 0)
             ->where('eligible_status', 2)
             ->first();
@@ -1095,26 +1096,72 @@ class LiaisonOfficerController extends Controller
     }
 
 
-    public function student_scholarship_eligible_final_posting_qrcode($date){
-        $eligibles = BillOnStudentAdmission::where('posted_to_erp', 0)
-            ->whereDate('datetime', $date)
+    public function student_scholarship_eligible_final_posting_qrcode($start_date,$end_date){
+          $start_date = Carbon::parse($start_date)->startOfDay();
+          $end_date = Carbon::parse($end_date)->endOfDay();
+
+         $eligibles = BillOnStudentAdmission::where('posted_to_erp', 0)
+            ->whereBetween('datetime', [$start_date, $end_date])
             ->where('eligible_status', 2)
             ->get();
+
+            if (!$eligibles->isEmpty()) {
+                $data = $eligibles->map(function ($eligible) {
+                    $std = $this->student_infos($eligible->student_id);
+                    return [
+                        'id' => $std['id'],
+                        'name' => $std['name'],
+                        'reg_code' => $std['reg_code'],
+                        'roll' => $std['roll_no'],
+                        'department' => $std['department']['name'],
+                        'batch' => $std['batch']['batch_name'],
+                    ];
+                });
             
-            $data = $eligibles->map(function ($eligible) {
-                $std = $this->student_infos($eligible->student_id);
-                return [
-                    'id' => $std['id'],
-                    'name' => $std['name'],
-                    'reg_code' => $std['reg_code'],
-                    'roll' => $std['roll_no'],
-                    'department' => $std['department']['name'],
-                    'batch' => $std['batch']['batch_name'],
-                ];
-            });
+                return $data;  
+                
+            }else{
+                return response()->json(['message' => 'No Student found!'], 404);
+            }
+            
+
+            
         
-            return $data;
-    
+
+
+
+    }
+
+    public function student_scholarship_eligible_final_posting_qrcode_pdf($start_date,$end_date){
+        $start_date = Carbon::parse($start_date)->startOfDay();
+        $end_date = Carbon::parse($end_date)->endOfDay();
+
+       $eligibles = BillOnStudentAdmission::where('posted_to_erp', 0)
+          ->whereBetween('datetime', [$start_date, $end_date])
+          ->where('eligible_status', 2)
+          ->get();
+        
+       $data = $eligibles->map(function ($eligible) {
+            $std = $this->student_infos($eligible->student_id);
+            return [
+                'student_id' => $std['id'],
+                'name' => $std['name'],
+                'reg_code' => $std['reg_code'],
+                'roll' => $std['roll_no'],
+                'department' => $std['department']['name'],
+                'batch' => $std['batch']['batch_name'],
+            ];
+        });
+       
+
+        $view = view('bill_for_stdents/eligible_student_final_posting_qrcode_generate',['data' => $data]);
+        
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('temp'), 'mode' => 'utf-8', 'format' => 'A4', 'margin_top' => 1,'margin_bottom' => 1,'margin_left' => 1, 'margin_right' => 1,]);
+       
+        $mpdf->WriteHTML($view, 2);
+        return $mpdf->Output( 'test.pdf', 'I');
+            
+          
 
 
 

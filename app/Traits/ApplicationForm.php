@@ -169,28 +169,28 @@ trait ApplicationForm
             /*$digits = 7;
             $receipt_number = rand(pow(10, $digits - 1), pow(10, $digits) - 1);*/
 
-            $last_bank_slip = \App\Models\STD\BankSlip::dsc()->first();
+           $last_bank_slip = \App\Models\STD\BankSlip::dsc()->first();
             $receipt_number = str_pad($last_bank_slip->id + 1, 7, '0', STR_PAD_LEFT);
 
-            $bank_slip = new \App\Models\STD\BankSlip();
-            $bank_slip->student_id = $student_id;
+            // $bank_slip = new \App\Models\STD\BankSlip();
+            // $bank_slip->student_id = $student_id;
 
-            $bank_slip->receipt_number = $receipt_number;
+            // $bank_slip->receipt_number = $receipt_number;
 
-            $bank_slip->student_name = $student->name;
-            $bank_slip->reg_code = $student->reg_code;
-            $bank_slip->save();
+            // $bank_slip->student_name = $student->name;
+            // $bank_slip->reg_code = $student->reg_code;
+            // $bank_slip->save();
 
 
-            $data = [];
-            foreach ($all_fees_as_array as $row) {
-                $data[] = [
-                    'bank_slip_id' => $bank_slip->id,
-                    'fee_type' => $row['fee_type'],
-                    'fee_amount' => $row['fee_amount']
-                ];
-            }
-            \App\Models\STD\BankSlipDetail::insert($data);
+            // $data = [];
+            // foreach ($all_fees_as_array as $row) {
+            //     $data[] = [
+            //         'bank_slip_id' => $bank_slip->id,
+            //         'fee_type' => $row['fee_type'],
+            //         'fee_amount' => $row['fee_amount']
+            //     ];
+            // }
+            // \App\Models\STD\BankSlipDetail::insert($data);
 
 
             $view = view('download_form/bank_slip', compact('student', 'all_fees_as_array', 'bank_name', 'branch_name', 'receipt_number'));

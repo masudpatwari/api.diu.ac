@@ -53,28 +53,28 @@ class HostelDue extends Command
     public function handle()
     {
 
-        $todayTime =  date("Y-m-d");;
-        $students = Booking::with('hostel', 'room')->where(['status' => 1])->get();
-        foreach ($students as $student) {
-            $due = $this->getBookingInfo($student->reg_no);
+        // $todayTime =  date("Y-m-d");;
+        // $students = Booking::with('hostel', 'room')->where(['status' => 1])->get();
+        // foreach ($students as $student) {
+        //     $due = $this->getBookingInfo($student->reg_no);
 
-            if($due->original['total_due'] > 999){  
+        //     if($due->original['total_due'] > 999){  
 
-                $data['date'] = $todayTime;
-                $data['created_by'] = 222;
-                $data['transactionable_type'] = 'Late fee';
-                $data['transactionable_id'] = $student->id;
-                $data['user_id'] = $student->student_id;
-                $data['amount'] = -500;
-                $data['receipt_no'] = $student->student_id.'-'.$todayTime;
-                $data['purpose'] = 'Late fee';
+        //         $data['date'] = $todayTime;
+        //         $data['created_by'] = 222;
+        //         $data['transactionable_type'] = 'Late fee';
+        //         $data['transactionable_id'] = $student->id;
+        //         $data['user_id'] = $student->student_id;
+        //         $data['amount'] = -500;
+        //         $data['receipt_no'] = $student->student_id.'-'.$todayTime;
+        //         $data['purpose'] = 'Late fee';
 
-                Transaction::create($data);
-                $this->info('Fine Inserted_'.$student->student_id);
+        //         Transaction::create($data);
+        //         $this->info('Fine Inserted_'.$student->student_id);
 
 
 
-            }
+        //     }
 
             // if ($due->original['total_due'] > 999) {
 
@@ -86,7 +86,7 @@ class HostelDue extends Command
 
             // $totalElements = count($data);
             // $this->info($totalElements);
-        }
+        // }
 
        
 

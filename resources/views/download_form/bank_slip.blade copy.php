@@ -78,23 +78,17 @@
         .mt-8 {
             margin-top: 16px;
         }
-        .mt-10 {
-            margin-top: 20px;
-        }
 
         .mt-15 {
             margin-top: 30px;
         }
-        .f-10 {
-            font-size: 16x !important;
-        }
 
         .f-12 {
-            font-size: 17px !important;
+            font-size: 12px !important;
         }
 
         .f-19 {
-            font-size: 16px !important;
+            font-size: 14px !important;
         }
 
         /*padding*/
@@ -285,9 +279,9 @@
 
         <table class="b-none">
             <tr>
-                <td colspan="2" class="bb-none br-none" style="padding-left: 13px;font-size:11px">Receipt No.
+                <td colspan="2" class="bb-none br-none" style="padding-left: 13px">Receipt No.
                     <b>SP{{ $receipt_number ?? '' }}</b></td>
-                <td class="tr w-40 bb-none" style="font-size:11px;padding-right: 20px ">Student Copy</td>
+                <td class="tr w-40 bb-none">Student Copy</td>
             </tr>
 
             <tr>
@@ -303,14 +297,14 @@
             </tr>
         </table>
 
-        <div style="width: 500px;margin: 0 auto;">
+        <div style="width: 299px;margin: 0 auto;">
 
             <table class="mt-1 b-none">
                 <tr>
                     <td class="tc f-12 bb-none p-0">
 
                         @if($branch_name == 'Satarkul')
-                            Holding # 233, Satarkul Road, Mustafa's Dream, 1st Floor, Uttar Badda, Dhaka- 1212
+                            Holding # 233, Satarkul Road, Mustafa's Dream, 1st Floor, , Uttar Badda, Dhaka- 1212
                         @elseif($branch_name == 'Banani')
                             House # 49, Block # H, Road # 11, <br> Kazi's Heritage, Banani , Dhaka- 1213
                         @elseif($branch_name == 'Panthapath')
@@ -349,37 +343,37 @@
             </table>
 
 
-            <table class="mt-10 b-none">
+            <table class="mt-5 b-none">
                 <tr>
-                    <td colspan="2" class="bb-none f-10">Name: <b>{{ $student->name }}</b></td>
+                    <td colspan="2" class="bb-none">Name: <b>{{ $student->name }}</b></td>
                 </tr>
 
                 <tr>
-                    <td colspan="2" class="bb-none bt-none f-10">Department: <b>{{ $student->department->name ?? '' }}</b>
+                    <td colspan="2" class="bb-none bt-none">Department: <b>{{ $student->department->name ?? '' }}</b>
                     </td>
                 </tr>
 
                 <tr>
-                    <td colspan="2" class="bb-none bt-none f-10">Reg. Code: <b>{{ $student->reg_code ?? '' }}</b></td>
+                    <td colspan="2" class="bb-none bt-none">Reg. Code: <b>{{ $student->reg_code ?? '' }}</b></td>
                 </tr>
 
                 <tr>
-                    <td class="bb-none br-none f-10">Session: <b>{{ $student->batch->sess ?? '' }} </b></td>
-                    <td class="bb-none f-10">Batch: <b>{{ $student->batch->batch_name ?? '' }} </b></td>
+                    <td class="bb-none br-none">Session: <b>{{ $student->batch->sess ?? '' }} </b></td>
+                    <td class="bb-none">Batch: <b>{{ $student->batch->batch_name ?? '' }} </b></td>
                 </tr>
 
                 <tr>
-                    <td class="br-none f-10">Roll No: <b>{{ $student->roll_no ?? '' }} </b></td>
-                    <td class="f-10">Semester: <b>{{ $student->current_semester ?? '' }}</b></td>
+                    <td class="br-none">Roll No: <b>{{ $student->roll_no ?? '' }} </b></td>
+                    <td>Semester: <b>{{ $student->current_semester ?? '' }}</b></td>
                 </tr>
             </table>
 
-            <div style="height: 0px">
+            <div style="height: 230px">
                 <table class="mt-8">
-                    <tr class="">
-                        <th class="w-15 f-10">Sl.No.</th>
-                        <th class="f-10">Description</th>
-                        <th class="w-40 f-10">Amount (In Taka)</th>
+                    <tr>
+                        <th class="w-15">Sl.No.</th>
+                        <th>Description</th>
+                        <th class="w-40">Amount (In Taka)</th>
                     </tr>
 
 
@@ -389,9 +383,9 @@
 
                     @foreach($all_fees_as_array as $row)
                         <tr>
-                            <td class="tc f-10">{{ $loop->iteration }}</td>
-                            <td class="f-10">{{ $row['fee_type'] }}</td>
-                            <td class="tc f-10">{{ number_format($row['fee_amount'], 2) }}</td>
+                            <td class="tc">{{ $loop->iteration }}</td>
+                            <td>{{ $row['fee_type'] }}</td>
+                            <td class="tc">{{ number_format($row['fee_amount'], 2) }}</td>
                         </tr>
 
                         {{ $total += $row['fee_amount'] }}
@@ -400,8 +394,8 @@
 
                     <tr>
                         <td></td>
-                        <td class="tr f-10"><strong>Total :</strong></td>
-                        <td class="tc f-10">{{ number_format($total ?? '', 2) }}</td>
+                        <td class="tr"><strong>Total :</strong></td>
+                        <td class="tc">{{ number_format($total ?? '', 2) }}</td>
                     </tr>
                 </table>
             </div>
@@ -409,34 +403,34 @@
 
             <table class="mt-8 b-none">
                 <tr>
-                    <td class="bb-none f-10" colspan="2">Received taka (In
+                    <td class="bb-none" colspan="2">Received taka (In
                         words) <span style="text-transform: capitalize"><b>{{ \App\classes\NumberToWord::numberToWord($total) }} taka</b></span>
                         only.
                     </td>
                 </tr>
 
                 <tr class="bb-none">
-                    <td class="br-none f-10">Bank Scroll No .............................</td>
-                    <td class="f-10">Date: ......................................</td>
+                    <td class="br-none">Bank Scroll No .............................</td>
+                    <td>Date: ......................................</td>
                 </tr>
                 <tr>
-                    <td class="f-10" colspan="2"><strong>Note: </strong>Cheque is not allowed but only received by cash,DD& Pay Order
+                    <td colspan="2"><strong>Note: </strong>Cheque is not allowed but only received by cash,DD& Pay Order
                     </td>
                 </tr>
             </table>
 
             <table class="mt-15 b-none">
                 <tr>
-                    <td class="bb-none br-none f-10"><span style="border-top: 1px solid #000;">Signature Of Student</span>
+                    <td class="bb-none br-none"><span style="border-top: 1px solid #000;">Signature Of Student</span>
                     </td>
-                    <td class="bb-none br-none f-10"><span style="border-top: 1px solid #000;">Bank's Officer</span></td>
-                    <td class="bb-none f-10"><span style="border-top: 1px solid #000;">Bank's Authorized Officer</span></td>
+                    <td class="bb-none br-none"><span style="border-top: 1px solid #000;">Bank's Officer</span></td>
+                    <td class="bb-none"><span style="border-top: 1px solid #000;">Bank's Authorized Officer</span></td>
                 </tr>
 
                 <tr>
-                    <td class="br-none bt-none f-10" style="padding-top: 65px" colspan="2"><span
+                    <td class="br-none bt-none" style="padding-top: 65px" colspan="2"><span
                                 style="border-top: 1px solid #000;">Authorized Officer of University</span></td>
-                    <td style="padding-top: 65px " class="f-10">DIU Scroll No. ................</td>
+                    <td style="padding-top: 65px">DIU Scroll No. ................</td>
                 </tr>
             </table>
 
@@ -771,9 +765,9 @@
 
         <table class="b-none">
             <tr>
-                <td colspan="2" class="bb-none br-none" style="padding-left: 13px;font-size:11px">Receipt No.
+                <td colspan="2" class="bb-none br-none" style="padding-left: 13px">Receipt No.
                     <b>SP{{ $receipt_number ?? '' }}</b></td>
-                <td class="tr w-40 bb-none" style="font-size:11px">Bank Copy</td>
+                <td class="tr w-40 bb-none">Bank Copy</td>
             </tr>
 
             <tr>
@@ -789,14 +783,14 @@
             </tr>
         </table>
 
-        <div style="width: 500px;margin: 0 auto;">
+        <div style="width: 299px;margin: 0 auto;">
 
             <table class="mt-1 b-none">
                 <tr>
                     <td class="tc f-12 bb-none p-0">
 
                         @if($branch_name == 'Satarkul')
-                            Holding # 233, Satarkul Road, Mustafa's Dream, 1st Floor, Uttar Badda, Dhaka- 1212
+                            Holding # 233, Satarkul Road, Mustafa's Dream, 1st Floor, , Uttar Badda, Dhaka- 1212
                         @elseif($branch_name == 'Banani')
                             House # 49, Block # H, Road # 11, <br> Kazi's Heritage, Banani , Dhaka- 1213
                         @elseif($branch_name == 'Panthapath')
@@ -834,37 +828,37 @@
                 </tr>
             </table>
 
-            <table class="mt-8 b-none">
+            <table class="mt-5 b-none">
                 <tr>
-                    <td colspan="2" class="bb-none f-10">Name: <b>{{ $student->name }}</b></td>
+                    <td colspan="2" class="bb-none">Name: <b>{{ $student->name }}</b></td>
                 </tr>
 
                 <tr>
-                    <td colspan="2" class="bb-none bt-none f-10">Department: <b>{{ $student->department->name ?? '' }}</b>
+                    <td colspan="2" class="bb-none bt-none">Department: <b>{{ $student->department->name ?? '' }}</b>
                     </td>
                 </tr>
 
                 <tr>
-                    <td colspan="2" class="bb-none bt-none f-10">Reg. Code: <b>{{ $student->reg_code ?? '' }}</b></td>
+                    <td colspan="2" class="bb-none bt-none">Reg. Code: <b>{{ $student->reg_code ?? '' }}</b></td>
                 </tr>
 
                 <tr>
-                    <td class="bb-none br-none f-10">Session: <b>{{ $student->batch->sess ?? '' }} </b></td>
-                    <td class="bb-none f-10">Batch: <b>{{ $student->batch->batch_name ?? '' }} </b></td>
+                    <td class="bb-none br-none">Session: <b>{{ $student->batch->sess ?? '' }} </b></td>
+                    <td class="bb-none">Batch: <b>{{ $student->batch->batch_name ?? '' }} </b></td>
                 </tr>
 
                 <tr>
-                    <td class="br-none f-10">Roll No: <b>{{ $student->roll_no ?? '' }} </b></td>
-                    <td class="f-10">Semester: <b>{{ $student->current_semester ?? '' }}</b></td>
+                    <td class="br-none">Roll No: <b>{{ $student->roll_no ?? '' }} </b></td>
+                    <td>Semester: <b>{{ $student->current_semester ?? '' }}</b></td>
                 </tr>
             </table>
 
-            <div style="height: 0px">
+            <div style="height: 230px">
                 <table class="mt-8">
                     <tr>
-                        <th class="w-15 f-10">Sl.No.</th>
-                        <th class="f-10">Description</th>
-                        <th class="w-40 f-10">Amount (In Taka)</th>
+                        <th class="w-15">Sl.No.</th>
+                        <th>Description</th>
+                        <th class="w-40">Amount (In Taka)</th>
                     </tr>
 
 
@@ -874,9 +868,9 @@
 
                     @foreach($all_fees_as_array as $row)
                         <tr>
-                            <td class="tc f-10">{{ $loop->iteration }}</td>
-                            <td class="f-10">{{ $row['fee_type'] }}</td>
-                            <td class="tc f-10">{{ number_format($row['fee_amount'], 2) }}</td>
+                            <td class="tc">{{ $loop->iteration }}</td>
+                            <td>{{ $row['fee_type'] }}</td>
+                            <td class="tc">{{ number_format($row['fee_amount'], 2) }}</td>
                         </tr>
 
                         {{ $total += $row['fee_amount'] }}
@@ -885,43 +879,43 @@
 
                     <tr>
                         <td></td>
-                        <td class="tr f-10"><strong>Total :</strong></td>
-                        <td class="tc f-10">{{ number_format($total ?? '', 2) }}</td>
+                        <td class="tr"><strong>Total :</strong></td>
+                        <td class="tc">{{ number_format($total ?? '', 2) }}</td>
                     </tr>
                 </table>
             </div>
 
             <table class="mt-8 b-none">
                 <tr>
-                    <td class="bb-none f-10" colspan="2">Received taka (In
+                    <td class="bb-none" colspan="2">Received taka (In
                         words) <span style="text-transform: capitalize"><b>{{ \App\classes\NumberToWord::numberToWord($total) }} taka</b></span>
                         only.
                     </td>
                 </tr>
 
                 <tr class="bb-none">
-                    <td class="br-none f-10">Bank Scroll No .........................</td>
-                    <td class="f-10">Date: ......................................</td>
+                    <td class="br-none">Bank Scroll No .........................</td>
+                    <td>Date: ......................................</td>
                 </tr>
                 <tr>
-                    <td class="f-10" colspan="2"><strong>Note: </strong>Cheque is not allowed but only received by cash,DD& Pay Order
+                    <td colspan="2"><strong>Note: </strong>Cheque is not allowed but only received by cash,DD& Pay Order
                     </td>
                 </tr>
             </table>
 
             <table class="mt-15 b-none">
                 <tr>
-                    <td class="bb-none br-none f-10"><span style="border-top: 1px solid #000;">Signature Of Student</span>
+                    <td class="bb-none br-none"><span style="border-top: 1px solid #000;">Signature Of Student</span>
                     </td>
-                    <td class="bb-none br-none bt-none f-10"><span style="border-top: 1px solid #000;">Bank's Officer</span>
+                    <td class="bb-none br-none bt-none"><span style="border-top: 1px solid #000;">Bank's Officer</span>
                     </td>
-                    <td class="bb-none f-10"><span style="border-top: 1px solid #000;">Bank's Authorized Officer</span></td>
+                    <td class="bb-none"><span style="border-top: 1px solid #000;">Bank's Authorized Officer</span></td>
                 </tr>
 
                 <tr>
-                    <td class="br-none bt-none f-10" style="padding-top: 65px" colspan="2"><span
+                    <td class="br-none bt-none" style="padding-top: 65px" colspan="2"><span
                                 style="border-top: 1px solid #000;">Authorized Officer of University</span></td>
-                    <td class="f-10" style="padding-top: 65px">DIU Scroll No. ................</td>
+                    <td style="padding-top: 65px">DIU Scroll No. ................</td>
                 </tr>
             </table>
 

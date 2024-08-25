@@ -269,7 +269,7 @@ class DiuAcController extends Controller
         }
 
         $websiteProgramGallery = WebsiteProgramGallery::whereWebsiteProgramId($websiteProgram->id)
-            ->paginate('20');
+        ->orderBy('id','desc')->paginate('30');
 
         if (!$websiteProgramGallery) {
             return response()->json(['message' => 'no data found'], 401);

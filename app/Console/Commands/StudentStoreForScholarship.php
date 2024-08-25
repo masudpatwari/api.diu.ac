@@ -154,4 +154,17 @@ class StudentStoreForScholarship extends Command
             return Liaison_programs::where('name', trim($std['department']['name']))->first()->amount_std_foreign;
         }
     }
+
+    public function get_amount_for_officer($stddata)
+    {
+
+        if (strpos(trim(strtolower($stddata['nationality'])), 'ban') !== false) {
+            return optional(Liaison_programs::where('name', $stddata['department']['name'])->first())
+                ->amount_liaison_local;
+        } else {
+
+            $ret = Liaison_programs::where('name', $stddata['department']['name'])->first()->amount_liaison_foreign;
+            return $ret;
+        }
+    }
 }
