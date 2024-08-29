@@ -17,7 +17,10 @@ class SettingController extends Controller
         $this->validate($request, [
             'about_diu' => 'required|string',
             'about_tcrc' => 'required|string',
+            'vission' => 'required|string',
+            'mission' => 'required|string',
             'video_id' => 'required|integer',
+            'footer_video_id' => 'required|integer',
         ]);
 
         $form = $request->all();

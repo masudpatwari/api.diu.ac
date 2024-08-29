@@ -74,7 +74,7 @@ class DiuTcrcController extends Controller
 
     public function setting()
     {
-        return Setting::with('video')->first();
+        return Setting::with('video','footer_video')->first();
     }
 
     public function video()
@@ -93,6 +93,11 @@ class DiuTcrcController extends Controller
     public function partner()
     {
         return Partner::all();
+    }
+
+    public function partnerType($type){
+        return Partner::where('type',$type)->get();
+
     }
 
     public function national($type)

@@ -146,7 +146,14 @@ $router->group(['middleware' => ['token.auth']], function () use ($router) {
         $router->get('scholarship_eligible_student_info/{student_id}', ['as' => 'liaison_bill_student.scholarship_eligible_student_info', 'uses' => 'LiaisonOfficerController@scholarship_eligible_student_info']);
         $router->get('student_scholarship_eligible_generate_pdf/{student_id}/{english}/{program}/{chair}', ['as' => 'liaison_bill_student.student_scholarship_eligible_generate_pdf', 'uses' => 'LiaisonOfficerController@student_scholarship_eligible_generate_pdf']);
         $router->get('student_scholarship_eligible_final_posting_qrcode/{start}/{end}', ['as' => 'liaison_bill_student.student_scholarship_eligible_final_posting_qrcode', 'uses' => 'LiaisonOfficerController@student_scholarship_eligible_final_posting_qrcode']);
+        
         $router->get('student_scholarship_eligible_final_posting_qrcode_pdf/{start}/{end}', ['as' => 'liaison_bill_student.student_scholarship_eligible_final_posting_qrcode_pdf', 'uses' => 'LiaisonOfficerController@student_scholarship_eligible_final_posting_qrcode_pdf']);
+
+        $router->get('student_scholarship_eligible_acknowledgment/{reg_code}', ['as' => 'liaison_bill_student.student_scholarship_eligible_acknowledgment', 'uses' => 'LiaisonOfficerController@student_scholarship_eligible_acknowledgment']);
+
+        $router->get('student_scholarship_department_social_link', ['as' => 'liaison_bill_student.student_scholarship_department_social_link', 'uses' => 'LiaisonOfficerController@student_scholarship_department_social_link']);
+
+        $router->post('student_scholarship_department_social_link_store', ['as' => 'liaison_bill_student.student_scholarship_department_social_link_store', 'uses' => 'LiaisonOfficerController@student_scholarship_department_social_link_store']);
 
         $router->get('student_scholarship_eligible_search_final_posting/{id}', ['as' => 'liaison_bill_student.student_scholarship_eligible_search_final_posting', 'uses' => 'LiaisonOfficerController@student_scholarship_eligible_search_final_posting']);
         $router->get('student_scholarship_eligible_store_final_posting/{student_id}', ['as' => 'liaison_bill_student.student_scholarship_eligible_store_final_posting_in_erp', 'uses' => 'LiaisonOfficerController@student_scholarship_eligible_store_final_posting']);

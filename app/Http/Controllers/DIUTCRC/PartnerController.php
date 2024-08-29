@@ -13,15 +13,16 @@ class PartnerController extends Controller
 
     public function index()
     {
-        return Partner::with('user:id,name')->get();
+        return Partner::with('user:id,name')->orderBy('id','desc')->get();
     }
 
     public function store(Request $request)
     {
         $this->validate($request, [
+            'type' => 'required',
             'title' => 'required|string|max:200',
             'url' => 'required|string|max:1000',
-            'file' => 'required|mimes:jpeg,jpg,png|max:1024', // 1024 = 1MB
+            'file' => 'required|mimes:jpeg,jpg,png|max:4100', // 1024 = 1MB
         ]);
 
         \DB::transaction(function () use ($request) {
@@ -31,6 +32,7 @@ class PartnerController extends Controller
             $files->move(storage_path('images/diu_tcrc/partner'), $file_name);
 
             Partner::create([
+                'type' => $request->type,
                 'title' => $request->title,
                 'url' => $request->url,
                 'image_path' => env('APP_URL') . "/images/diu_tcrc/partner/{$file_name}",
@@ -56,7 +58,7 @@ class PartnerController extends Controller
         $this->validate($request, [
             'title' => 'required|string|max:200',
             'url' => 'required|string|max:1000',
-            'file' => 'nullable|mimes:jpeg,jpg,png|max:1024', // 1024 = 1MB
+            'file' => 'nullable|mimes:jpeg,jpg,png|max:4100', // 1024 = 1MB
         ]);
 
         \DB::transaction(function () use ($request, $id) {
@@ -74,6 +76,7 @@ class PartnerController extends Controller
             }
 
             Partner::find($id)->update([
+                'type' => $request->type,
                 'title' => $request->title,
                 'url' => $request->url,
                 'image_path' => $image_url,

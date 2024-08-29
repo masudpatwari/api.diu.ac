@@ -24,7 +24,7 @@ class NewsActivitiesController extends Controller
             'type' => 'required|in:news,activities,events,international,law-and-policies',
             'title' => 'required|string|max:1000',
             'description' => 'required|string',
-            'file' => 'required|mimes:jpeg,jpg,png|max:1024', // 1024 = 1MB
+            'file' => 'required|mimes:jpeg,jpg,png|max:4100', // 1024 = 1MB
         ]);
 
         \DB::transaction(function () use ($request) {
@@ -63,7 +63,7 @@ class NewsActivitiesController extends Controller
             'type' => 'required|in:news,activities,events,international,law-and-policies',
             'title' => 'required|string|max:1000',
             'description' => 'required|string',
-            'file' => 'nullable|mimes:jpeg,jpg,png|max:1024', // 1024 = 1MB
+            'file' => 'nullable|mimes:jpeg,jpg,png|max:4100', // 1024 = 1MB
         ]);
 
         \DB::transaction(function () use ($request, $id) {

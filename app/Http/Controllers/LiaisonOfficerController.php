@@ -14,6 +14,7 @@ use App\Http\Resources\LiaisonOfficersEditResource;
 use Illuminate\Support\Facades\DB;
 use App\Traits\RmsApiTraits;
 use App\Liaison_programs;
+use App\Models\Admission\CourseCalculationProgramFee;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -648,6 +649,7 @@ class LiaisonOfficerController extends Controller
                 'number_of_semester' => $request->number_of_semester,
                 'scholarship_type' => $request->scholarship_type,
                 'eligible_status' => 2,
+                'social_link' => $request->social_link ?? null,
 
             ]);
 
@@ -700,6 +702,7 @@ class LiaisonOfficerController extends Controller
             'payable_mid' => ceil($payable_mid),
             'payable_final' => ceil($payable_final),
             'eligible_id' => $scholarship->eligible_id,
+            'social_link' => $scholarship->social_link ?? null,
             'date' => date('Y-m-d', strtotime($scholarship->datetime)),
             'student' => $student,
             'person' => $admited_person,
@@ -1166,4 +1169,39 @@ class LiaisonOfficerController extends Controller
 
 
     }
+
+    public function student_scholarship_eligible_acknowledgment($reg_code){
+
+        $student = $this->get_student_by_like_reg_code($reg_code);      
+        if ($student) {
+               $scholarship =  BillOnStudentAdmission::where('student_id', $student['id'])->where('eligible_status',2)->first();
+
+               if($scholarship){
+                return $this->scolarship_calculation($scholarship);
+                
+               }else{
+                return response()->json(['error' => 'Student Acknowledgment Not found!'], 404);
+
+               }
+            
+        } else {
+            return response()->json(['error' => 'Student Not found!'], 404);
+        }
+        
+    }
+
+    public function student_scholarship_department_social_link(){
+
+     return  CourseCalculationProgramFee:: where('status',1)->get();
+        
+    }
+
+    public function student_scholarship_department_social_link_store(Request $request){
+
+        $id =  $request->id;        
+        $social_link = $request->social_link;
+        CourseCalculationProgramFee:: where('id',$id)->update(['social_link'=>$social_link]);
+         return response()->json(['success' => 'Social Link Added Successfully'], 200);
+           
+       }
 }

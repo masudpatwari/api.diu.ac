@@ -15,6 +15,7 @@ class CourseCalculationProgramFee extends Model
         'course_fee',
         'admission_fee',
         'status',
+        'social_link',
     ];
 
     protected $appends = ['program_name'];

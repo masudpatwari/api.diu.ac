@@ -15,6 +15,7 @@ class National extends Model
         'title',
         'url',
         'created_by',
+        'image_path',
     ];
 
     public function user()

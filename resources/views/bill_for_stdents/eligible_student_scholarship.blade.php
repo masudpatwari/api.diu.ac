@@ -137,6 +137,18 @@
     ->errorCorrection('H')
     ->generate($outlookLink));
 
+    if($studentInfo['social_link'] != null){
+        $socialLink = $studentInfo['social_link'];
+
+        $socialLinkQrCode = base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')
+        ->size(150)
+        ->errorCorrection('H')
+        ->generate($socialLink));
+
+    }
+
+    
+
     @endphp
 
 
@@ -188,8 +200,15 @@
                     <img style="height: 100px;" src="data:image/png;base64, {!! $qrCode !!}">
                 </div>
                 @endif
-
             </td>
+            @if (!empty($socialLinkQrCode))
+            <td style="width: 20%; text-align: right;">
+                <div style="display: inline-block;">
+                    <img style="height: 100px;" src="data:image/png;base64, {!! $socialLinkQrCode !!}">
+                </div>
+                
+            </td>
+            @endif
         </tr>
     </table>
 
@@ -200,6 +219,7 @@
             <li>All fees including admission fees, tuitions fees, etc are non refundable.</li>
             <li>University will not take any responsibility for any financial transaction which is not done by bank (Except Admission Fee). </li>
             <li> Please read it carefully   <a href="https://diu.ac/code-of-conduct" style="color: #000;text-decoration:none">https://diu.ac/code-of-conduct</a></li>
+            <li>Please note that for professional accreditation like IEB, Pharmacy Council, Bar Council, etc DIU is not liable. Please check the update with the accreditation authority, not with DIU.</li>
         </ol>
 
     </div>

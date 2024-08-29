@@ -92,6 +92,7 @@ $router->group(['prefix' => 'public-diu-trc-website', 'namespace' => 'DIUTCRC'],
     $router->get('teams', ['as' => '[diuTcrc.getteams', 'uses' => 'DiuTcrcController@getTeams']);
 
     $router->get('partner', ['as' => '[diuTcrc.partner', 'uses' => 'DiuTcrcController@partner']);
+    $router->get('partner/{type}', ['as' => '[diuTcrc.partnerType', 'uses' => 'DiuTcrcController@partnerType']);
 
     $router->get('national/{type}', ['as' => '[diuTcrc.national', 'uses' => 'DiuTcrcController@national']);
 });
